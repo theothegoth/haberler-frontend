@@ -1,0 +1,42 @@
+[
+    {
+      "id": "1",
+      "platform": "twitter",
+      "journalist": "fatihportakal",
+      "content": "Yeni anayasa tartışmalarında dikkat çeken detaylar var.",
+      "url": "https://twitter.com/fatihportakal/status/1",
+      "timestamp": "2025-06-17T08:45:00Z",
+      "category": ["siyaset"],
+      "likes": 1200
+    },
+    {
+      "id": "2",
+      "platform": "youtube",
+      "journalist": "ikucukkaya",
+      "content": "Sabah yorumları: Ekonomik tablo nereye gidiyor?",
+      "url": "https://www.youtube.com/watch?v=eY52Zsg-KVI",
+      "timestamp": "2025-06-16T20:15:00Z",
+      "category": ["ekonomi"],
+      "likes": 3500
+    },
+    {
+      "id": "3",
+      "platform": "twitter",
+      "journalist": "cigdemtoker",
+      "content": "Yatırım teşvikleriyle ilgili kritik belgeler elime geçti.",
+      "url": "https://twitter.com/cigdemtoker/status/3",
+      "timestamp": "2025-06-17T10:30:00Z",
+      "category": ["ekonomi", "araştırmacı gazetecilik"],
+      "likes": 2700
+    },
+    {
+      "id": "4",
+      "platform": "youtube",
+      "journalist": "nevshincek",
+      "content": "Dış politikada İsrail-Türkiye ilişkileri",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "timestamp": "2025-06-16T23:45:00Z",
+      "category": ["dış politika"],
+      "likes": 2100
+    }
+  ]

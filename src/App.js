@@ -1,111 +1,71 @@
-import React, { useState } from "react";
-import posts from "./data/posts.json";
+import React, { useEffect, useState } from "react";
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState("Tümü");
-  const [selectedJournalist, setSelectedJournalist] = useState("Tümü");
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const allCategories = Array.from(
-    new Set(posts.flatMap((post) => post.category))
-  );
+  // YouTube kanal ID'si
+  const channelId = "UC4R8DWoMoI7CAwX8_LjQHig"; // Örnek: YouTube News kanal ID'si
 
-  const allJournalists = Array.from(
-    new Set(posts.map((post) => post.journalist))
-  );
+  useEffect(() => {
+    const fetchVideos = async () => {
+      setLoading(true);
+      setError(null);
 
-  // Şu anki zaman
-  const now = new Date();
-  // Dün bu saat
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
+      // Dün saat 00:00'dan itibaren olan saat (ISO formatında)
+      const now = new Date();
+      const yesterday = new Date(now);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const publishedAfter = yesterday.toISOString();
 
-  // Filtreleme: kategori + gazeteci + zaman
-  const filteredPosts = posts
-    .filter((post) =>
-      selectedCategory === "Tümü"
-        ? true
-        : post.category.includes(selectedCategory)
-    )
-    .filter((post) =>
-      selectedJournalist === "Tümü"
-        ? true
-        : post.journalist === selectedJournalist
-    )
-    .filter((post) => {
-      const postDate = new Date(post.timestamp);
-      return postDate >= yesterday && postDate <= now;
-    })
-    .sort((a, b) => b.likes - a.likes); // Likes’a göre sırala
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/youtube/videos?channelId=${channelId}&publishedAfter=${publishedAfter}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Veri çekilirken bir hata oluştu.");
+        }
+
+        const data = await response.json();
+        if (data.items) {
+          setVideos(data.items);
+        } else {
+          setVideos([]);
+        }
+      } catch (err) {
+        setError(err.message);
+        setVideos([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, [channelId]);
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial" }}>
-      <h1>Bugünün En Popüler Haberleri</h1>
+    <div style={{ padding: "20px" }}>
+      <h2>YouTube - Son 24 Saatte Yayınlanan Videolar</h2>
 
-      {/* Filtre Menüsü */}
-      <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}>
-        {/* Kategori Seçimi */}
-        <div>
-          <label htmlFor="category">Kategori: </label>
-          <select
-            id="category"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="Tümü">Tümü</option>
-            {allCategories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
+      {loading && <p>Yükleniyor...</p>}
+      {error && <p style={{ color: "red" }}>Hata: {error}</p>}
+      {!loading && videos.length === 0 && <p>Hiç video bulunamadı.</p>}
 
-        {/* Gazeteci Seçimi */}
-        <div>
-          <label htmlFor="journalist">Gazeteci: </label>
-          <select
-            id="journalist"
-            value={selectedJournalist}
-            onChange={(e) => setSelectedJournalist(e.target.value)}
-          >
-            <option value="Tümü">Tümü</option>
-            {allJournalists.map((j) => (
-              <option key={j} value={j}>
-                {j}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Gönderi Listesi */}
-      <div style={{ display: "grid", gap: "1rem" }}>
-        {filteredPosts.map((post) => (
-          <div
-            key={post.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "1rem",
-              borderRadius: "8px",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <h3>
-              {post.journalist} ({post.platform})
-            </h3>
-            <p>{post.content}</p>
-            <a href={post.url} target="_blank" rel="noopener noreferrer">
-              Gönderiyi Aç
+      <ul>
+        {videos.map((video) => (
+          <li key={video.id.videoId || video.etag} style={{ marginBottom: "10px" }}>
+            <a
+              href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {video.snippet.title}
             </a>
-            <p>
-              <strong>Kategori:</strong> {post.category.join(", ")}
-            </p>
-            <p>
-              <small>{new Date(post.timestamp).toLocaleString()}</small>
-            </p>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

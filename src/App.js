@@ -13,7 +13,13 @@ function App() {
     new Set(posts.map((post) => post.journalist))
   );
 
-  // Filtreleme mantığı (kategori + gazeteci)
+  // Şu anki zaman
+  const now = new Date();
+  // Dün bu saat
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+
+  // Filtreleme: kategori + gazeteci + zaman
   const filteredPosts = posts
     .filter((post) =>
       selectedCategory === "Tümü"
@@ -25,6 +31,10 @@ function App() {
         ? true
         : post.journalist === selectedJournalist
     )
+    .filter((post) => {
+      const postDate = new Date(post.timestamp);
+      return postDate >= yesterday && postDate <= now;
+    })
     .sort((a, b) => b.likes - a.likes); // Likes’a göre sırala
 
   return (

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/youtube';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+import youtubeService from '../services/youtubeService';
+import LoadingSpinner from './LoadingSpinner';
 
 function AddChannelForm({ onAdded }) {
   const [input, setInput] = useState('');
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('error'); // 'error' or 'success'
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,19 +15,27 @@ function AddChannelForm({ onAdded }) {
 
     if (!input.trim()) {
       setMessage('Lütfen bir kanal adı, URL veya ID girin.');
+      setMessageType('error');
       return;
     }
 
     try {
-      const res = await axios.post(`${API_URL}/add-channel`, {
-        input: input.trim(),
-        country: 'TR'
-      });
-      setMessage(res.data.message);
+      setLoading(true);
+      const response = await youtubeService.addUserChannel(input.trim());
+      setMessage(response.message || 'Kanal başarıyla eklendi!');
+      setMessageType('success');
       setInput('');
-      if (onAdded) onAdded();
+
+      // Call the onAdded callback after a short delay to show success message
+      setTimeout(() => {
+        if (onAdded) onAdded();
+        setMessage('');
+      }, 2000);
     } catch (error) {
-      setMessage(error.response?.data?.error || 'Bir hata oluştu.');
+      setMessage(error.response?.data?.error || error.message || 'Bir hata oluştu.');
+      setMessageType('error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,20 +47,43 @@ function AddChannelForm({ onAdded }) {
           placeholder="@kanaladi, kanal ID veya YouTube kanal URL'si"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={loading}
+          className="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+          aria-label="Kanal bilgisi girin"
         />
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-r-md hover:bg-blue-700 transition"
+          disabled={loading}
+          className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-r-md hover:bg-blue-700 transition disabled:bg-blue-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          aria-label="Kanal ekle"
         >
-          Kanal Ekle
+          {loading ? 'Ekleniyor...' : 'Kanal Ekle'}
         </button>
       </form>
-      {message && (
-        <p className="mt-2 text-center text-sm text-red-600">{message}</p>
+
+      {loading && (
+        <div className="mt-4 flex justify-center">
+          <LoadingSpinner size="sm" message="Kanal ekleniyor..." />
+        </div>
+      )}
+
+      {message && !loading && (
+        <p
+          className={`mt-2 text-center text-sm ${
+            messageType === 'success' ? 'text-green-600' : 'text-red-600'
+          }`}
+          role="alert"
+          aria-live="polite"
+        >
+          {message}
+        </p>
       )}
     </div>
   );
 }
+
+AddChannelForm.propTypes = {
+  onAdded: PropTypes.func,
+};
 
 export default AddChannelForm;

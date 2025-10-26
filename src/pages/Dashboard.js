@@ -483,33 +483,71 @@ function Dashboard() {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Video İzle"
-        className="w-full max-w-4xl mx-auto mt-20 bg-white rounded-xl shadow-2xl overflow-hidden"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-start z-50 p-4"
+        className="relative w-full max-w-5xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl outline-none animate-fadeIn overflow-hidden"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-90 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-fadeIn"
+        style={{
+          content: {
+            maxHeight: '90vh',
+            margin: 'auto',
+            border: 'none'
+          }
+        }}
       >
-        <div className="flex justify-end p-4 bg-gray-100">
+        {/* Header with gradient */}
+        <div className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 border-b border-gray-700">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-white font-bold text-lg">Video İzle</h3>
+              <p className="text-gray-200 text-xs">YouTube Video Player</p>
+            </div>
+          </div>
           <button
             onClick={closeModal}
-            className="text-gray-600 hover:text-gray-900 transition p-2 hover:bg-gray-200 rounded-full"
+            className="text-white hover:bg-white hover:bg-opacity-20 transition-all duration-200 p-2 rounded-full group"
             aria-label="Kapat"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
+
+        {/* Video Container with glow effect */}
         {selectedVideoId && (
-          <div className="aspect-w-16 aspect-h-9">
+          <div className="relative bg-black">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-20 blur-3xl"></div>
             <iframe
-              width="100%"
-              height="500"
-              src={`https://www.youtube.com/embed/${selectedVideoId}`}
+              src={`https://www.youtube.com/embed/${selectedVideoId}?autoplay=1&rel=0&modestbranding=1`}
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              className="border-0"
+              className="w-full border-0 relative z-10"
+              style={{ height: '70vh', maxHeight: '650px' }}
             />
           </div>
         )}
+
+        {/* Footer with info */}
+        <div className="px-6 py-3 bg-gray-800 bg-opacity-50 backdrop-blur-sm border-t border-gray-700">
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center space-x-2 text-gray-300">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              <span>Tam ekran için video üzerine çift tıklayın</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="px-3 py-1 bg-green-500 bg-opacity-20 text-green-400 rounded-full text-xs font-medium border border-green-500 border-opacity-30">
+                HD Kalite
+              </span>
+            </div>
+          </div>
+        </div>
       </Modal>
     </div>
   );

@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 const ErrorMessage = ({ message, onRetry }) => {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center justify-center py-12" role="alert" aria-live="assertive">
       <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
@@ -17,16 +20,16 @@ const ErrorMessage = ({ message, onRetry }) => {
               d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h3 className="text-lg font-semibold text-red-800">Hata Oluştu</h3>
+          <h3 className="text-lg font-semibold text-red-800">{t('errorMessage.title')}</h3>
         </div>
-        <p className="text-red-700 mb-4">{message || 'Bir şeyler yanlış gitti.'}</p>
+        <p className="text-red-700 mb-4">{message || t('common.somethingWrong')}</p>
         {onRetry && (
           <button
             onClick={onRetry}
             className="w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            aria-label="Tekrar dene"
+            aria-label={t('common.retry')}
           >
-            Tekrar Dene
+            {t('common.retry')}
           </button>
         )}
       </div>

@@ -8,7 +8,45 @@
     "delete": "Sil",
     "edit": "Düzenle",
     "confirm": "Onayla",
-    "close": "Kapat"
+    "close": "Kapat",
+    "addChannel": "Kanal Ekle",
+    "adding": "Ekleniyor...",
+    "removeChannel": "Kanalı kaldır",
+    "retry": "Tekrar Dene",
+    "backToHome": "Ana Sayfaya Dön",
+    "somethingWrong": "Bir şeyler yanlış gitti."
+  },
+  "channelList": {
+    "noChannels": "Henüz kanal eklemediniz",
+    "allChannels": "Tüm Kanallar",
+    "removeChannelAria": "kanalını kaldır"
+  },
+  "addChannelForm": {
+    "placeholder": "@kanaladi, kanal ID veya YouTube kanal URL'si",
+    "ariaLabel": "Kanal bilgisi girin",
+    "submitAria": "Kanal ekle",
+    "adding": "Ekleniyor...",
+    "addingChannel": "Kanal ekleniyor...",
+    "enterChannelInfo": "Lütfen bir kanal adı, URL veya ID girin.",
+    "channelAddedSuccess": "Kanal başarıyla eklendi!",
+    "errorOccurred": "Bir hata oluştu."
+  },
+  "errorBoundary": {
+    "title": "Bir Hata Oluştu",
+    "message": "Üzgünüz, beklenmeyen bir hata oluştu. Lütfen sayfayı yenileyip tekrar deneyin.",
+    "errorDetails": "Hata Detayları (Geliştirici Modu)"
+  },
+  "errorMessage": {
+    "title": "Hata Oluştu"
+  },
+  "loadingSpinner": {
+    "loading": "Yükleniyor...",
+    "srOnly": "Yükleniyor"
+  },
+  "errors": {
+    "loginError": "Giriş yapılırken bir hata oluştu",
+    "registerError": "Kayıt olunurken bir hata oluştu",
+    "channelRemoveError": "Kanal silinemedi"
   },
   "nav": {
     "videoDashboard": "Video Dashboard",

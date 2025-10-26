@@ -8,7 +8,45 @@
     "delete": "Delete",
     "edit": "Edit",
     "confirm": "Confirm",
-    "close": "Close"
+    "close": "Close",
+    "addChannel": "Add Channel",
+    "adding": "Adding...",
+    "removeChannel": "Remove channel",
+    "retry": "Try Again",
+    "backToHome": "Back to Home",
+    "somethingWrong": "Something went wrong."
+  },
+  "channelList": {
+    "noChannels": "You haven't added any channels yet",
+    "allChannels": "All Channels",
+    "removeChannelAria": "remove channel"
+  },
+  "addChannelForm": {
+    "placeholder": "@channelname, channel ID or YouTube channel URL",
+    "ariaLabel": "Enter channel information",
+    "submitAria": "Add channel",
+    "adding": "Adding...",
+    "addingChannel": "Adding channel...",
+    "enterChannelInfo": "Please enter a channel name, URL or ID.",
+    "channelAddedSuccess": "Channel added successfully!",
+    "errorOccurred": "An error occurred."
+  },
+  "errorBoundary": {
+    "title": "An Error Occurred",
+    "message": "Sorry, an unexpected error occurred. Please refresh the page and try again.",
+    "errorDetails": "Error Details (Developer Mode)"
+  },
+  "errorMessage": {
+    "title": "Error Occurred"
+  },
+  "loadingSpinner": {
+    "loading": "Loading...",
+    "srOnly": "Loading"
+  },
+  "errors": {
+    "loginError": "An error occurred during login",
+    "registerError": "An error occurred during registration",
+    "channelRemoveError": "Channel could not be removed"
   },
   "nav": {
     "videoDashboard": "Video Dashboard",

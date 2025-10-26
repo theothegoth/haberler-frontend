@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import youtubeService from '../services/youtubeService';
 import LoadingSpinner from './LoadingSpinner';
 
 function AddChannelForm({ onAdded }) {
+  const { t } = useTranslation();
   const [input, setInput] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('error'); // 'error' or 'success'
@@ -14,7 +16,7 @@ function AddChannelForm({ onAdded }) {
     setMessage('');
 
     if (!input.trim()) {
-      setMessage('Lütfen bir kanal adı, URL veya ID girin.');
+      setMessage(t('addChannelForm.enterChannelInfo'));
       setMessageType('error');
       return;
     }
@@ -22,7 +24,7 @@ function AddChannelForm({ onAdded }) {
     try {
       setLoading(true);
       const response = await youtubeService.addUserChannel(input.trim());
-      setMessage(response.message || 'Kanal başarıyla eklendi!');
+      setMessage(response.message || t('addChannelForm.channelAddedSuccess'));
       setMessageType('success');
       setInput('');
 
@@ -32,7 +34,7 @@ function AddChannelForm({ onAdded }) {
         setMessage('');
       }, 2000);
     } catch (error) {
-      setMessage(error.response?.data?.error || error.message || 'Bir hata oluştu.');
+      setMessage(error.response?.data?.error || error.message || t('addChannelForm.errorOccurred'));
       setMessageType('error');
     } finally {
       setLoading(false);
@@ -44,26 +46,26 @@ function AddChannelForm({ onAdded }) {
       <form onSubmit={handleSubmit} className="flex items-center max-w-md mx-auto">
         <input
           type="text"
-          placeholder="@kanaladi, kanal ID veya YouTube kanal URL'si"
+          placeholder={t('addChannelForm.placeholder')}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={loading}
           className="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-          aria-label="Kanal bilgisi girin"
+          aria-label={t('addChannelForm.ariaLabel')}
         />
         <button
           type="submit"
           disabled={loading}
           className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-r-md hover:bg-blue-700 transition disabled:bg-blue-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          aria-label="Kanal ekle"
+          aria-label={t('addChannelForm.submitAria')}
         >
-          {loading ? 'Ekleniyor...' : 'Kanal Ekle'}
+          {loading ? t('addChannelForm.adding') : t('common.addChannel')}
         </button>
       </form>
 
       {loading && (
         <div className="mt-4 flex justify-center">
-          <LoadingSpinner size="sm" message="Kanal ekleniyor..." />
+          <LoadingSpinner size="sm" message={t('addChannelForm.addingChannel')} />
         </div>
       )}
 

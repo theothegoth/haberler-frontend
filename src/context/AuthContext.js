@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import apiClient from '../services/api';
 
@@ -13,6 +14,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -47,7 +49,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Login error:', error);
       return {
         success: false,
-        error: error.response?.data?.error || 'Giriş yapılırken bir hata oluştu'
+        error: error.response?.data?.error || t('errors.loginError')
       };
     }
   };
@@ -68,7 +70,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error('Registration error:', error);
-      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Kayıt olunurken bir hata oluştu';
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || t('errors.registerError');
       return {
         success: false,
         error: errorMessage

@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import youtubeService from '../services/youtubeService';
 
 const useUserChannels = () => {
+  const { t } = useTranslation();
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,7 +34,7 @@ const useUserChannels = () => {
     } catch (err) {
       return {
         success: false,
-        error: err.response?.data?.error || 'Kanal silinemedi'
+        error: err.response?.data?.error || t('errors.channelRemoveError')
       };
     }
   };

@@ -1,7 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navigation = () => {
+  const { t } = useTranslation();
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -40,13 +43,13 @@ const Navigation = () => {
                   to="/dashboard"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Video Dashboard
+                  {t('nav.videoDashboard')}
                 </Link>
                 <Link
                   to="/feed"
                   className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Haber Akışı
+                  {t('nav.newsFeed')}
                 </Link>
                 <Link
                   to="/write"
@@ -55,13 +58,13 @@ const Navigation = () => {
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                   </svg>
-                  <span>Yaz</span>
+                  <span>{t('nav.write')}</span>
                 </Link>
                 <Link
                   to="/my-articles"
                   className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Haberlerim
+                  {t('nav.myArticles')}
                 </Link>
                 <span className="text-gray-600 text-sm px-2">
                   <span className="font-semibold">{user?.username}</span>
@@ -69,10 +72,11 @@ const Navigation = () => {
                 <button
                   onClick={handleLogout}
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
-                  aria-label="Çıkış Yap"
+                  aria-label={t('nav.logout')}
                 >
-                  Çıkış
+                  {t('nav.logout')}
                 </button>
+                <LanguageSwitcher />
               </>
             ) : (
               <>
@@ -80,14 +84,15 @@ const Navigation = () => {
                   to="/login"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Giriş Yap
+                  {t('nav.login')}
                 </Link>
                 <Link
                   to="/signup"
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                 >
-                  Kayıt Ol
+                  {t('nav.signup')}
                 </Link>
+                <LanguageSwitcher />
               </>
             )}
           </div>

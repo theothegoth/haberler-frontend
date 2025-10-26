@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
@@ -14,6 +15,7 @@ const UserProfile = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedNews, setSelectedNews] = useState(null);
+  const { t } = useTranslation();
   const [profileUser, setProfileUser] = useState(null);
 
   useEffect(() => {

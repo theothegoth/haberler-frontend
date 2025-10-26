@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
@@ -7,6 +8,7 @@ import ErrorMessage from '../components/ErrorMessage';
 const WriteNews = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     title: '',
     content: '',

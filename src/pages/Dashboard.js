@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import Modal from 'react-modal';
 import he from 'he';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import AddChannelForm from '../components/AddChannelForm';
 import ErrorMessage from '../components/ErrorMessage';
 import VideoCardSkeleton from '../components/VideoCardSkeleton';
@@ -15,6 +16,7 @@ Modal.setAppElement('#root');
 
 function Dashboard() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [selectedLayout, setSelectedLayout] = useState('list');
@@ -38,7 +40,7 @@ function Dashboard() {
   };
 
   const handleRemoveChannel = async (channelId) => {
-    if (window.confirm('Bu kanalı kaldırmak istediğinizden emin misiniz?')) {
+    if (window.confirm(t('dashboard.channelList.confirmRemove'))) {
       const result = await removeChannel(channelId);
       if (result.success) {
         refetch();
@@ -167,7 +169,7 @@ function Dashboard() {
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatsCard
-              title="Toplam Kanal"
+              title={t("dashboard.stats.totalChannels")}
               value={stats.totalChannels}
               color="blue"
               icon={
@@ -177,7 +179,7 @@ function Dashboard() {
               }
             />
             <StatsCard
-              title="Toplam Video"
+              title={t("dashboard.stats.totalVideos")}
               value={stats.totalVideos}
               color="green"
               icon={
@@ -187,7 +189,7 @@ function Dashboard() {
               }
             />
             <StatsCard
-              title="Bugünkü Videolar"
+              title={t("dashboard.stats.todayVideos")}
               value={stats.todayVideos}
               color="purple"
               icon={
@@ -251,7 +253,7 @@ function Dashboard() {
                   <div className="relative">
                     <input
                       type="text"
-                      placeholder="Video veya kanal ara..."
+                      placeholder={t("dashboard.filters.search")}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -301,7 +303,7 @@ function Dashboard() {
                         ? 'bg-blue-600 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
-                    title="Liste görünüm"
+                    title={t("dashboard.filters.viewMode.listTitle")}
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
@@ -357,7 +359,7 @@ function Dashboard() {
                   <p className="text-gray-600 mb-4">
                     {searchQuery
                       ? 'Arama kriterlerinize uygun video bulunamadı. Farklı kelimeler deneyin.'
-                      : 'En son YouTube videolarını görmeye başlamak için yukarıdaki formu kullanarak haber kanalları ekleyin.'}
+                      : t('dashboard.noVideosMessage')}
                   </p>
                   {!searchQuery && (
                     <p className="text-sm text-gray-500">
@@ -482,7 +484,7 @@ function Dashboard() {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        contentLabel="Video İzle"
+        contentLabel={t("dashboard.modal.title")}
         className="relative w-full max-w-5xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl outline-none animate-fadeIn overflow-hidden"
         overlayClassName="fixed inset-0 bg-black bg-opacity-90 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-fadeIn"
         style={{

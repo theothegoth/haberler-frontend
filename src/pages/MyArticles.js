@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
@@ -7,6 +8,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const MyArticles = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

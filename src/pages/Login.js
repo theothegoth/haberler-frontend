@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,7 +18,7 @@ const Login = () => {
 
     // Validation
     if (!email || !password) {
-      setError('Lütfen tüm alanları doldurun');
+      setError(t('auth.errors.fillAllFields'));
       return;
     }
 
@@ -43,15 +45,15 @@ const Login = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            Hesabınıza Giriş Yapın
+            {t('auth.login.title')}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Hesabınız yok mu?{' '}
+            {t('auth.login.noAccount')}{' '}
             <Link
               to="/signup"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              Kayıt olun
+              {t('auth.login.signupLink')}
             </Link>
           </p>
         </div>
@@ -72,7 +74,7 @@ const Login = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email adresi
+                {t('auth.login.email')}
               </label>
               <input
                 id="email"
@@ -92,7 +94,7 @@ const Login = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                Şifre
+                {t('auth.login.password')}
               </label>
               <input
                 id="password"
@@ -138,7 +140,7 @@ const Login = () => {
                     Giriş yapılıyor...
                   </span>
                 ) : (
-                  'Giriş Yap'
+                  t('auth.login.button')
                 )}
               </button>
             </div>

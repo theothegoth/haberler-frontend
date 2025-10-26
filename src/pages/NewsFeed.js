@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import newsService from '../services/newsService';
 import followService from '../services/followService';
@@ -8,6 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const NewsFeed = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [feed, setFeed] = useState([]);
   const [suggested, setSuggested] = useState([]);
   const [loading, setLoading] = useState(true);

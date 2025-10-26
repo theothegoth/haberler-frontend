@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 const ProtectedContent = ({ children, authorName, showWatermark = true }) => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     // Disable right-click
     const handleContextMenu = (e) => {
@@ -93,8 +96,7 @@ const ProtectedContent = ({ children, authorName, showWatermark = true }) => {
 
       {/* Copyright notice */}
       <div className="mt-4 text-xs text-gray-500 italic border-t pt-2">
-        © {new Date().getFullYear()} {authorName || 'Gaste User'}. Tüm hakları saklıdır.
-        Bu içerik telif hakkı ile korunmaktadır ve izinsiz kopyalanamaz.
+        © {new Date().getFullYear()} {authorName || 'Gaste User'}. {t('protectedContent.copyright')}
       </div>
     </div>
   );

@@ -1,0 +1,207 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error Occurred",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "close": "Close"
+  },
+  "nav": {
+    "videoDashboard": "Video Dashboard",
+    "newsFeed": "News Feed",
+    "write": "Write",
+    "myArticles": "My Articles",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout"
+  },
+  "home": {
+    "hero": {
+      "title": "YouTube News on",
+      "titleHighlight": "One Platform",
+      "subtitle": "Follow your favorite news channels, filter current news by categories, and browse in newspaper view.",
+      "ctaButton": "Get Started Free",
+      "loginButton": "Login",
+      "dashboardButton": "Go to Dashboard"
+    },
+    "features": {
+      "title": "Features",
+      "feature1": {
+        "title": "Follow YouTube Channels",
+        "description": "Add your favorite news channels and track all their videos from one place."
+      },
+      "feature2": {
+        "title": "Category Filtering",
+        "description": "Filter news by categories. Sports, Politics, Technology and more."
+      },
+      "feature3": {
+        "title": "Newspaper and List View",
+        "description": "Browse news in newspaper layout or classic list view."
+      }
+    },
+    "cta": {
+      "title": "Get Started Now",
+      "subtitle": "Create a free account and start tracking YouTube news.",
+      "button": "Sign Up Free"
+    },
+    "footer": {
+      "copyright": "© 2025 Gaste. All rights reserved."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login to Your Account",
+      "email": "Email address",
+      "password": "Password",
+      "button": "Login",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up"
+    },
+    "signup": {
+      "title": "Create Account",
+      "username": "Username",
+      "email": "Email address",
+      "password": "Password",
+      "button": "Sign Up",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Login"
+    },
+    "errors": {
+      "fillAllFields": "Please fill in all fields",
+      "invalidCredentials": "Invalid email or password",
+      "userExists": "This email is already registered",
+      "networkError": "Network error. Please try again."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "stats": {
+      "totalChannels": "Total Channels",
+      "totalVideos": "Total Videos",
+      "todayVideos": "Today's Videos",
+      "channels": "Channels",
+      "videos": "Videos",
+      "watched": "Watched"
+    },
+    "filters": {
+      "all": "All",
+      "search": "Search videos or channels...",
+      "viewMode": {
+        "newspaper": "Newspaper View",
+        "list": "List View",
+        "listTitle": "List view"
+      }
+    },
+    "channelList": {
+      "title": "My Channels",
+      "addChannel": "Add Channel",
+      "addNewChannel": "Add New Channel",
+      "noChannels": "You haven't added any channels yet",
+      "confirmRemove": "Are you sure you want to remove this channel?"
+    },
+    "noVideos": "No videos found",
+    "noVideosMessage": "Add news channels using the form above to start seeing the latest YouTube videos.",
+    "noChannelsMessage": "You haven't added any channels yet. Add one to get started!",
+    "viewsCount": "views",
+    "modal": {
+      "title": "Watch Video",
+      "subtitle": "YouTube Video Player"
+    }
+  },
+  "writeNews": {
+    "title": "Write New Article",
+    "form": {
+      "title": "Title",
+      "titlePlaceholder": "Enter article title...",
+      "titleHelper": "characters",
+      "content": "Content",
+      "contentPlaceholder": "Write your article content...",
+      "contentHelper": "characters (minimum 100)",
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "imageUrl": "Image URL",
+      "imageUrlPlaceholder": "https://example.com/image.jpg (optional)",
+      "tags": "Tags",
+      "tagsPlaceholder": "Add tag...",
+      "addTag": "Add"
+    },
+    "buttons": {
+      "preview": "Preview",
+      "edit": "Edit",
+      "publish": "Publish",
+      "publishing": "Publishing..."
+    },
+    "preview": {
+      "title": "Preview"
+    },
+    "success": "Article published successfully!",
+    "error": "Error publishing article"
+  },
+  "newsFeed": {
+    "title": "News Feed",
+    "noNews": "No news yet",
+    "noNewsMessage": "Users you follow haven't shared any news yet.",
+    "suggestedUsers": "Suggested Users",
+    "noSuggestions": "No suggestions found",
+    "follow": "Follow",
+    "following": "Following",
+    "readMore": "Read More",
+    "likes": "likes",
+    "comments": "comments",
+    "readArticle": "Read Article"
+  },
+  "myArticles": {
+    "title": "My Articles",
+    "stats": {
+      "articles": "Articles",
+      "totalLikes": "Total Likes",
+      "totalComments": "Total Comments"
+    },
+    "noArticles": "You haven't written any articles yet",
+    "writeFirst": "Write your first article!",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this article?",
+    "deleteSuccess": "Article deleted successfully",
+    "deleteError": "Error deleting article"
+  },
+  "userProfile": {
+    "articles": "Articles",
+    "followers": "Followers",
+    "following": "Following",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "noArticles": "No articles yet",
+    "loading": "Loading profile..."
+  },
+  "protectedContent": {
+    "watermark": "by",
+    "copyright": "This content is protected by copyright."
+  },
+  "categories": {
+    "all": "All",
+    "politics": "Politics",
+    "economy": "Economy",
+    "sports": "Sports",
+    "technology": "Technology",
+    "health": "Health",
+    "education": "Education",
+    "culture": "Culture & Art",
+    "science": "Science",
+    "world": "World",
+    "local": "Local"
+  },
+  "time": {
+    "yearsAgo": "years ago",
+    "monthsAgo": "months ago",
+    "weeksAgo": "weeks ago",
+    "daysAgo": "days ago",
+    "hoursAgo": "hours ago",
+    "minutesAgo": "minutes ago",
+    "justNow": "Just now"
+  }
+}

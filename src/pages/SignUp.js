@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 const SignUp = () => {
+  const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +20,7 @@ const SignUp = () => {
 
     // Validation
     if (!username || !email || !password || !confirmPassword) {
-      setError('Lütfen tüm alanları doldurun');
+      setError(t('auth.errors.fillAllFields'));
       return;
     }
 
@@ -60,15 +62,15 @@ const SignUp = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            Hesap Oluşturun
+            {t('auth.signup.title')}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Zaten hesabınız var mı?{' '}
+            {t('auth.signup.haveAccount')}{' '}
             <Link
               to="/login"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              Giriş yapın
+              {t('auth.signup.loginLink')}
             </Link>
           </p>
         </div>
@@ -89,7 +91,7 @@ const SignUp = () => {
                 htmlFor="username"
                 className="block text-sm font-medium text-gray-700"
               >
-                Kullanıcı adı
+                {t('auth.signup.username')}
               </label>
               <input
                 id="username"
@@ -109,7 +111,7 @@ const SignUp = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email adresi
+                {t('auth.signup.email')}
               </label>
               <input
                 id="email"
@@ -129,7 +131,7 @@ const SignUp = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                Şifre
+                {t('auth.signup.password')}
               </label>
               <input
                 id="password"
@@ -196,7 +198,7 @@ const SignUp = () => {
                     Kayıt yapılıyor...
                   </span>
                 ) : (
-                  'Kayıt Ol'
+                  t('auth.signup.button')
                 )}
               </button>
             </div>

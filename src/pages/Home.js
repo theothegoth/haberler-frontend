@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
 
   return (
@@ -10,12 +12,11 @@ const Home = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            YouTube Haberlerini
-            <span className="text-blue-600"> Tek Platformda</span>
+            {t('home.hero.title')}
+            <span className="text-blue-600"> {t('home.hero.titleHighlight')}</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Favori haber kanallarınızı takip edin, güncel haberleri kategorilere göre filtreleyin ve
-            gazeteci görünümünde inceleyin.
+            {t('home.hero.subtitle')}
           </p>
           <div className="flex justify-center space-x-4">
             {isAuthenticated ? (
@@ -23,7 +24,7 @@ const Home = () => {
                 to="/dashboard"
                 className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold shadow-lg"
               >
-                Dashboard'a Git
+                {t('home.hero.dashboardButton')}
               </Link>
             ) : (
               <>
@@ -31,13 +32,13 @@ const Home = () => {
                   to="/signup"
                   className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold shadow-lg"
                 >
-                  Ücretsiz Başla
+                  {t('home.hero.ctaButton')}
                 </Link>
                 <Link
                   to="/login"
                   className="bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-gray-50 transition-colors text-lg font-semibold border-2 border-blue-600 shadow-lg"
                 >
-                  Giriş Yap
+                  {t('home.hero.loginButton')}
                 </Link>
               </>
             )}
@@ -48,7 +49,7 @@ const Home = () => {
       {/* Features Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-          Özellikler
+          {t('home.features.title')}
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {/* Feature 1 */}
@@ -69,10 +70,10 @@ const Home = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              YouTube Kanallarını Takip Et
+              {t('home.features.feature1.title')}
             </h3>
             <p className="text-gray-600">
-              Favori haber kanallarınızı ekleyin ve tüm videolarını tek yerden takip edin.
+              {t('home.features.feature1.description')}
             </p>
           </div>
 
@@ -94,10 +95,10 @@ const Home = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Kategori Filtreleme
+              {t('home.features.feature2.title')}
             </h3>
             <p className="text-gray-600">
-              Haberleri kategorilerine göre filtreleyin. Spor, Politika, Teknoloji ve daha fazlası.
+              {t('home.features.feature2.description')}
             </p>
           </div>
 
@@ -119,10 +120,10 @@ const Home = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Gazeteci ve Liste Görünümü
+              {t('home.features.feature3.title')}
             </h3>
             <p className="text-gray-600">
-              Haberleri gazeteci düzeninde veya klasik liste görünümünde inceleyin.
+              {t('home.features.feature3.description')}
             </p>
           </div>
         </div>
@@ -132,17 +133,17 @@ const Home = () => {
       <div className="bg-blue-600 py-16 mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Hemen Başlayın
+            {t('home.cta.title')}
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Ücretsiz hesap oluşturun ve YouTube haberlerini takip etmeye başlayın.
+            {t('home.cta.subtitle')}
           </p>
           {!isAuthenticated && (
             <Link
               to="/signup"
               className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors text-lg font-semibold shadow-lg"
             >
-              Ücretsiz Kayıt Ol
+              {t('home.cta.button')}
             </Link>
           )}
         </div>
@@ -151,7 +152,7 @@ const Home = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>&copy; 2025 Gazeteci Sosyal. Tüm hakları saklıdır.</p>
+          <p>{t('home.footer.copyright')}</p>
         </div>
       </footer>
     </div>

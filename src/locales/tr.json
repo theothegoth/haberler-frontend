@@ -1,0 +1,207 @@
+{
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Hata Oluştu",
+    "success": "Başarılı",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "confirm": "Onayla",
+    "close": "Kapat"
+  },
+  "nav": {
+    "videoDashboard": "Video Dashboard",
+    "newsFeed": "Haber Akışı",
+    "write": "Yaz",
+    "myArticles": "Haberlerim",
+    "login": "Giriş Yap",
+    "signup": "Kayıt Ol",
+    "logout": "Çıkış"
+  },
+  "home": {
+    "hero": {
+      "title": "YouTube Haberlerini",
+      "titleHighlight": "Tek Platformda",
+      "subtitle": "Favori haber kanallarınızı takip edin, güncel haberleri kategorilere göre filtreleyin ve gazeteci görünümünde inceleyin.",
+      "ctaButton": "Ücretsiz Başla",
+      "loginButton": "Giriş Yap",
+      "dashboardButton": "Dashboard'a Git"
+    },
+    "features": {
+      "title": "Özellikler",
+      "feature1": {
+        "title": "YouTube Kanallarını Takip Et",
+        "description": "Favori haber kanallarınızı ekleyin ve tüm videolarını tek yerden takip edin."
+      },
+      "feature2": {
+        "title": "Kategori Filtreleme",
+        "description": "Haberleri kategorilerine göre filtreleyin. Spor, Politika, Teknoloji ve daha fazlası."
+      },
+      "feature3": {
+        "title": "Gazeteci ve Liste Görünümü",
+        "description": "Haberleri gazeteci düzeninde veya klasik liste görünümünde inceleyin."
+      }
+    },
+    "cta": {
+      "title": "Hemen Başlayın",
+      "subtitle": "Ücretsiz hesap oluşturun ve YouTube haberlerini takip etmeye başlayın.",
+      "button": "Ücretsiz Kayıt Ol"
+    },
+    "footer": {
+      "copyright": "© 2025 Gaste. Tüm hakları saklıdır."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Hesabınıza Giriş Yapın",
+      "email": "Email adresi",
+      "password": "Şifre",
+      "button": "Giriş Yap",
+      "noAccount": "Hesabınız yok mu?",
+      "signupLink": "Kayıt olun"
+    },
+    "signup": {
+      "title": "Hesap Oluştur",
+      "username": "Kullanıcı adı",
+      "email": "Email adresi",
+      "password": "Şifre",
+      "button": "Kayıt Ol",
+      "haveAccount": "Zaten hesabınız var mı?",
+      "loginLink": "Giriş yapın"
+    },
+    "errors": {
+      "fillAllFields": "Lütfen tüm alanları doldurun",
+      "invalidCredentials": "Geçersiz email veya şifre",
+      "userExists": "Bu email adresi zaten kayıtlı",
+      "networkError": "Ağ hatası. Lütfen tekrar deneyin."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "stats": {
+      "totalChannels": "Toplam Kanal",
+      "totalVideos": "Toplam Video",
+      "todayVideos": "Bugünkü Videolar",
+      "channels": "Kanal",
+      "videos": "Video",
+      "watched": "İzlendi"
+    },
+    "filters": {
+      "all": "Tümü",
+      "search": "Video veya kanal ara...",
+      "viewMode": {
+        "newspaper": "Gazeteci Görünümü",
+        "list": "Liste Görünümü",
+        "listTitle": "Liste görünüm"
+      }
+    },
+    "channelList": {
+      "title": "Kanallarım",
+      "addChannel": "Kanal Ekle",
+      "addNewChannel": "Yeni Kanal Ekle",
+      "noChannels": "Henüz kanal eklemediniz",
+      "confirmRemove": "Bu kanalı kaldırmak istediğinizden emin misiniz?"
+    },
+    "noVideos": "Video bulunamadı",
+    "noVideosMessage": "En son YouTube videolarını görmeye başlamak için yukarıdaki formu kullanarak haber kanalları ekleyin.",
+    "noChannelsMessage": "Henüz kanal eklemediniz. Başlamak için bir kanal ekleyin!",
+    "viewsCount": "görüntüleme",
+    "modal": {
+      "title": "Video İzle",
+      "subtitle": "YouTube Video Player"
+    }
+  },
+  "writeNews": {
+    "title": "Yeni Haber Yaz",
+    "form": {
+      "title": "Başlık",
+      "titlePlaceholder": "Haber başlığını girin...",
+      "titleHelper": "karakter",
+      "content": "İçerik",
+      "contentPlaceholder": "Haber içeriğini yazın...",
+      "contentHelper": "karakter (en az 100)",
+      "category": "Kategori",
+      "categoryPlaceholder": "Kategori seçin",
+      "imageUrl": "Resim URL",
+      "imageUrlPlaceholder": "https://example.com/image.jpg (opsiyonel)",
+      "tags": "Etiketler",
+      "tagsPlaceholder": "Etiket ekle...",
+      "addTag": "Ekle"
+    },
+    "buttons": {
+      "preview": "Önizleme",
+      "edit": "Düzenle",
+      "publish": "Yayınla",
+      "publishing": "Yayınlanıyor..."
+    },
+    "preview": {
+      "title": "Önizleme"
+    },
+    "success": "Haber başarıyla yayınlandı!",
+    "error": "Haber yayınlanırken bir hata oluştu"
+  },
+  "newsFeed": {
+    "title": "Haber Akışı",
+    "noNews": "Henüz haber yok",
+    "noNewsMessage": "Takip ettiğiniz kullanıcılardan henüz haber paylaşılmadı.",
+    "suggestedUsers": "Önerilen Kullanıcılar",
+    "noSuggestions": "Öneri bulunamadı",
+    "follow": "Takip Et",
+    "following": "Takip Ediliyor",
+    "readMore": "Devamını Oku",
+    "likes": "beğeni",
+    "comments": "yorum",
+    "readArticle": "Haberi Oku"
+  },
+  "myArticles": {
+    "title": "Haberlerim",
+    "stats": {
+      "articles": "Haber",
+      "totalLikes": "Toplam Beğeni",
+      "totalComments": "Toplam Yorum"
+    },
+    "noArticles": "Henüz haber yazmadınız",
+    "writeFirst": "İlk haberinizi yazın!",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "confirmDelete": "Bu haberi silmek istediğinizden emin misiniz?",
+    "deleteSuccess": "Haber başarıyla silindi",
+    "deleteError": "Haber silinirken bir hata oluştu"
+  },
+  "userProfile": {
+    "articles": "Haber",
+    "followers": "Takipçi",
+    "following": "Takip",
+    "follow": "Takip Et",
+    "unfollow": "Takipten Çık",
+    "noArticles": "Henüz haber yok",
+    "loading": "Profil yükleniyor..."
+  },
+  "protectedContent": {
+    "watermark": "tarafından",
+    "copyright": "Bu içerik telif hakkı ile korunmaktadır."
+  },
+  "categories": {
+    "all": "Tümü",
+    "politics": "Politika",
+    "economy": "Ekonomi",
+    "sports": "Spor",
+    "technology": "Teknoloji",
+    "health": "Sağlık",
+    "education": "Eğitim",
+    "culture": "Kültür & Sanat",
+    "science": "Bilim",
+    "world": "Dünya",
+    "local": "Yerel"
+  },
+  "time": {
+    "yearsAgo": "yıl önce",
+    "monthsAgo": "ay önce",
+    "weeksAgo": "hafta önce",
+    "daysAgo": "gün önce",
+    "hoursAgo": "saat önce",
+    "minutesAgo": "dakika önce",
+    "justNow": "Az önce"
+  }
+}

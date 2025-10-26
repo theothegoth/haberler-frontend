@@ -57,24 +57,24 @@ const WriteNews = () => {
     setSuccess('');
 
     if (formData.title.length < 10) {
-      setError('Başlık en az 10 karakter olmalıdır');
+      setError(t('writeNews.form.titleHelper'));
       return;
     }
 
     if (formData.content.length < 100) {
-      setError('İçerik en az 100 karakter olmalıdır');
+      setError(t('writeNews.form.contentHelper'));
       return;
     }
 
     try {
       setLoading(true);
       await newsService.createNews(formData);
-      setSuccess('Haberiniz başarıyla yayınlandı!');
+      setSuccess(t('writeNews.success'));
       setTimeout(() => {
         navigate('/my-articles');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.error || 'Haber yayınlanırken bir hata oluştu');
+      setError(err.response?.data?.error || t('writeNews.error'));
     } finally {
       setLoading(false);
     }
@@ -94,7 +94,7 @@ const WriteNews = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Haber Yaz
+                  {t('writeNews.title')}
                 </h1>
                 <p className="text-gray-600">Kendi haberlerinizi oluşturun ve paylaşın</p>
               </div>
@@ -107,7 +107,7 @@ const WriteNews = () => {
                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                 <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
               </svg>
-              <span>{preview ? 'Düzenle' : 'Önizle'}</span>
+              <span>{preview ? t('writeNews.buttons.edit') : t('writeNews.buttons.preview')}</span>
             </button>
           </div>
         </div>
@@ -125,7 +125,7 @@ const WriteNews = () => {
             {/* Title */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Başlık *
+                {t('writeNews.form.title')} *
               </label>
               <input
                 type="text"
@@ -143,7 +143,7 @@ const WriteNews = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-xl shadow-lg p-6">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Kategori
+                  {t('writeNews.form.category')}
                 </label>
                 <select
                   name="category"
@@ -151,7 +151,7 @@ const WriteNews = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
-                  <option value="">Kategori Seçin</option>
+                  <option value="">{t('writeNews.form.categoryPlaceholder')}</option>
                   {categories.map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
@@ -176,7 +176,7 @@ const WriteNews = () => {
             {/* Content */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                İçerik *
+                {t('writeNews.form.content')} *
               </label>
               <textarea
                 name="content"
@@ -193,7 +193,7 @@ const WriteNews = () => {
             {/* Tags */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Etiketler
+                {t('writeNews.form.tags')}
               </label>
               <div className="flex space-x-2 mb-3">
                 <input
@@ -209,7 +209,7 @@ const WriteNews = () => {
                   onClick={handleAddTag}
                   className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 >
-                  Ekle
+                  {t('writeNews.form.addTag')}
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -238,7 +238,7 @@ const WriteNews = () => {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {loading ? 'Yayınlanıyor...' : 'Haberi Yayınla'}
+                {loading ? t('writeNews.buttons.publishing') : t('writeNews.buttons.publish')}
               </button>
             </div>
           </form>

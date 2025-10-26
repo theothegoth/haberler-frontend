@@ -30,7 +30,7 @@ const MyArticles = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Bu haberi silmek istediğinizden emin misiniz?')) return;
+    if (!window.confirm(t('myArticles.confirmDelete'))) return;
 
     try {
       await newsService.deleteNews(id);
@@ -49,7 +49,7 @@ const MyArticles = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Haberlerim
+              {t('myArticles.title')}
             </h1>
             <p className="text-gray-600 mt-2">Yazdığınız tüm haberler</p>
           </div>
@@ -71,7 +71,7 @@ const MyArticles = () => {
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Toplam Haber</p>
+                <p className="text-sm text-gray-600">{t('myArticles.stats.articles')}</p>
                 <p className="text-3xl font-bold text-gray-900">{articles.length}</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -84,7 +84,7 @@ const MyArticles = () => {
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Toplam Beğeni</p>
+                <p className="text-sm text-gray-600">{t('myArticles.stats.totalLikes')}</p>
                 <p className="text-3xl font-bold text-gray-900">
                   {articles.reduce((sum, a) => sum + (parseInt(a.like_count) || 0), 0)}
                 </p>
@@ -99,7 +99,7 @@ const MyArticles = () => {
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Toplam Yorum</p>
+                <p className="text-sm text-gray-600">{t('myArticles.stats.totalComments')}</p>
                 <p className="text-3xl font-bold text-gray-900">
                   {articles.reduce((sum, a) => sum + (parseInt(a.comment_count) || 0), 0)}
                 </p>
@@ -119,8 +119,8 @@ const MyArticles = () => {
             <svg className="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Henüz haber yazmadınız</h3>
-            <p className="text-gray-600 mb-6">İlk haberinizi yazarak başlayın!</p>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('myArticles.noArticles')}</h3>
+            <p className="text-gray-600 mb-6">{t('myArticles.writeFirst')}</p>
             <Link
               to="/write"
               className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all"
@@ -174,13 +174,13 @@ const MyArticles = () => {
                   </div>
                   <div className="flex space-x-2">
                     <button className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium">
-                      Düzenle
+                      {t('myArticles.edit')}
                     </button>
                     <button
                       onClick={() => handleDelete(article.id)}
                       className="flex-1 px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg transition-colors text-sm font-medium"
                     >
-                      Sil
+                      {t('myArticles.delete')}
                     </button>
                   </div>
                 </div>

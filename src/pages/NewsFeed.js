@@ -83,7 +83,7 @@ const NewsFeed = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Haber Akışım
+            {t('newsFeed.title')}
           </h1>
           <p className="text-gray-600 mt-2">Takip ettiğiniz yazarlardan haberler</p>
         </div>
@@ -98,7 +98,7 @@ const NewsFeed = () => {
                 <svg className="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                 </svg>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Henüz haber yok</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('newsFeed.noNews')}</h3>
                 <p className="text-gray-600 mb-6">Haber akışınızda görmek için yazarları takip edin</p>
                 <button
                   onClick={() => navigate('/explore')}
@@ -155,7 +155,7 @@ const NewsFeed = () => {
                       onClick={() => setSelectedNews(news)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
                     >
-                      Devamını Oku →
+                      {t('newsFeed.readMore')} →
                     </button>
                   </div>
 
@@ -195,7 +195,7 @@ const NewsFeed = () => {
           <div className="space-y-6">
             {/* Suggested Users */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Önerilen Yazarlar</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">{t('newsFeed.suggestedUsers')}</h3>
               <div className="space-y-4">
                 {suggested.map((user) => (
                   <div key={user.id} className="flex items-center justify-between">
@@ -209,7 +209,7 @@ const NewsFeed = () => {
                       </div>
                     </Link>
                     <button className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm hover:bg-blue-700 transition-colors">
-                      Takip Et
+                      {t('newsFeed.follow')}
                     </button>
                   </div>
                 ))}

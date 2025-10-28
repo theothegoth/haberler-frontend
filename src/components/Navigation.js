@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import LanguageSwitcher from './LanguageSwitcher';
+import ThemeToggle from './ThemeToggle';
 
 const Navigation = () => {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="bg-white shadow-lg">
+    <nav className="bg-white dark:bg-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
@@ -41,19 +42,28 @@ const Navigation = () => {
               <>
                 <Link
                   to="/dashboard"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   {t('nav.videoDashboard')}
                 </Link>
                 <Link
                   to="/feed"
-                  className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-700 dark:text-gray-200 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   {t('nav.newsFeed')}
                 </Link>
                 <Link
+                  to="/explore"
+                  className="text-gray-700 dark:text-gray-200 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                  </svg>
+                  <span>{t('nav.explore')}</span>
+                </Link>
+                <Link
                   to="/write"
-                  className="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
+                  className="text-gray-700 dark:text-gray-200 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -62,11 +72,20 @@ const Navigation = () => {
                 </Link>
                 <Link
                   to="/my-articles"
-                  className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-700 dark:text-gray-200 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   {t('nav.myArticles')}
                 </Link>
-                <span className="text-gray-600 text-sm px-2">
+                <Link
+                  to="/settings"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                  </svg>
+                  <span>{t('nav.settings')}</span>
+                </Link>
+                <span className="text-gray-600 dark:text-gray-300 text-sm px-2">
                   <span className="font-semibold">{user?.username}</span>
                 </span>
                 <button
@@ -76,13 +95,14 @@ const Navigation = () => {
                 >
                   {t('nav.logout')}
                 </button>
+                <ThemeToggle />
                 <LanguageSwitcher />
               </>
             ) : (
               <>
                 <Link
                   to="/login"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   {t('nav.login')}
                 </Link>
@@ -92,6 +112,7 @@ const Navigation = () => {
                 >
                   {t('nav.signup')}
                 </Link>
+                <ThemeToggle />
                 <LanguageSwitcher />
               </>
             )}

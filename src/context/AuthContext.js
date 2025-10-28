@@ -61,13 +61,17 @@ export const AuthProvider = ({ children }) => {
         email,
         password
       });
-      const { token, user: userData } = response.data;
+      const { token, user: userData, requiresVerification, message } = response.data;
 
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
 
-      return { success: true };
+      return {
+        success: true,
+        requiresVerification,
+        message
+      };
     } catch (error) {
       console.error('Registration error:', error);
       const errorMessage = error.response?.data?.error || error.response?.data?.message || t('errors.registerError');
@@ -84,12 +88,18 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  };
+
   const value = {
     user,
     loading,
     login,
     register,
     logout,
+    updateUser,
     isAuthenticated: !!user
   };
 

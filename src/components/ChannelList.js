@@ -5,7 +5,7 @@ const ChannelList = ({ channels, onChannelClick, selectedChannel, onRemoveChanne
   const { t } = useTranslation();
   if (channels.length === 0) {
     return (
-      <div className="text-center py-4 text-gray-500 text-sm">
+      <div className="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
         {t('channelList.noChannels')}
       </div>
     );
@@ -17,8 +17,8 @@ const ChannelList = ({ channels, onChannelClick, selectedChannel, onRemoveChanne
         onClick={() => onChannelClick(null)}
         className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
           selectedChannel === null
-            ? 'bg-blue-100 text-blue-700 font-semibold'
-            : 'hover:bg-gray-100 text-gray-700'
+            ? 'bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 text-blue-700 dark:text-blue-300 font-semibold'
+            : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'
         }`}
       >
         <span className="flex items-center">
@@ -34,8 +34,8 @@ const ChannelList = ({ channels, onChannelClick, selectedChannel, onRemoveChanne
           key={channel.id}
           className={`group relative px-3 py-2 rounded-lg transition-colors ${
             selectedChannel === channel.channel_id
-              ? 'bg-blue-100 text-blue-700'
-              : 'hover:bg-gray-100'
+              ? 'bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 text-blue-700 dark:text-blue-300'
+              : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'
           }`}
         >
           <button
@@ -50,11 +50,11 @@ const ChannelList = ({ channels, onChannelClick, selectedChannel, onRemoveChanne
           </button>
           <button
             onClick={() => onRemoveChannel(channel.channel_id)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 rounded"
+            className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 dark:hover:bg-red-900 dark:hover:bg-opacity-30 rounded"
             aria-label={`${channel.channel_title} ${t('channelList.removeChannelAria')}`}
             title={t('common.removeChannel')}
           >
-            <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>

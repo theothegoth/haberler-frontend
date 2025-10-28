@@ -25,22 +25,22 @@ const SignUp = () => {
     }
 
     if (username.length < 3) {
-      setError('Kullanıcı adı en az 3 karakter olmalıdır');
+      setError(t('auth.signup.usernameMinLength'));
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Geçerli bir email adresi girin');
+      setError(t('auth.signup.validEmail'));
       return;
     }
 
     if (password.length < 6) {
-      setError('Şifre en az 6 karakter olmalıdır');
+      setError(t('auth.signup.passwordMinLength'));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Şifreler eşleşmiyor');
+      setError(t('auth.signup.passwordsMismatch'));
       return;
     }
 
@@ -49,7 +49,12 @@ const SignUp = () => {
     const result = await register(username, email, password);
 
     if (result.success) {
-      navigate('/dashboard');
+      if (result.requiresVerification) {
+        // Redirect to verify email required page immediately
+        navigate('/verify-email-required');
+      } else {
+        navigate('/dashboard');
+      }
     } else {
       setError(result.error);
     }
@@ -58,13 +63,13 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900 dark:text-white">
             {t('auth.signup.title')}
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
             {t('auth.signup.haveAccount')}{' '}
             <Link
               to="/login"
@@ -75,11 +80,11 @@ const SignUp = () => {
           </p>
         </div>
 
-        <div className="bg-white py-8 px-6 shadow-xl rounded-lg">
+        <div className="bg-white dark:bg-gray-800 py-8 px-6 shadow-xl rounded-lg">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div
-                className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                className="bg-red-50 dark:bg-red-900 dark:bg-opacity-20 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-300 px-4 py-3 rounded relative"
                 role="alert"
               >
                 <span className="block sm:inline">{error}</span>
@@ -89,7 +94,7 @@ const SignUp = () => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
               >
                 {t('auth.signup.username')}
               </label>
@@ -101,15 +106,15 @@ const SignUp = () => {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="kullaniciadi"
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder={t('auth.signup.usernamePlaceholder')}
               />
             </div>
 
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
               >
                 {t('auth.signup.email')}
               </label>
@@ -121,15 +126,15 @@ const SignUp = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="ornek@email.com"
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder={t('auth.signup.emailPlaceholder')}
               />
             </div>
 
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
               >
                 {t('auth.signup.password')}
               </label>
@@ -141,18 +146,18 @@ const SignUp = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="••••••••"
               />
-              <p className="mt-1 text-xs text-gray-500">En az 6 karakter</p>
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{t('auth.signup.passwordHelper')}</p>
             </div>
 
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200"
               >
-                Şifre Tekrar
+                {t('auth.signup.confirmPassword')}
               </label>
               <input
                 id="confirmPassword"
@@ -162,7 +167,7 @@ const SignUp = () => {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="••••••••"
               />
             </div>
@@ -195,7 +200,7 @@ const SignUp = () => {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
                     </svg>
-                    Kayıt yapılıyor...
+                    {t('auth.signup.registering')}
                   </span>
                 ) : (
                   t('auth.signup.button')

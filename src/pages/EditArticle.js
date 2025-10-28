@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
 import ErrorMessage from '../components/ErrorMessage';
+import LoadingSpinner from '../components/LoadingSpinner';
 
-const WriteNews = () => {
+const EditArticle = () => {
+  const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -19,13 +21,36 @@ const WriteNews = () => {
   const [tagInput, setTagInput] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [preview, setPreview] = useState(false);
 
   const categories = [
     'Politika', 'Ekonomi', 'Spor', 'Teknoloji', 'Sağlık',
     'Eğitim', 'Kültür', 'Sanat', 'Bilim', 'Dünya', 'Diğer'
   ];
+
+  useEffect(() => {
+    loadArticle();
+  }, [id]);
+
+  const loadArticle = async () => {
+    try {
+      setLoading(true);
+      const article = await newsService.getNewsById(id);
+      setFormData({
+        title: article.title || '',
+        content: article.content || '',
+        category: article.category || '',
+        imageUrl: article.image_url || '',
+        tags: article.tags || []
+      });
+    } catch (err) {
+      setError(err.response?.data?.error || t('editArticle.loadError'));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -67,18 +92,20 @@ const WriteNews = () => {
     }
 
     try {
-      setLoading(true);
-      await newsService.createNews(formData);
-      setSuccess(t('writeNews.success'));
+      setSubmitting(true);
+      await newsService.updateNews(id, formData);
+      setSuccess(t('editArticle.success'));
       setTimeout(() => {
         navigate('/my-articles');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.error || t('writeNews.error'));
+      setError(err.response?.data?.error || t('editArticle.error'));
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
+
+  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8">
@@ -87,16 +114,16 @@ const WriteNews = () => {
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                 </svg>
               </div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  {t('writeNews.title')}
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  {t('editArticle.title')}
                 </h1>
-                <p className="text-gray-600 dark:text-gray-300">{t('writeNews.subtitle')}</p>
+                <p className="text-gray-600 dark:text-gray-300">{t('editArticle.subtitle')}</p>
               </div>
             </div>
             <button
@@ -233,13 +260,22 @@ const WriteNews = () => {
 
             {/* Submit */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                {loading ? t('writeNews.buttons.publishing') : t('writeNews.buttons.publish')}
-              </button>
+              <div className="flex space-x-4">
+                <button
+                  type="button"
+                  onClick={() => navigate('/my-articles')}
+                  className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 py-4 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                >
+                  {t('editArticle.cancel')}
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {submitting ? t('editArticle.saving') : t('editArticle.saveChanges')}
+                </button>
+              </div>
             </div>
           </form>
         ) : (
@@ -295,4 +331,4 @@ const WriteNews = () => {
   );
 };
 
-export default WriteNews;
+export default EditArticle;

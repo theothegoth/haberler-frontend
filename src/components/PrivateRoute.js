@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import LoadingSpinner from './LoadingSpinner';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
 
   if (loading) {
     return (
@@ -14,7 +14,17 @@ const PrivateRoute = ({ children }) => {
     );
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  // Check if user is authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Check if email is verified
+  if (user && !user.emailVerified) {
+    return <Navigate to="/verify-email-required" replace />;
+  }
+
+  return children;
 };
 
 PrivateRoute.propTypes = {

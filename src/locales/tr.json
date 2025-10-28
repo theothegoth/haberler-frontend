@@ -16,6 +16,10 @@
     "backToHome": "Ana Sayfaya Dön",
     "somethingWrong": "Bir şeyler yanlış gitti."
   },
+  "theme": {
+    "switchToDark": "Karanlık moda geç",
+    "switchToLight": "Aydınlık moda geç"
+  },
   "channelList": {
     "noChannels": "Henüz kanal eklemediniz",
     "allChannels": "Tüm Kanallar",
@@ -46,13 +50,16 @@
   "errors": {
     "loginError": "Giriş yapılırken bir hata oluştu",
     "registerError": "Kayıt olunurken bir hata oluştu",
-    "channelRemoveError": "Kanal silinemedi"
+    "channelRemoveError": "Kanal silinemedi",
+    "feedLoadError": "Haber akışı yüklenirken hata oluştu"
   },
   "nav": {
     "videoDashboard": "Video Dashboard",
     "newsFeed": "Haber Akışı",
+    "explore": "Keşfet",
     "write": "Yaz",
     "myArticles": "Haberlerim",
+    "settings": "Ayarlar",
     "login": "Giriş Yap",
     "signup": "Kayıt Ol",
     "logout": "Çıkış"
@@ -70,7 +77,7 @@
       "title": "Özellikler",
       "feature1": {
         "title": "YouTube Kanallarını Takip Et",
-        "description": "Favori haber kanallarınızı ekleyin ve tüm videolarını tek yerden takip edin."
+        "description": "Favori haber kanallarınızı ekleyin ve son 48 saatteki en yeni videolarını tek yerden görün."
       },
       "feature2": {
         "title": "Kategori Filtreleme",
@@ -97,22 +104,66 @@
       "password": "Şifre",
       "button": "Giriş Yap",
       "noAccount": "Hesabınız yok mu?",
-      "signupLink": "Kayıt olun"
+      "signupLink": "Kayıt olun",
+      "emailPlaceholder": "ornek@email.com",
+      "loggingIn": "Giriş yapılıyor...",
+      "validEmail": "Geçerli bir email adresi girin"
     },
     "signup": {
       "title": "Hesap Oluştur",
       "username": "Kullanıcı adı",
       "email": "Email adresi",
       "password": "Şifre",
+      "confirmPassword": "Şifre Tekrar",
       "button": "Kayıt Ol",
       "haveAccount": "Zaten hesabınız var mı?",
-      "loginLink": "Giriş yapın"
+      "loginLink": "Giriş yapın",
+      "registering": "Kayıt yapılıyor...",
+      "passwordHelper": "En az 6 karakter",
+      "usernameMinLength": "Kullanıcı adı en az 3 karakter olmalıdır",
+      "validEmail": "Geçerli bir email adresi girin",
+      "passwordMinLength": "Şifre en az 6 karakter olmalıdır",
+      "passwordsMismatch": "Şifreler eşleşmiyor",
+      "redirecting": "5 saniye içinde dashboard'a yönlendiriliyorsunuz...",
+      "usernamePlaceholder": "kullaniciadi",
+      "emailPlaceholder": "ornek@email.com"
     },
     "errors": {
       "fillAllFields": "Lütfen tüm alanları doldurun",
       "invalidCredentials": "Geçersiz email veya şifre",
       "userExists": "Bu email adresi zaten kayıtlı",
       "networkError": "Ağ hatası. Lütfen tekrar deneyin."
+    },
+    "emailVerification": {
+      "banner": {
+        "message": "E-posta adresiniz doğrulanmadı. Lütfen gelen kutunuzdaki doğrulama bağlantısını kontrol edin.",
+        "resend": "E-posta Gönder",
+        "sending": "Gönderiliyor...",
+        "sentSuccess": "Doğrulama e-postası gönderildi! Lütfen gelen kutunuzu kontrol edin.",
+        "sentError": "E-posta gönderilemedi. Lütfen tekrar deneyin.",
+        "dismiss": "Kapat"
+      },
+      "verify": {
+        "verifying": "E-posta Doğrulanıyor...",
+        "verifyingMessage": "E-posta adresinizi doğrularken lütfen bekleyin",
+        "success": "E-posta Doğrulandı!",
+        "successMessage": "E-posta adresiniz başarıyla doğrulandı!",
+        "redirecting": "Giriş sayfasına yönlendiriliyorsunuz...",
+        "error": "Doğrulama Başarısız",
+        "errorMessage": "E-posta doğrulama başarısız oldu. Bağlantı geçersiz veya süresi dolmuş olabilir.",
+        "goToLogin": "Giriş Sayfasına Git",
+        "signUpAgain": "Tekrar Kayıt Ol"
+      },
+      "required": {
+        "title": "E-posta Doğrulaması Gerekli",
+        "message": "Gelen kutunuza bir doğrulama e-postası gönderdik. Hesabınıza erişmek için lütfen e-posta adresinizi doğrulayın.",
+        "instructions": "E-postanızı nasıl doğrularsınız:",
+        "step1": "Gaste'den gelen e-postayı kontrol edin",
+        "step2": "E-postadaki doğrulama bağlantısına tıklayın",
+        "step3": "Giriş sayfasına yönlendirilecek ve hesabınıza erişebileceksiniz",
+        "logout": "Çıkış Yap",
+        "helpText": "E-postayı almadınız mı? Spam klasörünüzü kontrol edin veya yukarıdaki 'E-posta Gönder' butonuna tıklayın."
+      }
     }
   },
   "dashboard": {
@@ -132,7 +183,10 @@
         "newspaper": "Gazeteci Görünümü",
         "list": "Liste Görünümü",
         "listTitle": "Liste görünüm"
-      }
+      },
+      "categories": "Kategoriler",
+      "allCategories": "Tüm Kategoriler",
+      "category": "Kategori"
     },
     "channelList": {
       "title": "Kanallarım",
@@ -142,26 +196,60 @@
       "confirmRemove": "Bu kanalı kaldırmak istediğinizden emin misiniz?"
     },
     "noVideos": "Video bulunamadı",
-    "noVideosMessage": "En son YouTube videolarını görmeye başlamak için yukarıdaki formu kullanarak haber kanalları ekleyin.",
+    "noVideosMessage": "Son 48 saatte yayınlanmış video yok. Daha fazla kanal ekleyin veya kanallarınızın yeni içerik yayınlamasını bekleyin.",
+    "noVideosMessageNoChannels": "En son YouTube videolarını görmeye başlamak için yukarıdaki formu kullanarak haber kanalları ekleyin.",
     "noChannelsMessage": "Henüz kanal eklemediniz. Başlamak için bir kanal ekleyin!",
+    "noResults": "Sonuç bulunamadı",
+    "noSearchResults": "Arama kriterlerinize uygun video bulunamadı. Farklı kelimeler deneyin.",
+    "channelExample": "Örnek: @CNN, @BBCNews, @HaberturkTV veya kanal URL'si",
+    "welcome": "Hoş geldiniz",
+    "trackVideos": "Haber videolarınızı buradan takip edin",
+    "sortNewest": "🕐 En Yeni",
+    "sortOldest": "📅 En Eski",
+    "sortPopular": "⭐ Popüler",
+    "gridViewTitle": "Gazete görünüm",
+    "modalTitle": "Video İzle",
+    "fullscreenTip": "Tam ekran için video üzerine çift tıklayın",
+    "hdQuality": "HD Kalite",
     "viewsCount": "görüntüleme",
     "modal": {
       "title": "Video İzle",
       "subtitle": "YouTube Video Player"
     }
   },
+  "videoCategories": {
+    "1": "Film & Animasyon",
+    "2": "Otomobiller ve Taşıtlar",
+    "10": "Müzik",
+    "15": "Evcil Hayvanlar",
+    "17": "Spor",
+    "18": "Kısa Filmler",
+    "19": "Seyahat ve Etkinlikler",
+    "20": "Oyun",
+    "22": "Bloglar",
+    "23": "Komedi",
+    "24": "Eğitim",
+    "25": "Haber ve Politika",
+    "26": "Nasıl Yapılır",
+    "27": "Bilim ve Teknoloji",
+    "28": "STK ve Aktivizm"
+  },
   "writeNews": {
     "title": "Yeni Haber Yaz",
+    "subtitle": "Kendi haberlerinizi oluşturun ve paylaşın",
     "form": {
       "title": "Başlık",
-      "titlePlaceholder": "Haber başlığını girin...",
+      "titlePlaceholder": "Haberinizin dikkat çekici başlığını yazın...",
       "titleHelper": "karakter",
+      "minCharacters": "min",
+      "titleTooShort": "Başlık en az 10 karakter olmalıdır",
       "content": "İçerik",
-      "contentPlaceholder": "Haber içeriğini yazın...",
+      "contentPlaceholder": "Haberinizin detaylı içeriğini yazın...",
       "contentHelper": "karakter (en az 100)",
+      "contentTooShort": "İçerik en az 100 karakter olmalıdır",
       "category": "Kategori",
       "categoryPlaceholder": "Kategori seçin",
-      "imageUrl": "Resim URL",
+      "imageUrl": "Görsel URL",
       "imageUrlPlaceholder": "https://example.com/image.jpg (opsiyonel)",
       "tags": "Etiketler",
       "tagsPlaceholder": "Etiket ekle...",
@@ -174,15 +262,31 @@
       "publishing": "Yayınlanıyor..."
     },
     "preview": {
-      "title": "Önizleme"
+      "title": "Önizleme",
+      "noCategory": "Kategori Yok",
+      "titlePlaceholder": "Başlık",
+      "contentPlaceholder": "İçerik buraya gelecek...",
+      "tagsLabel": "Etiketler:"
     },
     "success": "Haber başarıyla yayınlandı!",
     "error": "Haber yayınlanırken bir hata oluştu"
   },
+  "editArticle": {
+    "title": "Haberi Düzenle",
+    "subtitle": "Haberinizi güncelleyin",
+    "cancel": "İptal",
+    "saveChanges": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor...",
+    "success": "Haber başarıyla güncellendi!",
+    "error": "Haber güncellenirken bir hata oluştu",
+    "loadError": "Haber yüklenirken bir hata oluştu"
+  },
   "newsFeed": {
     "title": "Haber Akışı",
+    "subtitle": "Takip ettiğiniz yazarlardan haberler",
     "noNews": "Henüz haber yok",
-    "noNewsMessage": "Takip ettiğiniz kullanıcılardan henüz haber paylaşılmadı.",
+    "noNewsMessage": "Haber akışınızda görmek için yazarları takip edin",
+    "exploreAuthors": "Yazarları Keşfet",
     "suggestedUsers": "Önerilen Kullanıcılar",
     "noSuggestions": "Öneri bulunamadı",
     "follow": "Takip Et",
@@ -190,10 +294,18 @@
     "readMore": "Devamını Oku",
     "likes": "beğeni",
     "comments": "yorum",
-    "readArticle": "Haberi Oku"
+    "readArticle": "Haberi Oku",
+    "newsCount": "haber",
+    "writeYourOwn": "Kendi Haberini Yaz",
+    "writeYourOwnDesc": "Sende haberlerini yaz ve takipçilerinle paylaş!",
+    "writeNews": "Haber Yaz",
+    "newsDetail": "Haber Detayı"
   },
   "myArticles": {
     "title": "Haberlerim",
+    "subtitle": "Yazdığınız tüm haberler",
+    "writeNewArticle": "Yeni Haber Yaz",
+    "writeArticle": "Haber Yaz",
     "stats": {
       "articles": "Haber",
       "totalLikes": "Toplam Beğeni",
@@ -205,7 +317,9 @@
     "delete": "Sil",
     "confirmDelete": "Bu haberi silmek istediğinizden emin misiniz?",
     "deleteSuccess": "Haber başarıyla silindi",
-    "deleteError": "Haber silinirken bir hata oluştu"
+    "deleteError": "Haber silinirken bir hata oluştu",
+    "loadError": "Haberler yüklenirken hata oluştu",
+    "deleteErrorGeneral": "Haber silinirken hata oluştu"
   },
   "userProfile": {
     "articles": "Haber",
@@ -215,6 +329,22 @@
     "unfollow": "Takipten Çık",
     "noArticles": "Henüz haber yok",
     "loading": "Profil yükleniyor..."
+  },
+  "explore": {
+    "title": "Yazarları Keşfet",
+    "subtitle": "Yazarları keşfedin ve takip edin",
+    "articles": "Haber",
+    "followers": "Takipçi",
+    "following": "Takip",
+    "follow": "Takip Et",
+    "viewProfile": "Profili Görüntüle",
+    "loading": "Yükleniyor...",
+    "noUsers": "Yazar bulunamadı",
+    "noUsersMessage": "Henüz keşfedilecek yazar yok",
+    "loadError": "Yazarlar yüklenirken hata oluştu",
+    "totalAuthors": "Toplam Yazar",
+    "youAreFollowing": "Takip Ettikleriniz",
+    "totalArticles": "Toplam Haber"
   },
   "protectedContent": {
     "watermark": "tarafından",
@@ -241,5 +371,50 @@
     "hoursAgo": "saat önce",
     "minutesAgo": "dakika önce",
     "justNow": "Az önce"
+  },
+  "share": {
+    "shareOnTwitter": "Twitter'da Paylaş",
+    "shareTwitter": "Paylaş",
+    "share": "Paylaş"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "subtitle": "Hesap ayarlarınızı yönetin",
+    "tabs": {
+      "profile": "Profil",
+      "password": "Şifre"
+    },
+    "profile": {
+      "title": "Profil Ayarları",
+      "description": "Kişisel bilgilerinizi güncelleyin",
+      "profilePhoto": "Profil Fotoğrafı",
+      "photoComingSoon": "Profil fotoğrafı yükleme yakında geliyor",
+      "username": "Kullanıcı Adı",
+      "usernameHelper": "Bu, başkalarına görünen benzersiz kullanıcı adınızdır",
+      "usernameMinLength": "Kullanıcı adı en az 3 karakter olmalıdır",
+      "email": "E-posta Adresi",
+      "emailHelper": "Bildirimler ve giriş için e-posta adresiniz",
+      "bio": "Hakkında",
+      "bioPlaceholder": "Kendiniz hakkında bir şeyler yazın...",
+      "bioHelper": "Hakkınızda kısa bir açıklama (en fazla 500 karakter)",
+      "saveChanges": "Değişiklikleri Kaydet",
+      "saving": "Kaydediliyor...",
+      "updateSuccess": "Profil başarıyla güncellendi!",
+      "updateError": "Profil güncellenirken bir hata oluştu"
+    },
+    "password": {
+      "title": "Şifre Değiştir",
+      "description": "Hesabınızın güvenliğini sağlamak için şifrenizi güncelleyin",
+      "currentPassword": "Mevcut Şifre",
+      "newPassword": "Yeni Şifre",
+      "confirmPassword": "Yeni Şifre Tekrar",
+      "passwordHelper": "Şifre en az 6 karakter olmalıdır",
+      "passwordMinLength": "Şifre en az 6 karakter olmalıdır",
+      "passwordsMismatch": "Şifreler eşleşmiyor",
+      "changePassword": "Şifreyi Değiştir",
+      "changing": "Değiştiriliyor...",
+      "changeSuccess": "Şifre başarıyla değiştirildi!",
+      "changeError": "Şifre değiştirilirken bir hata oluştu"
+    }
   }
 }

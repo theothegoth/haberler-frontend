@@ -8,6 +8,7 @@ import draftService from '../services/draftService';
 import ErrorMessage from '../components/ErrorMessage';
 import SEO from '../components/SEO';
 import ImageUpload from '../components/ImageUpload';
+import RichTextEditor from '../components/RichTextEditor';
 
 const WriteNews = () => {
   const { user } = useAuth();
@@ -380,16 +381,17 @@ const WriteNews = () => {
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 {t('writeNews.form.content')} *
               </label>
-              <textarea
-                name="content"
+              <RichTextEditor
                 value={formData.content}
-                onChange={handleChange}
+                onChange={(content) => {
+                  setFormData({ ...formData, content });
+                  setHasUnsavedChanges(true);
+                }}
                 placeholder={t('writeNews.form.contentPlaceholder')}
-                rows="15"
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                required
               />
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{formData.content.length} / {t('writeNews.form.minCharacters')} 100 {t('writeNews.form.titleHelper')}</p>
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                {t('writeNews.form.minCharacters')} 100 characters minimum
+              </p>
             </div>
 
             {/* Tags */}

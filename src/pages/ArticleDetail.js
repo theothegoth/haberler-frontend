@@ -8,6 +8,7 @@ import commentService from '../services/commentService';
 import ProtectedContent from '../components/ProtectedContent';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SEO from '../components/SEO';
+import HTMLContent from '../components/HTMLContent';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -292,9 +293,10 @@ const ArticleDetail = () => {
                 )}
 
                 {/* Article Content */}
-                <div className="prose prose-lg max-w-none text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed mb-8">
-                  {article.content}
-                </div>
+                <HTMLContent
+                  content={article.content}
+                  className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8"
+                />
 
                 {/* Tags */}
                 {article.tags && article.tags.length > 0 && (

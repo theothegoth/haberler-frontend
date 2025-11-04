@@ -10,11 +10,19 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import TwitterShareButton from '../components/TwitterShareButton';
 import Comments from '../components/Comments';
 import SEO from '../components/SEO';
+import DOMPurify from 'dompurify';
 import StructuredData from '../components/StructuredData';
 
 const NewsFeed = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  
+  // Helper to strip HTML tags for preview
+  const stripHTML = (html) => {
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = DOMPurify.sanitize(html);
+    return tmp.textContent || tmp.innerText || '';
+  };
   const [feed, setFeed] = useState([]);
   const [suggested, setSuggested] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -249,7 +257,7 @@ const NewsFeed = () => {
                       />
                     )}
                     <p className="text-gray-700 dark:text-gray-200 line-clamp-3 mb-4">
-                      {news.content}
+                      {stripHTML(news.content)}
                     </p>
                     <span className="text-blue-600 hover:text-blue-700 font-medium">
                       {t('newsFeed.readMore')} →

@@ -18,6 +18,7 @@ const ArticleDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
@@ -33,6 +34,15 @@ const ArticleDetail = () => {
       const data = await newsService.getNewsById(id);
       setArticle(data);
       setIsLiked(data.user_has_liked || false);
+      
+      // Check if article is bookmarked
+      try {
+        const saved = await bookmarkService.checkSaved(id);
+        setIsSaved(saved);
+      } catch (err) {
+        console.error('Error checking bookmark status:', err);
+      }
+      
       setError(null);
     } catch (err) {
       console.error('Error loading article:', err);
@@ -80,8 +90,13 @@ const ArticleDetail = () => {
     }
 
     try {
-      await bookmarkService.saveArticle(article.id);
-      alert(t('bookmark.saved'));
+      if (isSaved) {
+        await bookmarkService.unsaveArticle(article.id);
+        setIsSaved(false);
+      } else {
+        await bookmarkService.saveArticle(article.id);
+        setIsSaved(true);
+      }
     } catch (error) {
       console.error('Bookmark error:', error);
       alert(t('common.error'));
@@ -240,12 +255,16 @@ const ArticleDetail = () => {
                   {/* Bookmark Button */}
                   <button
                     onClick={handleBookmark}
-                    className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                    title={t('bookmark.saveArticle')}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+                      isSaved
+                        ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-900/40'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    }`}
+                    title={isSaved ? t('bookmark.unsaveArticle') : t('bookmark.saveArticle')}
                   >
                     <svg
                       className="w-5 h-5"
-                      fill="none"
+                      fill={isSaved ? 'currentColor' : 'none'}
                       stroke="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -256,7 +275,7 @@ const ArticleDetail = () => {
                         d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
                       />
                     </svg>
-                    <span className="font-semibold">{t('bookmark.save')}</span>
+                    <span className="font-semibold">{isSaved ? t('bookmark.unsave') : t('bookmark.save')}</span>
                   </button>
                 </div>
 

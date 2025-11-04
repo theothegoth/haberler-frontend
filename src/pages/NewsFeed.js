@@ -22,6 +22,7 @@ const NewsFeed = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
+  const [bookmarkedArticles, setBookmarkedArticles] = useState(new Set());
   const LIMIT = 10;
 
   const loadFeed = useCallback(async (reset = false) => {
@@ -65,10 +66,33 @@ const NewsFeed = () => {
     }
   }, []);
 
+  const loadBookmarkStatus = useCallback(async (articles) => {
+    try {
+      const bookmarkChecks = await Promise.all(
+        articles.map(article => bookmarkService.checkSaved(article.id).catch(() => false))
+      );
+      const bookmarked = new Set();
+      articles.forEach((article, index) => {
+        if (bookmarkChecks[index]) {
+          bookmarked.add(article.id);
+        }
+      });
+      setBookmarkedArticles(bookmarked);
+    } catch (err) {
+      console.error('Failed to load bookmark status:', err);
+    }
+  }, []);
+
   useEffect(() => {
     loadFeed(true);
     loadSuggested();
   }, [loadSuggested]);
+
+  useEffect(() => {
+    if (feed.length > 0) {
+      loadBookmarkStatus(feed);
+    }
+  }, [feed, loadBookmarkStatus]);
 
   const handleFollow = async (userId) => {
     try {
@@ -96,10 +120,19 @@ const NewsFeed = () => {
   };
 
 
-  const handleBookmark = async (newsId) => {
+  const handleBookmark = async (newsId, currentlySaved) => {
     try {
-      await bookmarkService.saveArticle(newsId);
-      // Optionally show a success message
+      if (currentlySaved) {
+        await bookmarkService.unsaveArticle(newsId);
+        setBookmarkedArticles(prev => {
+          const next = new Set(prev);
+          next.delete(newsId);
+          return next;
+        });
+      } else {
+        await bookmarkService.saveArticle(newsId);
+        setBookmarkedArticles(prev => new Set(prev).add(newsId));
+      }
     } catch (error) {
       console.error('Bookmark error:', error);
       if (error.response?.status === 401) {
@@ -246,12 +279,16 @@ const NewsFeed = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          handleBookmark(news.id);
+                          handleBookmark(news.id, bookmarkedArticles.has(news.id));
                         }}
-                        className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-yellow-500 transition-colors"
-                        title={t('bookmark.saveArticle')}
+                        className={`flex items-center space-x-2 transition-colors ${
+                          bookmarkedArticles.has(news.id) 
+                            ? 'text-yellow-500' 
+                            : 'text-gray-600 dark:text-gray-300 hover:text-yellow-500'
+                        }`}
+                        title={bookmarkedArticles.has(news.id) ? t('bookmark.unsave') : t('bookmark.saveArticle')}
                       >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6" fill={bookmarkedArticles.has(news.id) ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                         </svg>
                       </button>

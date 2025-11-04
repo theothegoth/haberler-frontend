@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useNavigationBlocker } from '../context/NavigationBlockerContext';
 import newsService from '../services/newsService';
+import draftService from '../services/draftService';
 import ErrorMessage from '../components/ErrorMessage';
+import SEO from '../components/SEO';
+import ImageUpload from '../components/ImageUpload';
 
 const WriteNews = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { enableBlocker, disableBlocker } = useNavigationBlocker();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -21,11 +26,134 @@ const WriteNews = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(false);
+  const [draftStatus, setDraftStatus] = useState(''); // 'saving', 'saved', 'error'
+  const [hasDraft, setHasDraft] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const autoSaveTimer = useRef(null);
+  const initialFormData = useRef(null);
 
   const categories = [
     'Politika', 'Ekonomi', 'Spor', 'Teknoloji', 'Sağlık',
     'Eğitim', 'Kültür', 'Sanat', 'Bilim', 'Dünya', 'Diğer'
   ];
+
+  // Load draft on mount
+  useEffect(() => {
+    const loadDraft = async () => {
+      try {
+        const draft = await draftService.getDraft();
+        if (draft) {
+          const loadedData = {
+            title: draft.title || '',
+            content: draft.content || '',
+            category: draft.category || '',
+            imageUrl: draft.image_url || '',
+            tags: draft.tags || []
+          };
+          setFormData(loadedData);
+          setHasDraft(true);
+          // Store initial data to compare for changes
+          initialFormData.current = JSON.stringify(loadedData);
+        } else {
+          // No draft, set initial empty state
+          initialFormData.current = JSON.stringify(formData);
+        }
+      } catch (err) {
+        // No draft found or error - that's okay
+        console.log('No draft found');
+        initialFormData.current = JSON.stringify(formData);
+      }
+    };
+
+    loadDraft();
+  }, []);
+
+  // Auto-save draft
+  const saveDraft = useCallback(async () => {
+    // Only save if there's content
+    if (!formData.title && !formData.content) {
+      return;
+    }
+
+    try {
+      setDraftStatus('saving');
+      await draftService.saveDraft({
+        title: formData.title,
+        content: formData.content,
+        category: formData.category,
+        imageUrl: formData.imageUrl,
+        tags: formData.tags
+      });
+      setDraftStatus('saved');
+      setHasDraft(true);
+      // Update initial data after successful save
+      initialFormData.current = JSON.stringify(formData);
+      setHasUnsavedChanges(false);
+      setTimeout(() => setDraftStatus(''), 2000);
+    } catch (err) {
+      setDraftStatus('error');
+      setTimeout(() => setDraftStatus(''), 2000);
+    }
+  }, [formData]);
+
+  // Track unsaved changes
+  useEffect(() => {
+    if (initialFormData.current) {
+      const currentData = JSON.stringify(formData);
+      const hasChanges = currentData !== initialFormData.current;
+      setHasUnsavedChanges(hasChanges);
+    }
+  }, [formData]);
+
+  // Auto-save effect
+  useEffect(() => {
+    // Clear existing timer
+    if (autoSaveTimer.current) {
+      clearTimeout(autoSaveTimer.current);
+    }
+
+    // Set new timer to auto-save after 30 seconds of no changes
+    autoSaveTimer.current = setTimeout(() => {
+      saveDraft();
+    }, 30000);
+
+    // Cleanup
+    return () => {
+      if (autoSaveTimer.current) {
+        clearTimeout(autoSaveTimer.current);
+      }
+    };
+  }, [formData, saveDraft]);
+
+  // Enable/disable navigation blocker based on unsaved changes
+  useEffect(() => {
+    if (hasUnsavedChanges && (formData.title || formData.content)) {
+      enableBlocker(t('writeNews.unsavedChanges.message'));
+    } else {
+      disableBlocker();
+    }
+
+    return () => {
+      disableBlocker();
+    };
+  }, [hasUnsavedChanges, formData.title, formData.content, enableBlocker, disableBlocker, t]);
+
+  // Warn user before leaving page with unsaved changes (browser navigation)
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges && (formData.title || formData.content)) {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requires returnValue to be set
+        return ''; // Some browsers show this message
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges, formData.title, formData.content]);
 
   const handleChange = (e) => {
     setFormData({
@@ -51,6 +179,36 @@ const WriteNews = () => {
     });
   };
 
+  const handleImageUploaded = (imageUrl) => {
+    setFormData({
+      ...formData,
+      imageUrl: imageUrl
+    });
+  };
+
+  const handleDiscardDraft = async () => {
+    if (window.confirm(t('writeNews.confirmDiscardDraft'))) {
+      try {
+        await draftService.deleteDraft();
+        const emptyData = {
+          title: '',
+          content: '',
+          category: '',
+          imageUrl: '',
+          tags: []
+        };
+        setFormData(emptyData);
+        setHasDraft(false);
+        setHasUnsavedChanges(false);
+        initialFormData.current = JSON.stringify(emptyData);
+        setSuccess(t('writeNews.draftDiscarded'));
+        setTimeout(() => setSuccess(''), 3000);
+      } catch (err) {
+        setError(t('writeNews.draftDiscardError'));
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -69,6 +227,15 @@ const WriteNews = () => {
     try {
       setLoading(true);
       await newsService.createNews(formData);
+
+      // Delete draft after successful publish
+      if (hasDraft) {
+        await draftService.deleteDraft();
+      }
+
+      // Clear unsaved changes flag to allow navigation without warning
+      setHasUnsavedChanges(false);
+
       setSuccess(t('writeNews.success'));
       setTimeout(() => {
         navigate('/my-articles');
@@ -81,7 +248,15 @@ const WriteNews = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8">
+    <>
+      <SEO
+        title="Write News"
+        description="Write and publish your own news articles. Share your stories with the world on Gaste news platform."
+        keywords="write news, publish article, create news, journalism, write story, news writer"
+        url="https://gaste.com/write"
+        noindex={true}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
@@ -97,18 +272,50 @@ const WriteNews = () => {
                   {t('writeNews.title')}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-300">{t('writeNews.subtitle')}</p>
+                {/* Draft Status */}
+                {draftStatus === 'saving' && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('writeNews.draft.saving')}</p>
+                )}
+                {draftStatus === 'saved' && (
+                  <p className="text-sm text-green-600 dark:text-green-400 mt-1">{t('writeNews.draft.saved')}</p>
+                )}
+                {draftStatus === 'error' && (
+                  <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t('writeNews.draft.error')}</p>
+                )}
               </div>
             </div>
-            <button
-              onClick={() => setPreview(!preview)}
-              className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg dark:text-white transition-colors flex items-center space-x-2"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-              </svg>
-              <span>{preview ? t('writeNews.buttons.edit') : t('writeNews.buttons.preview')}</span>
-            </button>
+            <div className="flex items-center space-x-2">
+              {hasUnsavedChanges && (formData.title || formData.content) && (
+                <button
+                  onClick={saveDraft}
+                  disabled={draftStatus === 'saving'}
+                  className="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
+                  </svg>
+                  <span>{t('writeNews.buttons.saveDraft')}</span>
+                </button>
+              )}
+              {hasDraft && (
+                <button
+                  onClick={handleDiscardDraft}
+                  className="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-800 rounded-lg transition-colors"
+                >
+                  {t('writeNews.buttons.discardDraft')}
+                </button>
+              )}
+              <button
+                onClick={() => setPreview(!preview)}
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg dark:text-white transition-colors flex items-center space-x-2"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                  <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                </svg>
+                <span>{preview ? t('writeNews.buttons.edit') : t('writeNews.buttons.preview')}</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -139,38 +346,33 @@ const WriteNews = () => {
               <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{formData.title.length} / {t('writeNews.form.minCharacters')} 10 {t('writeNews.form.titleHelper')}</p>
             </div>
 
-            {/* Category and Image */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                  {t('writeNews.form.category')}
-                </label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                >
-                  <option value="">{t('writeNews.form.categoryPlaceholder')}</option>
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
+            {/* Category */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                {t('writeNews.form.category')}
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                <option value="">{t('writeNews.form.categoryPlaceholder')}</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                  {t('writeNews.form.imageUrl')}
-                </label>
-                <input
-                  type="url"
-                  name="imageUrl"
-                  value={formData.imageUrl}
-                  onChange={handleChange}
-                  placeholder={t('writeNews.form.imageUrlPlaceholder')}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+            {/* Image Upload */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
+                Article Image
+              </label>
+              <ImageUpload
+                currentImageUrl={formData.imageUrl}
+                onImageUploaded={handleImageUploaded}
+              />
             </div>
 
             {/* Content */}
@@ -267,9 +469,9 @@ const WriteNews = () => {
             </div>
             {formData.imageUrl && (
               <img
-                src={formData.imageUrl}
+                src={formData.imageUrl.startsWith('http') ? formData.imageUrl : `http://localhost:5000${formData.imageUrl}`}
                 alt={formData.title}
-                className="w-full h-96 object-cover rounded-lg mb-6"
+                className="w-full max-h-[600px] object-contain rounded-lg mb-6 bg-gray-100 dark:bg-gray-700"
                 onError={(e) => e.target.style.display = 'none'}
               />
             )}
@@ -292,6 +494,7 @@ const WriteNews = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

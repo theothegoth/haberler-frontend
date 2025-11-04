@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import followService from '../services/followService';
@@ -13,12 +13,7 @@ const Explore = () => {
   const [followingUsers, setFollowingUsers] = useState(new Set());
   const [followLoading, setFollowLoading] = useState(new Set());
 
-  useEffect(() => {
-    loadUsers();
-    loadMyFollowing();
-  }, []);
-
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
       const data = await followService.getSuggestedUsers(100);
@@ -28,9 +23,9 @@ const Explore = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
 
-  const loadMyFollowing = async () => {
+  const loadMyFollowing = useCallback(async () => {
     try {
       const data = await followService.getMyFollowing();
       const followingIds = new Set(data.map(u => u.id));
@@ -38,7 +33,12 @@ const Explore = () => {
     } catch (err) {
       console.error('Failed to load following:', err);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadUsers();
+    loadMyFollowing();
+  }, [loadUsers, loadMyFollowing]);
 
   const handleFollow = async (userId) => {
     if (followLoading.has(userId)) return;

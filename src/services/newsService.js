@@ -59,6 +59,19 @@ const newsService = {
   unlikeNews: async (id) => {
     const response = await api.delete(`/news/${id}/like`);
     return response.data;
+  },
+
+  // Upload article image
+  uploadImage: async (imageFile) => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const response = await api.post('/news/upload-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
   }
 };
 

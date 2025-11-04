@@ -1,44 +1,72 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
 import ErrorMessage from '../components/ErrorMessage';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TwitterShareButton from '../components/TwitterShareButton';
 
 const MyArticles = () => {
-  const { user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const LIMIT = 12;
 
-  useEffect(() => {
-    loadArticles();
-  }, []);
-
-  const loadArticles = async () => {
+  const loadArticles = useCallback(async (reset = false) => {
     try {
-      setLoading(true);
-      const data = await newsService.getMyArticles();
-      setArticles(data);
+      if (reset) {
+        setLoading(true);
+        setOffset(0);
+      } else {
+        setLoadingMore(true);
+      }
+
+      const currentOffset = reset ? 0 : offset;
+      const data = await newsService.getMyArticles(LIMIT, currentOffset);
+
+      if (reset) {
+        setArticles(data);
+      } else {
+        setArticles(prev => [...prev, ...data]);
+      }
+
+      setHasMore(data.length === LIMIT);
+      if (!reset) {
+        setOffset(prev => prev + LIMIT);
+      } else {
+        setOffset(LIMIT);
+      }
     } catch (err) {
       setError(err.response?.data?.error || t('myArticles.loadError'));
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
-  };
+  }, [offset, t]);
+
+  useEffect(() => {
+    loadArticles(true);
+  }, []);
 
   const handleDelete = async (id) => {
     if (!window.confirm(t('myArticles.confirmDelete'))) return;
 
     try {
       await newsService.deleteNews(id);
-      loadArticles();
+      loadArticles(true);
     } catch (err) {
       alert(err.response?.data?.error || t('myArticles.deleteErrorGeneral'));
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loadingMore && hasMore) {
+      loadArticles(false);
     }
   };
 
@@ -137,23 +165,27 @@ const MyArticles = () => {
                 key={article.id}
                 className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
               >
+                <Link
+                  to={`/article/${article.id}`}
+                  className="block hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
+                >
                 {article.image_url && (
                   <img
-                    src={article.image_url}
+                    src={article.image_url.startsWith('http') ? article.image_url : `http://localhost:5000${article.image_url}`}
                     alt={article.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-48 object-contain bg-gray-100 dark:bg-gray-700"
                     onError={(e) => e.target.style.display = 'none'}
                   />
                 )}
-                <div className="p-6">
+                  <div className="p-6">
                   {article.category && (
                     <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">
                       {article.category}
                     </span>
                   )}
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2">
-                    {article.title}
-                  </h3>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">
+                      {article.title}
+                    </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
                     {article.content}
                   </p>
@@ -174,7 +206,9 @@ const MyArticles = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  </div>
+                </Link>
+                <div className="px-6 pb-6 space-y-2">
                     <TwitterShareButton
                       title={article.title}
                       url={`${window.location.origin}/news/${article.id}`}
@@ -195,9 +229,21 @@ const MyArticles = () => {
                       </button>
                     </div>
                   </div>
-                </div>
-              </article>
+                </article>
             ))}
+          </div>
+        )}
+
+        {/* Load More Button */}
+        {articles.length > 0 && hasMore && (
+          <div className="text-center mt-8">
+            <button
+              onClick={handleLoadMore}
+              disabled={loadingMore}
+              className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loadingMore ? t('myArticles.loading') : t('myArticles.loadMore')}
+            </button>
           </div>
         )}
       </div>

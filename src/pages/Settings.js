@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../services/api';
 import ErrorMessage from '../components/ErrorMessage';
-import LoadingSpinner from '../components/LoadingSpinner';
+import ImageUpload from '../components/ImageUpload';
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -103,6 +103,15 @@ const Settings = () => {
     }
   };
 
+  const handleImageUploadSuccess = (data) => {
+    setSuccess(t('settings.profile.photoUpdateSuccess'));
+    updateUser(data.user);
+  };
+
+  const handleImageUploadError = (errorMessage) => {
+    setError(errorMessage);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -171,19 +180,16 @@ const Settings = () => {
                     </p>
                   </div>
 
-                  {/* Avatar */}
-                  <div className="flex items-center space-x-6">
-                    <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
-                      {user?.username?.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {t('settings.profile.profilePhoto')}
-                      </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {t('settings.profile.photoComingSoon')}
-                      </p>
-                    </div>
+                  {/* Profile Picture */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                      {t('settings.profile.profilePhoto')}
+                    </h3>
+                    <ImageUpload
+                      currentImage={user?.profilePicture}
+                      onUploadSuccess={handleImageUploadSuccess}
+                      onUploadError={handleImageUploadError}
+                    />
                   </div>
 
                   {/* Username */}

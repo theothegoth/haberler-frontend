@@ -1,3 +1,20 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow private pages
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /write
+Disallow: /edit-article
+Disallow: /my-articles
+Disallow: /verify-email
+Disallow: /verify-email-required
+
+# Allow public pages
+Allow: /feed
+Allow: /explore
+Allow: /user/
+
+# Sitemap
+Sitemap: https://gaste.com/sitemap.xml

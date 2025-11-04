@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import newsService from '../services/newsService';
@@ -7,6 +7,9 @@ import ProtectedContent from '../components/ProtectedContent';
 import ErrorMessage from '../components/ErrorMessage';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TwitterShareButton from '../components/TwitterShareButton';
+import Comments from '../components/Comments';
+import SEO from '../components/SEO';
+import StructuredData from '../components/StructuredData';
 
 const NewsFeed = () => {
   const navigate = useNavigate();
@@ -15,31 +18,66 @@ const NewsFeed = () => {
   const [suggested, setSuggested] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedNews, setSelectedNews] = useState(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const LIMIT = 10;
 
-  useEffect(() => {
-    loadFeed();
-    loadSuggested();
-  }, []);
-
-  const loadFeed = async () => {
+  const loadFeed = useCallback(async (reset = false) => {
     try {
-      setLoading(true);
-      const data = await newsService.getNewsFeed();
-      setFeed(data);
+      if (reset) {
+        setLoading(true);
+        setOffset(0);
+      } else {
+        setLoadingMore(true);
+      }
+
+      const currentOffset = reset ? 0 : offset;
+      const data = await newsService.getNewsFeed(LIMIT, currentOffset);
+
+      if (reset) {
+        setFeed(data);
+      } else {
+        setFeed(prev => [...prev, ...data]);
+      }
+
+      setHasMore(data.length === LIMIT);
+      if (!reset) {
+        setOffset(prev => prev + LIMIT);
+      } else {
+        setOffset(LIMIT);
+      }
     } catch (err) {
-      setError(err.response?.data?.error || t('errors.feedLoadError'));
+      setError(t('errors.feedLoadError'));
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
-  };
+  }, [offset, t]);
 
-  const loadSuggested = async () => {
+  const loadSuggested = useCallback(async () => {
     try {
       const data = await followService.getSuggestedUsers(5);
       setSuggested(data);
     } catch (err) {
       console.error('Failed to load suggestions:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadFeed(true);
+    loadSuggested();
+  }, [loadSuggested]);
+
+  const handleFollow = async (userId) => {
+    try {
+      await followService.followUser(userId);
+      // Refresh suggested users and feed
+      loadSuggested();
+      loadFeed(true);
+    } catch (err) {
+      console.error('Follow error:', err);
+      setError(t('errors.followError') || 'Failed to follow user');
     }
   };
 
@@ -50,9 +88,15 @@ const NewsFeed = () => {
       } else {
         await newsService.likeNews(newsId);
       }
-      loadFeed();
+      loadFeed(true);
     } catch (err) {
       console.error('Like error:', err);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loadingMore && hasMore) {
+      loadFeed(false);
     }
   };
 
@@ -79,7 +123,14 @@ const NewsFeed = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <>
+      <SEO
+        title="News Feed"
+        description="Read news articles from journalists and writers you follow. Stay updated with the latest news."
+        keywords="news feed, articles, journalism, latest news"
+        url="https://gaste.com/feed"
+      />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -136,29 +187,28 @@ const NewsFeed = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 hover:text-blue-600 cursor-pointer"
-                        onClick={() => setSelectedNews(news)}>
+                  <Link
+                    to={`/article/${news.id}`}
+                    className="block p-6 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
+                  >
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 hover:text-blue-600 cursor-pointer">
                       {news.title}
                     </h2>
                     {news.image_url && (
                       <img
-                        src={news.image_url}
+                        src={news.image_url.startsWith('http') ? news.image_url : `http://localhost:5000${news.image_url}`}
                         alt={news.title}
-                        className="w-full h-64 object-cover rounded-lg mb-4"
+                        className="w-full h-64 object-contain bg-gray-100 dark:bg-gray-700 rounded-lg mb-4"
                         onError={(e) => e.target.style.display = 'none'}
                       />
                     )}
                     <p className="text-gray-700 dark:text-gray-200 line-clamp-3 mb-4">
                       {news.content}
                     </p>
-                    <button
-                      onClick={() => setSelectedNews(news)}
-                      className="text-blue-600 hover:text-blue-700 font-medium"
-                    >
+                    <span className="text-blue-600 hover:text-blue-700 font-medium">
                       {t('newsFeed.readMore')} →
-                    </button>
-                  </div>
+                    </span>
+                  </Link>
 
                   {/* Actions */}
                   <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900 flex items-center justify-between border-t">
@@ -190,6 +240,19 @@ const NewsFeed = () => {
                 </article>
               ))
             )}
+
+            {/* Load More Button */}
+            {feed.length > 0 && hasMore && (
+              <div className="text-center">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loadingMore ? t('newsFeed.loading') : t('newsFeed.loadMore')}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -209,7 +272,10 @@ const NewsFeed = () => {
                         <p className="text-xs text-gray-500 dark:text-gray-400">{user.news_count} {t('newsFeed.newsCount')}</p>
                       </div>
                     </Link>
-                    <button className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm hover:bg-blue-700 transition-colors">
+                    <button
+                      onClick={() => handleFollow(user.id)}
+                      className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm hover:bg-blue-700 transition-colors"
+                    >
                       {t('newsFeed.follow')}
                     </button>
                   </div>
@@ -233,70 +299,9 @@ const NewsFeed = () => {
           </div>
         </div>
 
-        {/* News Detail Modal */}
-        {selectedNews && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" onClick={() => setSelectedNews(null)}>
-            <div className="bg-white dark:bg-gray-800 rounded-xl max-w-4xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-              <div className="sticky top-0 bg-white dark:bg-gray-800 border-b p-4 flex justify-between items-center">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('newsFeed.newsDetail')}</h2>
-                <button
-                  onClick={() => setSelectedNews(null)}
-                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:text-gray-200"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <div className="p-8">
-                <ProtectedContent authorName={selectedNews.username}>
-                  <div className="mb-4">
-                    {selectedNews.category && (
-                      <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                        {selectedNews.category}
-                      </span>
-                    )}
-                  </div>
-                  <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">{selectedNews.title}</h1>
-                  <div className="flex items-center space-x-4 mb-6 text-gray-600 dark:text-gray-300">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                        {selectedNews.username.charAt(0).toUpperCase()}
-                      </div>
-                      <span className="font-medium">{selectedNews.username}</span>
-                    </div>
-                    <span>•</span>
-                    <span>{new Date(selectedNews.created_at).toLocaleDateString('tr-TR')}</span>
-                  </div>
-                  {selectedNews.image_url && (
-                    <img
-                      src={selectedNews.image_url}
-                      alt={selectedNews.title}
-                      className="w-full h-96 object-cover rounded-lg mb-6"
-                      onError={(e) => e.target.style.display = 'none'}
-                    />
-                  )}
-                  <div className="prose max-w-none text-gray-700 dark:text-gray-200 whitespace-pre-wrap text-lg leading-relaxed">
-                    {selectedNews.content}
-                  </div>
-                  {selectedNews.tags && selectedNews.tags.length > 0 && (
-                    <div className="mt-6 pt-6 border-t">
-                      <div className="flex flex-wrap gap-2">
-                        {selectedNews.tags.map((tag, i) => (
-                          <span key={i} className="px-3 py-1 bg-gray-100 text-gray-700 dark:text-gray-200 rounded-full text-sm">
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </ProtectedContent>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
+    </>
   );
 };
 

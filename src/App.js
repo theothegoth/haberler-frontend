@@ -1,13 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { NavigationBlockerProvider } from './context/NavigationBlockerContext';
 import Navigation from './components/Navigation';
 import VerificationBanner from './components/VerificationBanner';
+import NavigationBlockerDialog from './components/NavigationBlockerDialog';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import VerifyEmail from './pages/VerifyEmail';
 import VerifyEmailRequired from './pages/VerifyEmailRequired';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import WriteNews from './pages/WriteNews';
 import EditArticle from './pages/EditArticle';
@@ -16,22 +21,29 @@ import MyArticles from './pages/MyArticles';
 import UserProfile from './pages/UserProfile';
 import Explore from './pages/Explore';
 import Settings from './pages/Settings';
+import Notifications from './pages/Notifications';
+import ArticleDetail from './pages/ArticleDetail';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
-    <Router>
-      <ThemeProvider>
-      <AuthProvider>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-          <Navigation />
-          <VerificationBanner />
-          <Routes>
+    <HelmetProvider>
+      <Router>
+        <ThemeProvider>
+        <AuthProvider>
+          <NavigationBlockerProvider>
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+            <Navigation />
+            <VerificationBanner />
+            <NavigationBlockerDialog />
+            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/verify-email-required" element={<VerifyEmailRequired />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route
               path="/dashboard"
               element={
@@ -89,6 +101,14 @@ function App() {
               }
             />
             <Route
+              path="/notifications"
+              element={
+                <PrivateRoute>
+                  <Notifications />
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="/user/:userId"
               element={
                 <PrivateRoute>
@@ -96,11 +116,21 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route
+              path="/article/:id"
+              element={
+                <PrivateRoute>
+                  <ArticleDetail />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </div>
+          </NavigationBlockerProvider>
       </AuthProvider>
       </ThemeProvider>
     </Router>
+    </HelmetProvider>
   );
 }
 

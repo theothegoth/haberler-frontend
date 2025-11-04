@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
 import ErrorMessage from '../components/ErrorMessage';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ImageUpload from '../components/ImageUpload';
 
 const EditArticle = () => {
   const { id } = useParams();
@@ -30,11 +31,7 @@ const EditArticle = () => {
     'Eğitim', 'Kültür', 'Sanat', 'Bilim', 'Dünya', 'Diğer'
   ];
 
-  useEffect(() => {
-    loadArticle();
-  }, [id]);
-
-  const loadArticle = async () => {
+  const loadArticle = useCallback(async () => {
     try {
       setLoading(true);
       const article = await newsService.getNewsById(id);
@@ -50,7 +47,11 @@ const EditArticle = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, t]);
+
+  useEffect(() => {
+    loadArticle();
+  }, [loadArticle]);
 
   const handleChange = (e) => {
     setFormData({
@@ -73,6 +74,13 @@ const EditArticle = () => {
     setFormData({
       ...formData,
       tags: formData.tags.filter(tag => tag !== tagToRemove)
+    });
+  };
+
+  const handleImageUploaded = (imageUrl) => {
+    setFormData({
+      ...formData,
+      imageUrl: imageUrl
     });
   };
 
@@ -166,38 +174,33 @@ const EditArticle = () => {
               <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{formData.title.length} / {t('writeNews.form.minCharacters')} 10 {t('writeNews.form.titleHelper')}</p>
             </div>
 
-            {/* Category and Image */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                  {t('writeNews.form.category')}
-                </label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                >
-                  <option value="">{t('writeNews.form.categoryPlaceholder')}</option>
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
+            {/* Category */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                {t('writeNews.form.category')}
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                <option value="">{t('writeNews.form.categoryPlaceholder')}</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                  {t('writeNews.form.imageUrl')}
-                </label>
-                <input
-                  type="url"
-                  name="imageUrl"
-                  value={formData.imageUrl}
-                  onChange={handleChange}
-                  placeholder={t('writeNews.form.imageUrlPlaceholder')}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+            {/* Image Upload */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
+                Article Image
+              </label>
+              <ImageUpload
+                currentImageUrl={formData.imageUrl}
+                onImageUploaded={handleImageUploaded}
+              />
             </div>
 
             {/* Content */}
@@ -303,9 +306,9 @@ const EditArticle = () => {
             </div>
             {formData.imageUrl && (
               <img
-                src={formData.imageUrl}
+                src={formData.imageUrl.startsWith('http') ? formData.imageUrl : `http://localhost:5000${formData.imageUrl}`}
                 alt={formData.title}
-                className="w-full h-96 object-cover rounded-lg mb-6"
+                className="w-full max-h-[600px] object-contain rounded-lg mb-6 bg-gray-100 dark:bg-gray-700"
                 onError={(e) => e.target.style.display = 'none'}
               />
             )}

@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
+import bookmarkService from '../services/bookmarkService';
 import commentService from '../services/commentService';
 import ProtectedContent from '../components/ProtectedContent';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -69,6 +70,21 @@ const ArticleDetail = () => {
     } catch (err) {
       console.error('Error liking article:', err);
       alert(err.response?.data?.error || t('common.error'));
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!currentUser) {
+      alert(t('common.loginRequired'));
+      return;
+    }
+
+    try {
+      await bookmarkService.saveArticle(article.id);
+      alert(t('bookmark.saved'));
+    } catch (error) {
+      console.error('Bookmark error:', error);
+      alert(t('common.error'));
     }
   };
 
@@ -219,6 +235,28 @@ const ArticleDetail = () => {
                       />
                     </svg>
                     <span className="font-semibold">{article.like_count || 0}</span>
+                  </button>
+
+                  {/* Bookmark Button */}
+                  <button
+                    onClick={handleBookmark}
+                    className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    title={t('bookmark.saveArticle')}
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                      />
+                    </svg>
+                    <span className="font-semibold">{t('bookmark.save')}</span>
                   </button>
                 </div>
 

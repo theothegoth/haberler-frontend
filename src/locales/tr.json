@@ -63,6 +63,7 @@
     "explore": "Keşfet",
     "write": "Yaz",
     "myArticles": "Haberlerim",
+    "savedArticles": "Kaydedilenler",
     "settings": "Ayarlar",
     "login": "Giriş Yap",
     "signup": "Kayıt Ol",
@@ -526,5 +527,23 @@
     "submitComment": "Yorum Gönder",
     "loginToComment": "Yorum yapmak için giriş yapmalısınız",
     "noComments": "Henüz yorum yok. İlk yorumu siz yapın!"
+  }
+,
+  "savedArticles": {
+    "title": "Kaydedilenler",
+    "subtitle": "Kaydettiğiniz haberler",
+    "noArticles": "Henüz kaydedilmiş haber yok",
+    "noArticlesMessage": "Beğendiğiniz haberleri daha sonra okumak için kaydedin",
+    "remove": "Kaldır",
+    "removed": "Kaydedilmekten çıkarıldı",
+    "loadMore": "Daha Fazla Yükle",
+    "loading": "Yükleniyor..."
+  },
+  "bookmark": {
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "unsave": "Kaldır",
+    "saveArticle": "Haberi kaydet",
+    "unsaveArticle": "Kaydedilenlerden kaldır"
   }
 }

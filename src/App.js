@@ -23,6 +23,7 @@ import Explore from './pages/Explore';
 import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 import ArticleDetail from './pages/ArticleDetail';
+import SavedArticles from './pages/SavedArticles';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -105,6 +106,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Notifications />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/saved-articles"
+              element={
+                <PrivateRoute>
+                  <SavedArticles />
                 </PrivateRoute>
               }
             />

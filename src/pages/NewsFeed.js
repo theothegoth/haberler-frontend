@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import newsService from '../services/newsService';
 import followService from '../services/followService';
+import bookmarkService from '../services/bookmarkService';
 import ProtectedContent from '../components/ProtectedContent';
 import ErrorMessage from '../components/ErrorMessage';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -94,6 +95,18 @@ const NewsFeed = () => {
     }
   };
 
+
+  const handleBookmark = async (newsId) => {
+    try {
+      await bookmarkService.saveArticle(newsId);
+      // Optionally show a success message
+    } catch (error) {
+      console.error('Bookmark error:', error);
+      if (error.response?.status === 401) {
+        navigate('/login');
+      }
+    }
+  };
   const handleLoadMore = () => {
     if (!loadingMore && hasMore) {
       loadFeed(false);
@@ -229,6 +242,19 @@ const NewsFeed = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                         <span>{news.comment_count}</span>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleBookmark(news.id);
+                        }}
+                        className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-yellow-500 transition-colors"
+                        title={t('bookmark.saveArticle')}
+                      >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                        </svg>
+                      </button>
                       </div>
                     </div>
                     <TwitterShareButton

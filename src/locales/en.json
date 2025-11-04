@@ -523,5 +523,22 @@
     "submitComment": "Submit Comment",
     "loginToComment": "Please login to comment",
     "noComments": "No comments yet. Be the first to comment!"
+  },
+  "savedArticles": {
+    "title": "Saved Articles",
+    "subtitle": "Your saved articles",
+    "noArticles": "No saved articles yet",
+    "noArticlesMessage": "Save articles you like to read them later",
+    "remove": "Remove",
+    "removed": "Removed from saved",
+    "loadMore": "Load More",
+    "loading": "Loading..."
+  },
+  "bookmark": {
+    "save": "Save",
+    "saved": "Saved",
+    "unsave": "Remove",
+    "saveArticle": "Save article",
+    "unsaveArticle": "Remove from saved"
   }
 }

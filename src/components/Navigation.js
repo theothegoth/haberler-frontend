@@ -79,6 +79,12 @@ const Navigation = () => {
                   {t('nav.myArticles')}
                 </BlockedLink>
                 <BlockedLink
+                  to="/saved-articles"
+                  className="text-gray-700 dark:text-gray-200 hover:text-yellow-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  {t('nav.savedArticles')}
+                </BlockedLink>
+                <BlockedLink
                   to="/settings"
                   className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
                 >

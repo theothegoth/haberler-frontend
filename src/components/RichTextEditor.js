@@ -1,13 +1,24 @@
 import { useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
+// Import TinyMCE
+import 'tinymce/tinymce';
+// Import theme
+import 'tinymce/themes/silver';
+// Import skins
+import 'tinymce/skins/ui/oxide/skin.min.css';
+// Import plugins
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/link';
+import 'tinymce/plugins/code';
+import 'tinymce/plugins/wordcount';
+
 const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) => {
   const editorRef = useRef(null);
 
   return (
     <div className="rich-text-editor">
       <Editor
-        apiKey="no-api-key" // Using TinyMCE cloud-free mode
         onInit={(evt, editor) => editorRef.current = editor}
         value={value}
         onEditorChange={onChange}
@@ -40,8 +51,8 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
             blockquote { border-left: 4px solid #e5e7eb; padding-left: 16px; margin: 16px 0; color: #6b7280; }
           `,
           placeholder: placeholder,
-          skin: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'oxide-dark' : 'oxide',
-          content_css: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default',
+          skin: false,
+          content_css: false,
           branding: false,
           promotion: false,
           formats: {

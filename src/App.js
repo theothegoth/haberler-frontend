@@ -24,6 +24,8 @@ import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 import ArticleDetail from './pages/ArticleDetail';
 import SavedArticles from './pages/SavedArticles';
+import AdvancedSearch from './pages/AdvancedSearch';
+import BlockedUsers from './pages/BlockedUsers';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -118,6 +120,14 @@ function App() {
               }
             />
             <Route
+              path="/blocked-users"
+              element={
+                <PrivateRoute>
+                  <BlockedUsers />
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="/user/:userId"
               element={
                 <PrivateRoute>
@@ -130,6 +140,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <ArticleDetail />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <PrivateRoute>
+                  <AdvancedSearch />
                 </PrivateRoute>
               }
             />

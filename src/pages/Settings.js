@@ -212,9 +212,9 @@ const Settings = () => {
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth{2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                   </svg>
-                  <span className="font-medium">Engellenen Kullanıcılar</span>
+                  <span className="font-medium">{t('settings.tabs.blocked')}</span>
                 </button>
               </nav>
             </div>
@@ -400,14 +400,14 @@ const Settings = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        Engellenen Kullanıcılar
+                        {t('settings.blocked.title')}
                       </h2>
                       <p className="text-gray-600 dark:text-gray-400 mt-2">
-                        Engellediğiniz kullanıcıları buradan yönetebilirsiniz
+                        {t('settings.blocked.description')}
                       </p>
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {blockedUsers.length} kullanıcı
+                      {blockedUsers.length} {t('settings.blocked.userCount')}
                     </div>
                   </div>
 

@@ -67,7 +67,8 @@
     "settings": "Ayarlar",
     "login": "Giriş Yap",
     "signup": "Kayıt Ol",
-    "logout": "Çıkış"
+    "logout": "Çıkış",
+    "search": "Ara"
   },
   "home": {
     "hero": {
@@ -365,7 +366,8 @@
     "stats": {
       "articles": "Haber",
       "totalLikes": "Toplam Beğeni",
-      "totalComments": "Toplam Yorum"
+      "totalComments": "Toplam Yorum",
+      "totalViews": "Toplam Görüntülenme"
     },
     "noArticles": "Henüz haber yazmadınız",
     "noArticlesMessage": "Bu kullanıcı henüz haber yazmamış",
@@ -414,17 +416,14 @@
     "copyright": "Bu içerik telif hakkı ile korunmaktadır."
   },
   "categories": {
-    "all": "Tümü",
     "politics": "Politika",
-    "economy": "Ekonomi",
     "sports": "Spor",
     "technology": "Teknoloji",
     "health": "Sağlık",
-    "education": "Eğitim",
-    "culture": "Kültür & Sanat",
-    "science": "Bilim",
+    "economy": "Ekonomi",
     "world": "Dünya",
-    "local": "Yerel"
+    "culture": "Kültür",
+    "entertainment": "Eğlence"
   },
   "time": {
     "yearsAgo": "yıl önce",
@@ -445,7 +444,8 @@
     "subtitle": "Hesap ayarlarınızı yönetin",
     "tabs": {
       "profile": "Profil",
-      "password": "Şifre"
+      "password": "Şifre",
+      "blocked": "Engellenen Kullanıcılar"
     },
     "profile": {
       "title": "Profil Ayarları",
@@ -479,6 +479,24 @@
       "changing": "Değiştiriliyor...",
       "changeSuccess": "Şifre başarıyla değiştirildi!",
       "changeError": "Şifre değiştirilirken bir hata oluştu"
+    },
+    "blocked": {
+      "title": "Engellenen Kullanıcılar",
+      "description": "Engellediğiniz kullanıcıları buradan yönetebilirsiniz",
+      "userCount": "kullanıcı",
+      "noBlocked": "Henüz hiç kullanıcı engellemediniz",
+      "noBlockedMessage": "Engellemek istediğiniz kullanıcıların profillerinden veya içeriklerinden engelleme yapabilirsiniz",
+      "unblock": "Engeli Kaldır",
+      "unblocking": "Engel kaldırılıyor...",
+      "blockedDate": "Engellenme tarihi",
+      "confirmUnblock": "Bu kullanıcının engelini kaldırmak istediğinizden emin misiniz?",
+      "unblockSuccess": "Kullanıcının engeli kaldırıldı",
+      "unblockError": "Engel kaldırılırken bir hata oluştu",
+      "infoTitle": "Engelleme hakkında",
+      "info1": "Engellediğiniz kullanıcıların içerikleri haber akışınızda görünmez",
+      "info2": "Engellediğiniz kullanıcıların yorumları gizlenir",
+      "info3": "Engelleme işlemi gizlidir, karşı taraf haberdar olmaz",
+      "info4": "İstediğiniz zaman engeli kaldırabilirsiniz"
     }
   },
   "imageUpload": {
@@ -526,9 +544,11 @@
     "writeComment": "Yorum yazın...",
     "submitComment": "Yorum Gönder",
     "loginToComment": "Yorum yapmak için giriş yapmalısınız",
-    "noComments": "Henüz yorum yok. İlk yorumu siz yapın!"
-  }
-,
+    "noComments": "Henüz yorum yok. İlk yorumu siz yapın!",
+    "reply": "Yanıtla",
+    "writeReply": "Bir yanıt yazın...",
+    "submitReply": "Yanıtı Gönder"
+  },
   "savedArticles": {
     "title": "Kaydedilenler",
     "subtitle": "Kaydettiğiniz haberler",
@@ -545,5 +565,31 @@
     "unsave": "Kaldır",
     "saveArticle": "Haberi kaydet",
     "unsaveArticle": "Kaydedilenlerden kaldır"
+  },
+  "search": {
+    "advancedSearch": "Gelişmiş Arama",
+    "searchDescription": "Gelişmiş filtrelerle haber ara",
+    "searchQuery": "Arama Kelimeleri",
+    "searchPlaceholder": "Başlık ve içerikte ara...",
+    "category": "Kategori",
+    "allCategories": "Tüm Kategoriler",
+    "author": "Yazar",
+    "authorPlaceholder": "Yazar kullanıcı adı...",
+    "tags": "Etiketler",
+    "tagsPlaceholder": "Etiketler (virgülle ayırın)...",
+    "startDate": "Başlangıç Tarihi",
+    "endDate": "Bitiş Tarihi",
+    "sortBy": "Sıralama",
+    "sortByDate": "En Yeni",
+    "sortByPopularity": "En Popüler",
+    "sortByRelevance": "En İlgili",
+    "search": "Ara",
+    "searching": "Aranıyor...",
+    "clearFilters": "Filtreleri Temizle",
+    "results": "Arama Sonuçları",
+    "articlesFound": "haber bulundu",
+    "noResults": "Haber bulunamadı",
+    "tryDifferentFilters": "Farklı filtreler deneyebilirsiniz",
+    "searchError": "Arama başarısız oldu"
   }
 }

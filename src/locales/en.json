@@ -66,7 +66,9 @@
     "settings": "Settings",
     "login": "Login",
     "signup": "Sign Up",
-    "logout": "Logout"
+    "logout": "Logout",
+    "search": "Search",
+    "savedArticles": "Saved Articles"
   },
   "home": {
     "hero": {
@@ -364,7 +366,8 @@
     "stats": {
       "articles": "Articles",
       "totalLikes": "Total Likes",
-      "totalComments": "Total Comments"
+      "totalComments": "Total Comments",
+      "totalViews": "Total Views"
     },
     "noArticles": "You haven't written any articles yet",
     "writeFirst": "Write your first article!",
@@ -411,7 +414,26 @@
     "subtitle": "Manage your account settings",
     "tabs": {
       "profile": "Profile",
-      "password": "Password"
+      "password": "Password",
+      "blocked": "Blocked Users"
+    },
+    "blocked": {
+      "title": "Blocked Users",
+      "description": "Manage your blocked users here",
+      "userCount": "users",
+      "noBlocked": "You haven't blocked anyone yet",
+      "noBlockedMessage": "You can block users from their profiles or articles",
+      "unblock": "Unblock",
+      "unblocking": "Unblocking...",
+      "blockedDate": "Blocked on",
+      "confirmUnblock": "Are you sure you want to unblock this user?",
+      "unblockSuccess": "User unblocked successfully",
+      "unblockError": "Error unblocking user",
+      "infoTitle": "About Blocking",
+      "info1": "Blocked users' content won't appear in your feed",
+      "info2": "Blocked users' comments will be hidden",
+      "info3": "Blocking is private, the other person won't be notified",
+      "info4": "You can unblock users anytime"
     },
     "profile": {
       "title": "Profile Settings",
@@ -451,17 +473,14 @@
     "copyright": "This content is protected by copyright."
   },
   "categories": {
-    "all": "All",
     "politics": "Politics",
-    "economy": "Economy",
     "sports": "Sports",
     "technology": "Technology",
     "health": "Health",
-    "education": "Education",
-    "culture": "Culture & Art",
-    "science": "Science",
+    "economy": "Economy",
     "world": "World",
-    "local": "Local"
+    "culture": "Culture",
+    "entertainment": "Entertainment"
   },
   "time": {
     "yearsAgo": "years ago",
@@ -522,7 +541,10 @@
     "writeComment": "Write a comment...",
     "submitComment": "Submit Comment",
     "loginToComment": "Please login to comment",
-    "noComments": "No comments yet. Be the first to comment!"
+    "noComments": "No comments yet. Be the first to comment!",
+    "reply": "Reply",
+    "writeReply": "Write a reply...",
+    "submitReply": "Submit Reply"
   },
   "savedArticles": {
     "title": "Saved Articles",
@@ -540,5 +562,31 @@
     "unsave": "Remove",
     "saveArticle": "Save article",
     "unsaveArticle": "Remove from saved"
+  },
+  "search": {
+    "advancedSearch": "Advanced Search",
+    "searchDescription": "Search articles with advanced filters",
+    "searchQuery": "Search Keywords",
+    "searchPlaceholder": "Search in title and content...",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "author": "Author",
+    "authorPlaceholder": "Author username...",
+    "tags": "Tags",
+    "tagsPlaceholder": "Tags (comma-separated)...",
+    "startDate": "From Date",
+    "endDate": "To Date",
+    "sortBy": "Sort By",
+    "sortByDate": "Most Recent",
+    "sortByPopularity": "Most Popular",
+    "sortByRelevance": "Most Relevant",
+    "search": "Search",
+    "searching": "Searching...",
+    "clearFilters": "Clear Filters",
+    "results": "Search Results",
+    "articlesFound": "articles found",
+    "noResults": "No articles found",
+    "tryDifferentFilters": "Try adjusting your search filters",
+    "searchError": "Search failed"
   }
 }

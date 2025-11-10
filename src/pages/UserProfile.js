@@ -1,15 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
 import followService from '../services/followService';
+import blockService from '../services/blockService';
 import ProtectedContent from '../components/ProtectedContent';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ReportModal from '../components/ReportModal';
 
 const UserProfile = () => {
   const { userId } = useParams();
   const { user: currentUser } = useAuth();
+  const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
   const [counts, setCounts] = useState({ followers_count: 0, following_count: 0 });
   const [isFollowing, setIsFollowing] = useState(false);
@@ -21,6 +24,8 @@ const UserProfile = () => {
   const [offset, setOffset] = useState(0);
   const LIMIT = 12;
   const [likedArticles, setLikedArticles] = useState(new Set());
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const loadProfile = useCallback(async (reset = false) => {
     try {
@@ -32,11 +37,19 @@ const UserProfile = () => {
       }
 
       const currentOffset = reset ? 0 : offset;
-      const [newsData, countsData, followingData] = await Promise.all([
+      const promises = [
         newsService.getUserNews(userId, LIMIT, currentOffset),
         followService.getFollowCounts(userId),
         currentUser ? followService.checkFollowing(userId) : Promise.resolve({ isFollowing: false })
-      ]);
+      ];
+
+      // Check block status if not own profile
+      if (currentUser && currentUser.id !== parseInt(userId)) {
+        promises.push(blockService.checkIfBlocked(userId));
+      }
+
+      const results = await Promise.all(promises);
+      const [newsData, countsData, followingData, blockData] = results;
 
       if (reset) {
         setArticles(newsData);
@@ -46,6 +59,9 @@ const UserProfile = () => {
 
       setCounts(countsData);
       setIsFollowing(followingData.isFollowing);
+      if (blockData) {
+        setIsBlocked(blockData.isBlocked);
+      }
       setHasMore(newsData.length === LIMIT);
 
       if (!reset) {
@@ -79,6 +95,36 @@ const UserProfile = () => {
       setIsFollowing(!isFollowing);
       loadProfile(true);
     } catch (err) {
+      alert(err.response?.data?.error || 'Bir hata oluştu');
+    }
+  };
+
+  const handleBlockToggle = async () => {
+    if (!currentUser) {
+      alert('Bu işlem için giriş yapmanız gerekiyor');
+      return;
+    }
+
+    const confirmMsg = isBlocked
+      ? 'Bu kullanıcının engelini kaldırmak istediğinizden emin misiniz?'
+      : 'Bu kullanıcıyı engellemek istediğinizden emin misiniz? Engellediğinizde bu kullanıcının içeriklerini göremeyeceksiniz.';
+
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      if (isBlocked) {
+        await blockService.unblockUser(userId);
+        setIsBlocked(false);
+        alert('Kullanıcının engeli kaldırıldı');
+      } else {
+        await blockService.blockUser(userId);
+        setIsBlocked(true);
+        alert('Kullanıcı engellendi. Artık bu kullanıcının içeriklerini göremeyeceksiniz.');
+        // Redirect to home after blocking
+        setTimeout(() => navigate('/'), 1500);
+      }
+    } catch (err) {
+      console.error('Block toggle error:', err);
       alert(err.response?.data?.error || 'Bir hata oluştu');
     }
   };
@@ -132,7 +178,7 @@ const UserProfile = () => {
   const isOwnProfile = currentUser && currentUser.id === parseInt(userId);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Profile Header */}
       <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -157,16 +203,38 @@ const UserProfile = () => {
               </div>
             </div>
             {!isOwnProfile && currentUser && (
-              <button
-                onClick={handleFollowToggle}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105 ${
-                  isFollowing
-                    ? 'bg-white bg-opacity-20 hover:bg-opacity-30'
-                    : 'bg-white text-purple-600 hover:bg-gray-100'
-                }`}
-              >
-                {isFollowing ? t('userProfile.unfollow') : t('userProfile.follow')}
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleFollowToggle}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105 ${
+                    isFollowing
+                      ? 'bg-white bg-opacity-20 hover:bg-opacity-30'
+                      : 'bg-white text-purple-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {isFollowing ? t('userProfile.unfollow') : t('userProfile.follow')}
+                </button>
+
+                <button
+                  onClick={handleBlockToggle}
+                  className="p-3 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all"
+                  title={isBlocked ? 'Engeli Kaldır' : 'Engelle'}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                  </svg>
+                </button>
+
+                <button
+                  onClick={() => setShowReportModal(true)}
+                  className="p-3 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all"
+                  title="Bildir"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                  </svg>
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -174,22 +242,22 @@ const UserProfile = () => {
 
       {/* Articles */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('userProfile.articles')}</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t('userProfile.articles')}</h2>
 
         {articles.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
             <svg className="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('userProfile.noArticles')}</h3>
-            <p className="text-gray-600">{t('userProfile.noArticlesMessage')}</p>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('userProfile.noArticles')}</h3>
+            <p className="text-gray-600 dark:text-gray-400">{t('userProfile.noArticlesMessage')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article) => (
               <Link to={`/article/${article.id}`} key={article.id}>
                 <article
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
                 >
                 {article.image_url && (
                   <img
@@ -201,17 +269,17 @@ const UserProfile = () => {
                 )}
                 <div className="p-6">
                   {article.category && (
-                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">
+                    <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-xs">
                       {article.category}
                     </span>
                   )}
-                  <h3 className="text-xl font-bold text-gray-900 mt-3 mb-2 line-clamp-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2">
                     {article.title}
                   </h3>
-                  <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-4">
                     {article.content}
                   </p>
-                  <div className="flex items-center justify-between text-sm text-gray-500">
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                     <span>{new Date(article.created_at).toLocaleDateString('tr-TR')}</span>
                     <div className="flex items-center space-x-4">
                       <button
@@ -246,6 +314,14 @@ const UserProfile = () => {
         )}
       </div>
 
+      {/* Report Modal */}
+      <ReportModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        contentType="user"
+        contentId={userId}
+        contentTitle={profileUser?.username || 'Kullanıcı'}
+      />
     </div>
   );
 };

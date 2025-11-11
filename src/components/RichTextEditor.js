@@ -1,30 +1,27 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-
-// Import TinyMCE
-import 'tinymce/tinymce';
-// Import theme
-import 'tinymce/themes/silver';
-// Import skins
-import 'tinymce/skins/ui/oxide/skin.min.css';
-// Import plugins
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/link';
-import 'tinymce/plugins/code';
-import 'tinymce/plugins/wordcount';
 
 const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) => {
   const editorRef = useRef(null);
 
+  // Calculate character count by stripping HTML tags
+  const charCount = useMemo(() => {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = value || '';
+    return (tmp.textContent || tmp.innerText || '').length;
+  }, [value]);
+
   return (
     <div className="rich-text-editor">
       <Editor
+        tinymceScriptSrc="/tinymce/tinymce.min.js"
         onInit={(evt, editor) => editorRef.current = editor}
         value={value}
         onEditorChange={onChange}
         init={{
           height: 500,
           menubar: false,
+          license_key: 'gpl',
           plugins: [
             'lists', 'link', 'code', 'wordcount'
           ],
@@ -32,6 +29,7 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
             'bold italic underline | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist | ' +
             'link | removeformat | code',
+          statusbar: true,
           content_style: `
             body {
               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -51,8 +49,6 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
             blockquote { border-left: 4px solid #e5e7eb; padding-left: 16px; margin: 16px 0; color: #6b7280; }
           `,
           placeholder: placeholder,
-          skin: false,
-          content_css: false,
           branding: false,
           promotion: false,
           formats: {
@@ -64,6 +60,12 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
           block_formats: 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 3=h3',
         }}
       />
+      <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <span className={charCount < 100 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}>
+          {charCount} characters
+        </span>
+        {charCount < 100 && <span className="ml-2">(minimum 100 characters)</span>}
+      </div>
     </div>
   );
 };

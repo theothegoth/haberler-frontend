@@ -389,9 +389,6 @@ const WriteNews = () => {
                 }}
                 placeholder={t('writeNews.form.contentPlaceholder')}
               />
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                {t('writeNews.form.minCharacters')} 100 characters minimum
-              </p>
             </div>
 
             {/* Tags */}

@@ -591,5 +591,22 @@
     "noResults": "Haber bulunamadı",
     "tryDifferentFilters": "Farklı filtreler deneyebilirsiniz",
     "searchError": "Arama başarısız oldu"
+  },
+  "pwa": {
+    "install": {
+      "title": "Gaste'yi Yükle",
+      "description": "Uygulamayı cihazınıza yükleyerek daha hızlı erişim sağlayın ve çevrimdışı kullanın.",
+      "button": "Yükle",
+      "later": "Daha Sonra"
+    }
+  },
+  "offline": {
+    "title": "İnternet Bağlantınız Yok",
+    "description": "Gaste'yi kullanabilmek için internet bağlantısına ihtiyacınız var. Lütfen bağlantınızı kontrol edip tekrar deneyin.",
+    "retry": "Tekrar Dene",
+    "tipsTitle": "Deneyebilecekleriniz:",
+    "tip1": "Wi-Fi veya mobil verinizin açık olduğundan emin olun",
+    "tip2": "Uçak modunun kapalı olduğunu kontrol edin",
+    "tip3": "Farklı bir ağa bağlanmayı deneyin"
   }
 }

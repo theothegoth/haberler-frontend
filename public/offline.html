@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Çevrimdışı - Gaste</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .icon svg {
+      width: 60px;
+      height: 60px;
+      stroke: white;
+      fill: none;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #1a202c;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 16px;
+      color: #4a5568;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .retry-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .retry-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .retry-button:active {
+      transform: translateY(0);
+    }
+
+    .tips {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 2px solid #e2e8f0;
+    }
+
+    .tips-title {
+      font-size: 14px;
+      color: #718096;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .tips-list {
+      list-style: none;
+      font-size: 14px;
+      color: #a0aec0;
+    }
+
+    .tips-list li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tips-list li::before {
+      content: "•";
+      margin-right: 8px;
+      color: #667eea;
+      font-weight: bold;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .icon {
+        width: 100px;
+        height: 100px;
+      }
+
+      .icon svg {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 1h22v22H1z" fill="none"/>
+        <path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+        <line x1="12" y1="22.08" x2="12" y2="12"/>
+      </svg>
+    </div>
+
+    <h1>İnternet Bağlantınız Yok</h1>
+    <p>Gaste'yi kullanabilmek için internet bağlantısına ihtiyacınız var. Lütfen bağlantınızı kontrol edip tekrar deneyin.</p>
+
+    <button class="retry-button" onclick="window.location.reload()">
+      Tekrar Dene
+    </button>
+
+    <div class="tips">
+      <div class="tips-title">Deneyebilecekleriniz:</div>
+      <ul class="tips-list">
+        <li>Wi-Fi veya mobil verinizin açık olduğundan emin olun</li>
+        <li>Uçak modunun kapalı olduğunu kontrol edin</li>
+        <li>Farklı bir ağa bağlanmayı deneyin</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Auto-retry when online
+    window.addEventListener('online', () => {
+      window.location.reload();
+    });
+
+    // Check connection status
+    if (navigator.onLine) {
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>

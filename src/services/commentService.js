@@ -6,8 +6,22 @@ const commentService = {
     return response.data;
   },
 
-  createComment: async (newsId, content) => {
-    const response = await apiClient.post(`/comments/${newsId}`, { content });
+  createComment: async (newsId, content, parentId = null) => {
+    const body = { content };
+    if (parentId !== null && parentId !== undefined) {
+      body.parentId = parentId;
+    }
+    const response = await apiClient.post(`/comments/${newsId}`, body);
+    return response.data;
+  },
+
+  likeComment: async (commentId) => {
+    const response = await apiClient.post(`/comments/${commentId}/like`);
+    return response.data;
+  },
+
+  unlikeComment: async (commentId) => {
+    const response = await apiClient.delete(`/comments/${commentId}/like`);
     return response.data;
   },
 

@@ -212,7 +212,7 @@ const Settings = () => {
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth{2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                   </svg>
                   <span className="font-medium">{t('settings.tabs.blocked')}</span>
                 </button>
@@ -431,10 +431,10 @@ const Settings = () => {
                         />
                       </svg>
                       <p className="text-gray-600 dark:text-gray-400 text-lg font-medium mb-2">
-                        Henüz hiç kullanıcı engellemediniz
+                        {t('settings.blocked.noBlocked')}
                       </p>
                       <p className="text-gray-500 dark:text-gray-500 text-sm">
-                        Engellemek istediğiniz kullanıcıların profillerinden veya içeriklerinden engelleme yapabilirsiniz
+                        {t('settings.blocked.noBlockedMessage')}
                       </p>
                     </div>
                   ) : (
@@ -456,7 +456,7 @@ const Settings = () => {
                                 {blocked.username}
                               </p>
                               <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Engellenme tarihi: {new Date(blocked.created_at).toLocaleDateString('tr-TR', {
+                                {t('settings.blocked.blockedDate')}: {new Date(blocked.created_at).toLocaleDateString('tr-TR', {
                                   year: 'numeric',
                                   month: 'long',
                                   day: 'numeric'
@@ -472,7 +472,7 @@ const Settings = () => {
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
-                            <span>Engeli Kaldır</span>
+                            <span>{t('settings.blocked.unblock')}</span>
                           </button>
                         </div>
                       ))}
@@ -487,13 +487,13 @@ const Settings = () => {
                       </svg>
                       <div className="flex-1">
                         <p className="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">
-                          Engelleme hakkında
+                          {t('settings.blocked.infoTitle')}
                         </p>
                         <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1 list-disc list-inside">
-                          <li>Engellediğiniz kullanıcıların içerikleri haber akışınızda görünmez</li>
-                          <li>Engellediğiniz kullanıcıların yorumları gizlenir</li>
-                          <li>Engelleme işlemi gizlidir, karşı taraf haberdar olmaz</li>
-                          <li>İstediğiniz zaman engeli kaldırabilirsiniz</li>
+                          <li>{t('settings.blocked.info1')}</li>
+                          <li>{t('settings.blocked.info2')}</li>
+                          <li>{t('settings.blocked.info3')}</li>
+                          <li>{t('settings.blocked.info4')}</li>
                         </ul>
                       </div>
                     </div>

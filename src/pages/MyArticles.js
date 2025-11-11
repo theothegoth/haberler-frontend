@@ -17,6 +17,13 @@ const MyArticles = () => {
   const [offset, setOffset] = useState(0);
   const LIMIT = 12;
 
+  // Strip HTML tags from content
+  const stripHTML = (html) => {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
   const loadArticles = useCallback(async (reset = false) => {
     try {
       if (reset) {
@@ -97,7 +104,7 @@ const MyArticles = () => {
         {error && <ErrorMessage message={error} />}
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -137,6 +144,22 @@ const MyArticles = () => {
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{t('myArticles.stats.totalViews')}</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {articles.reduce((sum, a) => sum + (parseInt(a.view_count) || 0), 0)}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                  <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                 </svg>
               </div>
             </div>
@@ -187,7 +210,7 @@ const MyArticles = () => {
                       {article.title}
                     </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
-                    {article.content}
+                    {stripHTML(article.content)}
                   </p>
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
                     <span>{new Date(article.created_at).toLocaleDateString('tr-TR')}</span>
@@ -203,6 +226,13 @@ const MyArticles = () => {
                           <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7z" clipRule="evenodd" />
                         </svg>
                         <span>{article.comment_count}</span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                          <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                        </svg>
+                        <span>{article.view_count || 0}</span>
                       </span>
                     </div>
                   </div>

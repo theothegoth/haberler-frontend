@@ -588,5 +588,22 @@
     "noResults": "No articles found",
     "tryDifferentFilters": "Try adjusting your search filters",
     "searchError": "Search failed"
+  },
+  "pwa": {
+    "install": {
+      "title": "Install Gaste",
+      "description": "Install the app on your device for faster access and offline use.",
+      "button": "Install",
+      "later": "Later"
+    }
+  },
+  "offline": {
+    "title": "No Internet Connection",
+    "description": "You need an internet connection to use Gaste. Please check your connection and try again.",
+    "retry": "Try Again",
+    "tipsTitle": "Things to try:",
+    "tip1": "Make sure your Wi-Fi or mobile data is turned on",
+    "tip2": "Check that airplane mode is off",
+    "tip3": "Try connecting to a different network"
   }
 }

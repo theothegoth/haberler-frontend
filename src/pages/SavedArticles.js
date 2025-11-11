@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import DOMPurify from 'dompurify';
 import bookmarkService from '../services/bookmarkService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TwitterShareButton from '../components/TwitterShareButton';
@@ -8,6 +9,13 @@ import SEO from '../components/SEO';
 
 const SavedArticles = () => {
   const { t } = useTranslation();
+
+  // Helper to strip HTML tags for preview
+  const stripHTML = (html) => {
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = DOMPurify.sanitize(html);
+    return tmp.textContent || tmp.innerText || '';
+  };
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -154,7 +162,7 @@ const SavedArticles = () => {
                         {article.title}
                       </h3>
                       <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
-                        {article.content}
+                        {stripHTML(article.content)}
                       </p>
                       <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
                         <span>{new Date(article.created_at).toLocaleDateString('tr-TR')}</span>
@@ -170,6 +178,13 @@ const SavedArticles = () => {
                               <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7z" clipRule="evenodd" />
                             </svg>
                             <span>{article.comment_count}</span>
+                          </span>
+                          <span className="flex items-center space-x-1">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                              <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                            </svg>
+                            <span>{article.view_count || 0}</span>
                           </span>
                         </div>
                       </div>

@@ -1,32 +1,41 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { lazy, Suspense } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { NavigationBlockerProvider } from './context/NavigationBlockerContext';
 import Navigation from './components/Navigation';
 import VerificationBanner from './components/VerificationBanner';
 import NavigationBlockerDialog from './components/NavigationBlockerDialog';
+import InstallPWA from './components/InstallPWA';
+import OfflineFallback from './components/OfflineFallback';
+import PrivateRoute from './components/PrivateRoute';
+import LoadingSpinner from './components/LoadingSpinner';
+
+// Lazy load pages for better performance (code splitting)
+// Critical pages loaded immediately
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import VerifyEmail from './pages/VerifyEmail';
-import VerifyEmailRequired from './pages/VerifyEmailRequired';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import Dashboard from './pages/Dashboard';
-import WriteNews from './pages/WriteNews';
-import EditArticle from './pages/EditArticle';
-import NewsFeed from './pages/NewsFeed';
-import MyArticles from './pages/MyArticles';
-import UserProfile from './pages/UserProfile';
-import Explore from './pages/Explore';
-import Settings from './pages/Settings';
-import Notifications from './pages/Notifications';
-import ArticleDetail from './pages/ArticleDetail';
-import SavedArticles from './pages/SavedArticles';
-import AdvancedSearch from './pages/AdvancedSearch';
-import BlockedUsers from './pages/BlockedUsers';
-import PrivateRoute from './components/PrivateRoute';
+
+// Lazy load other pages
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const VerifyEmailRequired = lazy(() => import('./pages/VerifyEmailRequired'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const WriteNews = lazy(() => import('./pages/WriteNews'));
+const EditArticle = lazy(() => import('./pages/EditArticle'));
+const NewsFeed = lazy(() => import('./pages/NewsFeed'));
+const MyArticles = lazy(() => import('./pages/MyArticles'));
+const UserProfile = lazy(() => import('./pages/UserProfile'));
+const Explore = lazy(() => import('./pages/Explore'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Notifications = lazy(() => import('./pages/Notifications'));
+const ArticleDetail = lazy(() => import('./pages/ArticleDetail'));
+const SavedArticles = lazy(() => import('./pages/SavedArticles'));
+const AdvancedSearch = lazy(() => import('./pages/AdvancedSearch'));
+const BlockedUsers = lazy(() => import('./pages/BlockedUsers'));
 
 function App() {
   return (
@@ -35,10 +44,13 @@ function App() {
         <ThemeProvider>
         <AuthProvider>
           <NavigationBlockerProvider>
+          <OfflineFallback>
           <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <Navigation />
             <VerificationBanner />
             <NavigationBlockerDialog />
+            <InstallPWA />
+            <Suspense fallback={<LoadingSpinner fullPage={true} size="lg" />}>
             <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -152,7 +164,9 @@ function App() {
               }
             />
           </Routes>
+          </Suspense>
         </div>
+          </OfflineFallback>
           </NavigationBlockerProvider>
       </AuthProvider>
       </ThemeProvider>

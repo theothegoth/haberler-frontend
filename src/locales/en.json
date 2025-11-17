@@ -18,7 +18,8 @@
     "goBack": "Go Back",
     "confirmDelete": "Are you sure you want to delete this?",
     "loginRequired": "You must be logged in",
-    "submitting": "Submitting..."
+    "submitting": "Submitting...",
+    "deleting": "Deleting..."
   },
   "theme": {
     "switchToDark": "Switch to dark mode",
@@ -68,7 +69,13 @@
     "signup": "Sign Up",
     "logout": "Logout",
     "search": "Search",
-    "savedArticles": "Saved Articles"
+    "searchArticles": "Search Articles",
+    "savedArticles": "Saved Articles",
+    "analytics": "Analytics",
+    "watch": "Watch",
+    "read": "Read",
+    "writeArticle": "Write Article",
+    "drafts": "Drafts"
   },
   "home": {
     "hero": {
@@ -300,7 +307,8 @@
       "publish": "Publish",
       "publishing": "Publishing...",
       "saveDraft": "Save Draft",
-      "discardDraft": "Discard Draft"
+      "discardDraft": "Discard Draft",
+      "newArticle": "New Article"
     },
     "preview": {
       "title": "Preview",
@@ -312,11 +320,13 @@
     "draft": {
       "saving": "Saving draft...",
       "saved": "Draft saved",
-      "error": "Error saving draft"
+      "error": "Error saving draft",
+      "maxReached": "Maximum 3 drafts allowed. Please publish or delete a draft first."
     },
     "success": "Article published successfully!",
     "error": "Error publishing article",
     "confirmDiscardDraft": "Are you sure you want to discard this draft?",
+    "confirmNewArticle": "You have unsaved changes. Start a new article without saving?",
     "draftDiscarded": "Draft discarded successfully",
     "draftDiscardError": "Error discarding draft",
     "unsavedChanges": {
@@ -440,6 +450,10 @@
       "description": "Update your personal information",
       "profilePhoto": "Profile Photo",
       "photoComingSoon": "Profile photo upload coming soon",
+      "uploadPhoto": "Upload Photo",
+      "removePhoto": "Remove Photo",
+      "photoHelper": "Upload a profile picture (max 5MB). Supported formats: JPG, PNG, GIF, WEBP",
+      "photoUpdateSuccess": "Profile picture updated successfully!",
       "username": "Username",
       "usernameHelper": "This is your unique username visible to others",
       "usernameMinLength": "Username must be at least 3 characters",
@@ -466,6 +480,27 @@
       "changing": "Changing...",
       "changeSuccess": "Password changed successfully!",
       "changeError": "Error changing password"
+    },
+    "email": {
+      "title": "Email Preferences",
+      "description": "Manage your email notifications and preferences",
+      "weeklyDigest": "Weekly Digest",
+      "weeklyDigestDesc": "Receive a weekly summary of the top articles on Gaste",
+      "newFollower": "New Follower",
+      "newFollowerDesc": "Get notified when someone follows you",
+      "newComment": "New Comment",
+      "newCommentDesc": "Get notified when someone comments on your articles",
+      "newLike": "New Like",
+      "newLikeDesc": "Get notified when someone likes your articles",
+      "info": "You can update your email preferences at any time. Changes take effect immediately.",
+      "updateSuccess": "Email preferences updated successfully!",
+      "updateError": "Error updating email preferences"
+    },
+    "tabs": {
+      "profile": "Profile",
+      "password": "Password",
+      "email": "Email Preferences",
+      "blocked": "Blocked Users"
     }
   },
   "protectedContent": {
@@ -474,12 +509,16 @@
   },
   "categories": {
     "politics": "Politics",
+    "economy": "Economy",
     "sports": "Sports",
     "technology": "Technology",
     "health": "Health",
-    "economy": "Economy",
-    "world": "World",
+    "education": "Education",
     "culture": "Culture",
+    "art": "Art",
+    "science": "Science",
+    "world": "World",
+    "other": "Other",
     "entertainment": "Entertainment"
   },
   "time": {
@@ -605,5 +644,66 @@
     "tip1": "Make sure your Wi-Fi or mobile data is turned on",
     "tip2": "Check that airplane mode is off",
     "tip3": "Try connecting to a different network"
+  },
+  "analytics": {
+    "title": "Analytics Dashboard",
+    "subtitle": "Track your content performance and audience growth",
+    "totalArticles": "Total Articles",
+    "totalViews": "Total Views",
+    "totalLikes": "Total Likes",
+    "totalComments": "Total Comments",
+    "followers": "Followers",
+    "last30Days": "Last 30 Days Performance",
+    "articlesPublished": "Articles Published",
+    "views": "Views",
+    "likes": "Likes",
+    "comments": "Comments",
+    "engagementRate": "Engagement Rate",
+    "7days": "Last 7 Days",
+    "14days": "Last 14 Days",
+    "30days": "Last 30 Days",
+    "90days": "Last 90 Days",
+    "viewsOverTime": "Views Over Time",
+    "engagementMetrics": "Engagement Metrics",
+    "followerGrowth": "Follower Growth",
+    "totalFollowers": "Total Followers",
+    "popularArticles": "Popular Articles",
+    "byViews": "By Views",
+    "byLikes": "By Likes",
+    "byComments": "By Comments",
+    "byEngagement": "By Engagement",
+    "noArticlesYet": "No articles yet",
+    "topCategories": "Top Categories",
+    "articles": "articles",
+    "noCategoriesYet": "No categories yet"
+  },
+  "recommendations": {
+    "youMightAlsoLike": "You Might Also Like",
+    "trending": "Trending Now",
+    "personalized": "Recommended for You",
+    "followingFeed": "From People You Follow",
+    "similarArticles": "Similar Articles",
+    "basedOnReading": "Based on your reading history",
+    "noRecommendations": "No recommendations available"
+  },
+  "drafts": {
+    "title": "Drafts",
+    "subtitle": "Your saved drafts",
+    "noDrafts": "No drafts yet",
+    "noDraftsMessage": "You don't have any saved drafts. Start writing an article to create a draft.",
+    "startWriting": "Start Writing",
+    "untitled": "Untitled Draft",
+    "lastEdited": "Last edited",
+    "noContent": "No content yet",
+    "confirmDelete": "Are you sure you want to delete this draft?",
+    "confirmPublish": "Are you sure you want to publish this draft?",
+    "continueEditing": "Continue Editing",
+    "publish": "Publish",
+    "publishing": "Publishing...",
+    "deleting": "Deleting...",
+    "createNew": "Create New Draft",
+    "deleteError": "Failed to delete draft",
+    "publishError": "Failed to publish draft",
+    "loadError": "Failed to load drafts"
   }
 }

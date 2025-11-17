@@ -36,6 +36,8 @@ const ArticleDetail = lazy(() => import('./pages/ArticleDetail'));
 const SavedArticles = lazy(() => import('./pages/SavedArticles'));
 const AdvancedSearch = lazy(() => import('./pages/AdvancedSearch'));
 const BlockedUsers = lazy(() => import('./pages/BlockedUsers'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const Drafts = lazy(() => import('./pages/Drafts'));
 
 function App() {
   return (
@@ -148,6 +150,14 @@ function App() {
               }
             />
             <Route
+              path="/profile/:userId"
+              element={
+                <PrivateRoute>
+                  <UserProfile />
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="/article/:id"
               element={
                 <PrivateRoute>
@@ -160,6 +170,22 @@ function App() {
               element={
                 <PrivateRoute>
                   <AdvancedSearch />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <PrivateRoute>
+                  <Analytics />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/drafts"
+              element={
+                <PrivateRoute>
+                  <Drafts />
                 </PrivateRoute>
               }
             />

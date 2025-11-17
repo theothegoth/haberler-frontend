@@ -5,11 +5,14 @@ import LanguageSwitcher from './LanguageSwitcher';
 import ThemeToggle from './ThemeToggle';
 import BlockedLink from './BlockedLink';
 import NotificationBell from './NotificationBell';
+import { useState } from 'react';
 
 const Navigation = () => {
   const { t } = useTranslation();
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [readDropdownOpen, setReadDropdownOpen] = useState(false);
+  const [writeDropdownOpen, setWriteDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -19,9 +22,9 @@ const Navigation = () => {
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center flex-shrink-0">
             <BlockedLink
               to="/"
               className="flex items-center space-x-2 text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-purple-700 transition-all"
@@ -38,77 +41,132 @@ const Navigation = () => {
             </BlockedLink>
           </div>
 
-          {/* Navigation Links */}
+          {/* Center Navigation Links */}
+          {isAuthenticated && (
+            <div className="flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+              {/* Watch - Direct Link */}
+              <BlockedLink
+                to="/dashboard"
+                className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                {t('nav.watch')}
+              </BlockedLink>
+
+              {/* Read - Dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={() => setReadDropdownOpen(true)}
+                onMouseLeave={() => setReadDropdownOpen(false)}
+              >
+                <button
+                  className="text-gray-700 dark:text-gray-200 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
+                >
+                  <span>{t('nav.read')}</span>
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+
+                {readDropdownOpen && (
+                  <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-600">
+                    <BlockedLink
+                      to="/feed"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      {t('nav.newsFeed')}
+                    </BlockedLink>
+                    <BlockedLink
+                      to="/my-articles"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      {t('nav.myArticles')}
+                    </BlockedLink>
+                    <BlockedLink
+                      to="/saved-articles"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      {t('nav.savedArticles')}
+                    </BlockedLink>
+                    <BlockedLink
+                      to="/search"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      {t('nav.searchArticles')}
+                    </BlockedLink>
+                  </div>
+                )}
+              </div>
+
+              {/* Write - Dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={() => setWriteDropdownOpen(true)}
+                onMouseLeave={() => setWriteDropdownOpen(false)}
+              >
+                <button
+                  className="text-gray-700 dark:text-gray-200 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
+                >
+                  <span>{t('nav.write')}</span>
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+
+                {writeDropdownOpen && (
+                  <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-600">
+                    <BlockedLink
+                      to="/write"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      {t('nav.writeArticle')}
+                    </BlockedLink>
+                    <BlockedLink
+                      to="/drafts"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      {t('nav.drafts')}
+                    </BlockedLink>
+                    <BlockedLink
+                      to="/analytics"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      {t('nav.analytics')}
+                    </BlockedLink>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Right Side Actions */}
           <div className="flex items-center space-x-2">
             {isAuthenticated ? (
               <>
-                <BlockedLink
-                  to="/dashboard"
-                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  {t('nav.videoDashboard')}
-                </BlockedLink>
-                <BlockedLink
-                  to="/feed"
-                  className="text-gray-700 dark:text-gray-200 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  {t('nav.newsFeed')}
-                </BlockedLink>
-                <BlockedLink
-                  to="/explore"
-                  className="text-gray-700 dark:text-gray-200 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                  </svg>
-                  <span>{t('nav.explore')}</span>
-                </BlockedLink>
-                <BlockedLink
-                  to="/search"
-                  className="text-gray-700 dark:text-gray-200 hover:text-orange-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                  </svg>
-                  <span>{t('nav.search')}</span>
-                </BlockedLink>
-                <BlockedLink
-                  to="/write"
-                  className="text-gray-700 dark:text-gray-200 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                  </svg>
-                  <span>{t('nav.write')}</span>
-                </BlockedLink>
-                <BlockedLink
-                  to="/my-articles"
-                  className="text-gray-700 dark:text-gray-200 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  {t('nav.myArticles')}
-                </BlockedLink>
-                <BlockedLink
-                  to="/saved-articles"
-                  className="text-gray-700 dark:text-gray-200 hover:text-yellow-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  {t('nav.savedArticles')}
-                </BlockedLink>
-                <BlockedLink
-                  to="/settings"
-                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
-                  </svg>
-                  <span>{t('nav.settings')}</span>
-                </BlockedLink>
-                
                 {/* Notification Bell */}
                 <NotificationBell />
-                
-                <span className="text-gray-600 dark:text-gray-300 text-sm px-2">
+
+                {/* User Profile */}
+                <BlockedLink
+                  to={`/profile/${user?.id}`}
+                  className="text-gray-600 dark:text-gray-300 text-sm px-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
                   <span className="font-semibold">{user?.username}</span>
-                </span>
+                </BlockedLink>
+                {/* Settings */}
+                <BlockedLink
+                  to="/settings"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md transition-colors"
+                  title={t('nav.settings') || 'Settings'}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </BlockedLink>
+
+
+
+                {/* Logout */}
                 <button
                   onClick={handleLogout}
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
@@ -116,6 +174,8 @@ const Navigation = () => {
                 >
                   {t('nav.logout')}
                 </button>
+
+                {/* Theme & Language */}
                 <ThemeToggle />
                 <LanguageSwitcher />
               </>

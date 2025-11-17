@@ -18,7 +18,8 @@
     "goBack": "Geri Dön",
     "confirmDelete": "Silmek istediğinizden emin misiniz?",
     "loginRequired": "Giriş yapmalısınız",
-    "submitting": "Gönderiliyor..."
+    "submitting": "Gönderiliyor...",
+    "deleting": "Siliniyor..."
   },
   "theme": {
     "switchToDark": "Karanlık moda geç",
@@ -64,11 +65,17 @@
     "write": "Yaz",
     "myArticles": "Haberlerim",
     "savedArticles": "Kaydedilenler",
+    "analytics": "Analitik",
     "settings": "Ayarlar",
     "login": "Giriş Yap",
     "signup": "Kayıt Ol",
     "logout": "Çıkış",
-    "search": "Ara"
+    "search": "Ara",
+    "searchArticles": "Haber Ara",
+    "watch": "İzle",
+    "read": "Oku",
+    "writeArticle": "Makale Yaz",
+    "drafts": "Taslaklar"
   },
   "home": {
     "hero": {
@@ -300,7 +307,8 @@
       "publish": "Yayınla",
       "publishing": "Yayınlanıyor...",
       "saveDraft": "Taslağı Kaydet",
-      "discardDraft": "Taslağı Sil"
+      "discardDraft": "Taslağı Sil",
+      "newArticle": "Yeni Makale"
     },
     "preview": {
       "title": "Önizleme",
@@ -312,11 +320,13 @@
     "draft": {
       "saving": "Taslak kaydediliyor...",
       "saved": "Taslak kaydedildi",
-      "error": "Taslak kaydedilemedi"
+      "error": "Taslak kaydedilemedi",
+      "maxReached": "Maksimum 3 taslağa izin verilir. Lütfen önce bir taslağı yayınlayın veya silin."
     },
     "success": "Haber başarıyla yayınlandı!",
     "error": "Haber yayınlanırken bir hata oluştu",
     "confirmDiscardDraft": "Taslağı silmek istediğinizden emin misiniz?",
+    "confirmNewArticle": "Kaydedilmemiş değişiklikleriniz var. Kaydetmeden yeni makale başlatılsın mı?",
     "draftDiscarded": "Taslak başarıyla silindi",
     "draftDiscardError": "Taslak silinirken bir hata oluştu",
     "unsavedChanges": {
@@ -417,12 +427,16 @@
   },
   "categories": {
     "politics": "Politika",
+    "economy": "Ekonomi",
     "sports": "Spor",
     "technology": "Teknoloji",
     "health": "Sağlık",
-    "economy": "Ekonomi",
-    "world": "Dünya",
+    "education": "Eğitim",
     "culture": "Kültür",
+    "art": "Sanat",
+    "science": "Bilim",
+    "world": "Dünya",
+    "other": "Diğer",
     "entertainment": "Eğlence"
   },
   "time": {
@@ -452,6 +466,9 @@
       "description": "Kişisel bilgilerinizi güncelleyin",
       "profilePhoto": "Profil Fotoğrafı",
       "photoComingSoon": "Profil fotoğrafı yükleme yakında geliyor",
+      "uploadPhoto": "Fotoğraf Yükle",
+      "removePhoto": "Fotoğrafı Kaldır",
+      "photoHelper": "Profil fotoğrafı yükleyin (maks 5MB). Desteklenen formatlar: JPG, PNG, GIF, WEBP",
       "photoUpdateSuccess": "Profil fotoğrafı başarıyla güncellendi!",
       "username": "Kullanıcı Adı",
       "usernameHelper": "Bu, başkalarına görünen benzersiz kullanıcı adınızdır",
@@ -479,6 +496,27 @@
       "changing": "Değiştiriliyor...",
       "changeSuccess": "Şifre başarıyla değiştirildi!",
       "changeError": "Şifre değiştirilirken bir hata oluştu"
+    },
+    "email": {
+      "title": "Email Tercihleri",
+      "description": "Email bildirimlerinizi ve tercihlerinizi yönetin",
+      "weeklyDigest": "Haftalık Özet",
+      "weeklyDigestDesc": "Gaste'deki en popüler haberlerin haftalık özetini alın",
+      "newFollower": "Yeni Takipçi",
+      "newFollowerDesc": "Birisi sizi takip ettiğinde bildirim alın",
+      "newComment": "Yeni Yorum",
+      "newCommentDesc": "Haberlerinize yorum yapıldığında bildirim alın",
+      "newLike": "Yeni Beğeni",
+      "newLikeDesc": "Haberleriniz beğenildiğinde bildirim alın",
+      "info": "Email tercihlerinizi istediğiniz zaman güncelleyebilirsiniz. Değişiklikler hemen etkin olur.",
+      "updateSuccess": "Email tercihleri başarıyla güncellendi!",
+      "updateError": "Email tercihleri güncellenirken bir hata oluştu"
+    },
+    "tabs": {
+      "profile": "Profil",
+      "password": "Şifre",
+      "email": "Email Tercihleri",
+      "blocked": "Engellenen Kullanıcılar"
     },
     "blocked": {
       "title": "Engellenen Kullanıcılar",
@@ -608,5 +646,66 @@
     "tip1": "Wi-Fi veya mobil verinizin açık olduğundan emin olun",
     "tip2": "Uçak modunun kapalı olduğunu kontrol edin",
     "tip3": "Farklı bir ağa bağlanmayı deneyin"
+  },
+  "analytics": {
+    "title": "Analitik Paneli",
+    "subtitle": "İçerik performansınızı ve kitle büyümenizi takip edin",
+    "totalArticles": "Toplam Makale",
+    "totalViews": "Toplam Görüntülenme",
+    "totalLikes": "Toplam Beğeni",
+    "totalComments": "Toplam Yorum",
+    "followers": "Takipçi",
+    "last30Days": "Son 30 Gün Performansı",
+    "articlesPublished": "Yayınlanan Makale",
+    "views": "Görüntülenme",
+    "likes": "Beğeni",
+    "comments": "Yorum",
+    "engagementRate": "Etkileşim Oranı",
+    "7days": "Son 7 Gün",
+    "14days": "Son 14 Gün",
+    "30days": "Son 30 Gün",
+    "90days": "Son 90 Gün",
+    "viewsOverTime": "Zaman İçinde Görüntülenmeler",
+    "engagementMetrics": "Etkileşim Metrikleri",
+    "followerGrowth": "Takipçi Büyümesi",
+    "totalFollowers": "Toplam Takipçi",
+    "popularArticles": "Popüler Makaleler",
+    "byViews": "Görüntülenmeye Göre",
+    "byLikes": "Beğeniye Göre",
+    "byComments": "Yoruma Göre",
+    "byEngagement": "Etkileşime Göre",
+    "noArticlesYet": "Henüz makale yok",
+    "topCategories": "Popüler Kategoriler",
+    "articles": "makale",
+    "noCategoriesYet": "Henüz kategori yok"
+  },
+  "recommendations": {
+    "youMightAlsoLike": "İlginizi Çekebilir",
+    "trending": "Trendler",
+    "personalized": "Sizin İçin Öneriler",
+    "followingFeed": "Takip Ettiklerinizden",
+    "similarArticles": "Benzer Makaleler",
+    "basedOnReading": "Okuma geçmişinize göre",
+    "noRecommendations": "Öneri bulunamadı"
+  },
+  "drafts": {
+    "title": "Taslaklar",
+    "subtitle": "Kaydedilmiş taslakların",
+    "noDrafts": "Henüz taslak yok",
+    "noDraftsMessage": "Kaydedilmiş taslağınız bulunmuyor. Taslak oluşturmak için makale yazmaya başlayın.",
+    "startWriting": "Yazmaya Başla",
+    "untitled": "Başlıksız Taslak",
+    "lastEdited": "Son düzenleme",
+    "noContent": "Henüz içerik yok",
+    "confirmDelete": "Bu taslağı silmek istediğinizden emin misiniz?",
+    "confirmPublish": "Bu taslağı yayınlamak istediğinizden emin misiniz?",
+    "continueEditing": "Düzenlemeye Devam Et",
+    "publish": "Yayınla",
+    "publishing": "Yayınlanıyor...",
+    "deleting": "Siliniyor...",
+    "createNew": "Yeni Taslak Oluştur",
+    "deleteError": "Taslak silinirken bir hata oluştu",
+    "publishError": "Taslak yayınlanırken bir hata oluştu",
+    "loadError": "Taslaklar yüklenirken bir hata oluştu"
   }
 }

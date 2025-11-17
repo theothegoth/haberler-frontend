@@ -11,6 +11,7 @@ import SEO from '../components/SEO';
 import HTMLContent from '../components/HTMLContent';
 import blockService from '../services/blockService';
 import ReportModal from '../components/ReportModal';
+import SimilarArticles from '../components/SimilarArticles';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -430,7 +431,7 @@ const ArticleDetail = () => {
       />
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <button
             onClick={() => navigate(-1)}
@@ -442,8 +443,12 @@ const ArticleDetail = () => {
             <span>{t('common.goBack')}</span>
           </button>
 
-          {/* Article Container */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Article Column */}
+            <div className="lg:col-span-2">
+              {/* Article Container */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <div className="p-8">
               <ProtectedContent authorName={article.username}>
                 {/* Category */}
@@ -676,6 +681,15 @@ const ArticleDetail = () => {
                     </div>
                   ))
                 )}
+              </div>
+            </div>
+              </div>
+            </div>
+
+            {/* Sidebar Column - Similar Articles */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-8">
+                {article && <SimilarArticles newsId={article.id} />}
               </div>
             </div>
           </div>

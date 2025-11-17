@@ -154,8 +154,8 @@ const SavedArticles = () => {
                     )}
                     <div className="p-6">
                       {article.category && (
-                        <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">
-                          {article.category}
+                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-xs">
+                          {t(`categories.${article.category.toLowerCase()}`) || article.category}
                         </span>
                       )}
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">

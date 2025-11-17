@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../services/api';
 import blockService from '../services/blockService';
+import emailPreferencesService from '../services/emailPreferencesService';
 import ErrorMessage from '../components/ErrorMessage';
-import ImageUpload from '../components/ImageUpload';
+import ProfilePictureUpload from '../components/ProfilePictureUpload';
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -33,10 +34,21 @@ const Settings = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [loadingBlocked, setLoadingBlocked] = useState(false);
 
+  // Email preferences state
+  const [emailPreferences, setEmailPreferences] = useState({
+    weekly_digest: true,
+    new_follower: true,
+    new_comment: true,
+    new_like: false
+  });
+  const [loadingEmailPrefs, setLoadingEmailPrefs] = useState(false);
+
   // Load blocked users when the blocked tab is active
   useEffect(() => {
     if (activeTab === 'blocked') {
       loadBlockedUsers();
+    } else if (activeTab === 'email') {
+      loadEmailPreferences();
     }
   }, [activeTab]);
 
@@ -51,6 +63,43 @@ const Settings = () => {
       setError('Engellenen kullanıcılar yüklenirken bir hata oluştu');
     } finally {
       setLoadingBlocked(false);
+    }
+  };
+
+  const loadEmailPreferences = async () => {
+    try {
+      setLoadingEmailPrefs(true);
+      setError('');
+      const data = await emailPreferencesService.getPreferences();
+      setEmailPreferences(data);
+    } catch (err) {
+      console.error('Error loading email preferences:', err);
+      setError('Email tercihleri yüklenirken bir hata oluştu');
+    } finally {
+      setLoadingEmailPrefs(false);
+    }
+  };
+
+  const handleEmailPreferenceChange = (key) => {
+    setEmailPreferences({
+      ...emailPreferences,
+      [key]: !emailPreferences[key]
+    });
+  };
+
+  const handleEmailPreferencesSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    try {
+      setLoading(true);
+      await emailPreferencesService.updatePreferences(emailPreferences);
+      setSuccess(t('settings.email.updateSuccess'));
+    } catch (err) {
+      setError(err.response?.data?.error || t('settings.email.updateError'));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -204,6 +253,19 @@ const Settings = () => {
                   <span className="font-medium">{t('settings.tabs.password')}</span>
                 </button>
                 <button
+                  onClick={() => handleTabChange('email')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center space-x-3 ${
+                    activeTab === 'email'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="font-medium">{t('settings.tabs.email')}</span>
+                </button>
+                <button
                   onClick={() => handleTabChange('blocked')}
                   className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center space-x-3 ${
                     activeTab === 'blocked'
@@ -247,8 +309,8 @@ const Settings = () => {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       {t('settings.profile.profilePhoto')}
                     </h3>
-                    <ImageUpload
-                      currentImage={user?.profilePicture}
+                    <ProfilePictureUpload
+                      currentImage={user?.profile_picture}
                       onUploadSuccess={handleImageUploadSuccess}
                       onUploadError={handleImageUploadError}
                     />
@@ -391,6 +453,122 @@ const Settings = () => {
                       {loading ? t('settings.password.changing') : t('settings.password.changePassword')}
                     </button>
                   </div>
+                </form>
+              )}
+
+              {/* Email Preferences Tab */}
+              {activeTab === 'email' && (
+                <form onSubmit={handleEmailPreferencesSubmit} className="space-y-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                      {t('settings.email.title')}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                      {t('settings.email.description')}
+                    </p>
+                  </div>
+
+                  {loadingEmailPrefs ? (
+                    <div className="flex justify-center py-12">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {/* Weekly Digest */}
+                      <div className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <input
+                          type="checkbox"
+                          id="weekly_digest"
+                          checked={emailPreferences.weekly_digest}
+                          onChange={() => handleEmailPreferenceChange('weekly_digest')}
+                          className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <div className="flex-1">
+                          <label htmlFor="weekly_digest" className="block font-semibold text-gray-900 dark:text-white cursor-pointer">
+                            📰 {t('settings.email.weeklyDigest')}
+                          </label>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {t('settings.email.weeklyDigestDesc')}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* New Follower */}
+                      <div className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <input
+                          type="checkbox"
+                          id="new_follower"
+                          checked={emailPreferences.new_follower}
+                          onChange={() => handleEmailPreferenceChange('new_follower')}
+                          className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <div className="flex-1">
+                          <label htmlFor="new_follower" className="block font-semibold text-gray-900 dark:text-white cursor-pointer">
+                            🎉 {t('settings.email.newFollower')}
+                          </label>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {t('settings.email.newFollowerDesc')}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* New Comment */}
+                      <div className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <input
+                          type="checkbox"
+                          id="new_comment"
+                          checked={emailPreferences.new_comment}
+                          onChange={() => handleEmailPreferenceChange('new_comment')}
+                          className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <div className="flex-1">
+                          <label htmlFor="new_comment" className="block font-semibold text-gray-900 dark:text-white cursor-pointer">
+                            💬 {t('settings.email.newComment')}
+                          </label>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {t('settings.email.newCommentDesc')}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* New Like */}
+                      <div className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <input
+                          type="checkbox"
+                          id="new_like"
+                          checked={emailPreferences.new_like}
+                          onChange={() => handleEmailPreferenceChange('new_like')}
+                          className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <div className="flex-1">
+                          <label htmlFor="new_like" className="block font-semibold text-gray-900 dark:text-white cursor-pointer">
+                            ❤️ {t('settings.email.newLike')}
+                          </label>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {t('settings.email.newLikeDesc')}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Info Box */}
+                      <div className="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border-l-4 border-blue-500 p-4 rounded">
+                        <p className="text-sm text-blue-700 dark:text-blue-300">
+                          💡 {t('settings.email.info')}
+                        </p>
+                      </div>
+
+                      {/* Submit */}
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          disabled={loading}
+                          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        >
+                          {loading ? t('settings.saving') : t('settings.saveChanges')}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </form>
               )}
 

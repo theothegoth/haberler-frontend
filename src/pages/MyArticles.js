@@ -5,6 +5,7 @@ import newsService from '../services/newsService';
 import ErrorMessage from '../components/ErrorMessage';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TwitterShareButton from '../components/TwitterShareButton';
+import { getImageUrl, handleImageError } from '../utils/imageUtils';
 
 const MyArticles = () => {
   const { t } = useTranslation();
@@ -194,10 +195,11 @@ const MyArticles = () => {
                 >
                 {article.image_url && (
                   <img
-                    src={article.image_url.startsWith('http') ? article.image_url : `http://localhost:5000${article.image_url}`}
+                    src={getImageUrl(article.image_url)}
                     alt={article.title}
                     className="w-full h-48 object-contain bg-gray-100 dark:bg-gray-700"
-                    onError={(e) => e.target.style.display = 'none'}
+                    onError={handleImageError}
+                    onLoad={() => console.log('Image loaded:', getImageUrl(article.image_url))}
                   />
                 )}
                   <div className="p-6">

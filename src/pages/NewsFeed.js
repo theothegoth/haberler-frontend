@@ -12,6 +12,8 @@ import Comments from '../components/Comments';
 import SEO from '../components/SEO';
 import DOMPurify from 'dompurify';
 import StructuredData from '../components/StructuredData';
+import { getImageUrl, handleImageError } from '../utils/imageUtils';
+import TrendingArticles from '../components/TrendingArticles';
 
 const NewsFeed = () => {
   const navigate = useNavigate();
@@ -225,7 +227,18 @@ const NewsFeed = () => {
                       to={`/user/${news.user_id}`}
                       className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
                     >
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                      {news.user_profile_picture ? (
+                        <img
+                          src={`http://localhost:5000${news.user_profile_picture}`}
+                          alt={news.username}
+                          className="w-10 h-10 rounded-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div className={`w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold ${news.user_profile_picture ? 'hidden' : ''}`}>
                         {news.username.charAt(0).toUpperCase()}
                       </div>
                       <div>
@@ -250,10 +263,11 @@ const NewsFeed = () => {
                     </h2>
                     {news.image_url && (
                       <img
-                        src={news.image_url.startsWith('http') ? news.image_url : `http://localhost:5000${news.image_url}`}
+                        src={getImageUrl(news.image_url)}
                         alt={news.title}
                         className="w-full h-64 object-contain bg-gray-100 dark:bg-gray-700 rounded-lg mb-4"
-                        onError={(e) => e.target.style.display = 'none'}
+                        onError={handleImageError}
+                        onLoad={() => console.log('Image loaded:', getImageUrl(news.image_url))}
                       />
                     )}
                     <p className="text-gray-700 dark:text-gray-200 line-clamp-3 mb-4">
@@ -335,6 +349,9 @@ const NewsFeed = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Trending Articles */}
+            <TrendingArticles limit={5} days={7} />
+
             {/* Suggested Users */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t('newsFeed.suggestedUsers')}</h3>

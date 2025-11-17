@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNavigationBlocker } from '../context/NavigationBlockerContext';
 import newsService from '../services/newsService';
@@ -13,6 +13,7 @@ import RichTextEditor from '../components/RichTextEditor';
 const WriteNews = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const { enableBlocker, disableBlocker } = useNavigationBlocker();
   const [formData, setFormData] = useState({
@@ -28,46 +29,49 @@ const WriteNews = () => {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(false);
   const [draftStatus, setDraftStatus] = useState(''); // 'saving', 'saved', 'error'
-  const [hasDraft, setHasDraft] = useState(false);
+  const [currentDraftId, setCurrentDraftId] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const autoSaveTimer = useRef(null);
   const initialFormData = useRef(null);
 
   const categories = [
-    'Politika', 'Ekonomi', 'Spor', 'Teknoloji', 'Sağlık',
-    'Eğitim', 'Kültür', 'Sanat', 'Bilim', 'Dünya', 'Diğer'
+    'politics', 'economy', 'sports', 'technology', 'health',
+    'education', 'culture', 'art', 'science', 'world', 'other'
   ];
 
-  // Load draft on mount
+  // Load draft on mount (if draftId is provided in URL)
   useEffect(() => {
     const loadDraft = async () => {
-      try {
-        const draft = await draftService.getDraft();
-        if (draft) {
-          const loadedData = {
-            title: draft.title || '',
-            content: draft.content || '',
-            category: draft.category || '',
-            imageUrl: draft.image_url || '',
-            tags: draft.tags || []
-          };
-          setFormData(loadedData);
-          setHasDraft(true);
-          // Store initial data to compare for changes
-          initialFormData.current = JSON.stringify(loadedData);
-        } else {
-          // No draft, set initial empty state
-          initialFormData.current = JSON.stringify(formData);
+      const draftId = searchParams.get('draftId');
+
+      if (draftId) {
+        try {
+          const draft = await draftService.getDraft(draftId);
+          if (draft) {
+            const loadedData = {
+              title: draft.title || '',
+              content: draft.content || '',
+              category: draft.category || '',
+              imageUrl: draft.image_url || '',
+              tags: draft.tags || []
+            };
+            setFormData(loadedData);
+            setCurrentDraftId(parseInt(draftId));
+            // Store initial data to compare for changes
+            initialFormData.current = JSON.stringify(loadedData);
+          }
+        } catch (err) {
+          console.error('Error loading draft:', err);
+          setError('Failed to load draft');
         }
-      } catch (err) {
-        // No draft found or error - that's okay
-        console.log('No draft found');
+      } else {
+        // No draft ID, creating new article
         initialFormData.current = JSON.stringify(formData);
       }
     };
 
     loadDraft();
-  }, []);
+  }, [searchParams]);
 
   // Auto-save draft
   const saveDraft = useCallback(async () => {
@@ -78,24 +82,44 @@ const WriteNews = () => {
 
     try {
       setDraftStatus('saving');
-      await draftService.saveDraft({
+      const draftData = {
         title: formData.title,
         content: formData.content,
         category: formData.category,
         imageUrl: formData.imageUrl,
         tags: formData.tags
-      });
+      };
+
+      let result;
+      if (currentDraftId) {
+        // Update existing draft
+        result = await draftService.updateDraft(currentDraftId, draftData);
+      } else {
+        // Create new draft
+        result = await draftService.createDraft(draftData);
+        // Set the draft ID after creation and update URL
+        if (result.draft && result.draft.id) {
+          setCurrentDraftId(result.draft.id);
+          // Update URL to include draftId
+          navigate(`/write?draftId=${result.draft.id}`, { replace: true });
+        }
+      }
+
       setDraftStatus('saved');
-      setHasDraft(true);
       // Update initial data after successful save
       initialFormData.current = JSON.stringify(formData);
       setHasUnsavedChanges(false);
       setTimeout(() => setDraftStatus(''), 2000);
     } catch (err) {
-      setDraftStatus('error');
-      setTimeout(() => setDraftStatus(''), 2000);
+      console.error('Error saving draft:', err);
+      if (err.response?.data?.error?.includes('Maximum')) {
+        setDraftStatus('max_reached');
+      } else {
+        setDraftStatus('error');
+      }
+      setTimeout(() => setDraftStatus(''), 3000);
     }
-  }, [formData]);
+  }, [formData, currentDraftId, navigate]);
 
   // Track unsaved changes
   useEffect(() => {
@@ -187,10 +211,38 @@ const WriteNews = () => {
     });
   };
 
+  const handleNewArticle = () => {
+    if (hasUnsavedChanges && (formData.title || formData.content)) {
+      if (!window.confirm(t('writeNews.confirmNewArticle'))) {
+        return;
+      }
+    }
+
+    const emptyData = {
+      title: '',
+      content: '',
+      category: '',
+      imageUrl: '',
+      tags: []
+    };
+    setFormData(emptyData);
+    setCurrentDraftId(null);
+    setHasUnsavedChanges(false);
+    setDraftStatus('');
+    setError('');
+    setSuccess('');
+    setPreview(false); // Exit preview mode
+    initialFormData.current = JSON.stringify(emptyData);
+    // Navigate back to write page without draft ID
+    navigate('/write', { replace: true });
+  };
+
   const handleDiscardDraft = async () => {
+    if (!currentDraftId) return;
+
     if (window.confirm(t('writeNews.confirmDiscardDraft'))) {
       try {
-        await draftService.deleteDraft();
+        await draftService.deleteDraft(currentDraftId);
         const emptyData = {
           title: '',
           content: '',
@@ -199,9 +251,11 @@ const WriteNews = () => {
           tags: []
         };
         setFormData(emptyData);
-        setHasDraft(false);
+        setCurrentDraftId(null);
         setHasUnsavedChanges(false);
         initialFormData.current = JSON.stringify(emptyData);
+        // Navigate back to write page without draft ID
+        navigate('/write', { replace: true });
         setSuccess(t('writeNews.draftDiscarded'));
         setTimeout(() => setSuccess(''), 3000);
       } catch (err) {
@@ -230,8 +284,8 @@ const WriteNews = () => {
       await newsService.createNews(formData);
 
       // Delete draft after successful publish
-      if (hasDraft) {
-        await draftService.deleteDraft();
+      if (currentDraftId) {
+        await draftService.deleteDraft(currentDraftId);
       }
 
       // Clear unsaved changes flag to allow navigation without warning
@@ -283,9 +337,23 @@ const WriteNews = () => {
                 {draftStatus === 'error' && (
                   <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t('writeNews.draft.error')}</p>
                 )}
+                {draftStatus === 'max_reached' && (
+                  <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">{t('writeNews.draft.maxReached')}</p>
+                )}
               </div>
             </div>
             <div className="flex items-center space-x-2">
+              {currentDraftId && (
+                <button
+                  onClick={handleNewArticle}
+                  className="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800 rounded-lg transition-colors flex items-center space-x-2"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                  <span>{t('writeNews.buttons.newArticle')}</span>
+                </button>
+              )}
               {hasUnsavedChanges && (formData.title || formData.content) && (
                 <button
                   onClick={saveDraft}
@@ -298,7 +366,7 @@ const WriteNews = () => {
                   <span>{t('writeNews.buttons.saveDraft')}</span>
                 </button>
               )}
-              {hasDraft && (
+              {currentDraftId && (
                 <button
                   onClick={handleDiscardDraft}
                   className="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-800 rounded-lg transition-colors"
@@ -360,7 +428,7 @@ const WriteNews = () => {
               >
                 <option value="">{t('writeNews.form.categoryPlaceholder')}</option>
                 {categories.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>{t(`categories.${cat}`)}</option>
                 ))}
               </select>
             </div>
@@ -474,9 +542,12 @@ const WriteNews = () => {
                 onError={(e) => e.target.style.display = 'none'}
               />
             )}
-            <div className="prose max-w-none text-gray-700 dark:text-gray-200 whitespace-pre-wrap">
-              {formData.content || t('writeNews.preview.contentPlaceholder')}
-            </div>
+            <div
+              className="prose prose-lg max-w-none dark:prose-invert [&_*]:text-gray-900 dark:[&_*]:text-gray-100 break-words max-h-[600px] overflow-y-auto"
+              dangerouslySetInnerHTML={{
+                __html: formData.content || `<p class="text-gray-500 italic">${t('writeNews.preview.contentPlaceholder')}</p>`
+              }}
+            />
             {formData.tags.length > 0 && (
               <div className="mt-6 pt-6 border-t dark:border-gray-700">
                 <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">{t('writeNews.preview.tagsLabel')}</p>

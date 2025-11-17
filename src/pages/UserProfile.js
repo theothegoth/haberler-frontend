@@ -2,12 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import apiClient from '../services/api';
 import newsService from '../services/newsService';
 import followService from '../services/followService';
 import blockService from '../services/blockService';
 import ProtectedContent from '../components/ProtectedContent';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ReportModal from '../components/ReportModal';
+import DOMPurify from 'dompurify';
+import { getImageUrl, handleImageError } from '../utils/imageUtils';
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -26,6 +29,13 @@ const UserProfile = () => {
   const [likedArticles, setLikedArticles] = useState(new Set());
   const [isBlocked, setIsBlocked] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+
+  // Helper to strip HTML tags for preview
+  const stripHTML = (html) => {
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = DOMPurify.sanitize(html);
+    return tmp.textContent || tmp.innerText || '';
+  };
 
   const loadProfile = useCallback(async (reset = false) => {
     try {
@@ -70,8 +80,26 @@ const UserProfile = () => {
         setOffset(LIMIT);
       }
 
-      if (newsData.length > 0) {
-        setProfileUser({ username: newsData[0].username });
+      // Fetch user profile data separately
+      if (reset) {
+        try {
+          const response = await apiClient.get(`/auth/user/${userId}`);
+          setProfileUser({
+            username: response.data.user.username,
+            user_bio: response.data.user.bio,
+            user_profile_picture: response.data.user.profile_picture
+          });
+        } catch (err) {
+          console.error('Error fetching user profile:', err);
+          // Fallback to article data if available
+          if (newsData.length > 0) {
+            setProfileUser({
+              username: newsData[0].username,
+              user_bio: newsData[0].user_bio,
+              user_profile_picture: newsData[0].user_profile_picture
+            });
+          }
+        }
       }
     } catch (err) {
       console.error('Error loading profile:', err);
@@ -184,11 +212,29 @@ const UserProfile = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
-              <div className="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-4xl font-bold backdrop-blur-sm">
-                {(profileUser?.username || 'U').charAt(0).toUpperCase()}
+              {profileUser?.user_profile_picture ? (
+                <img
+                  src={`http://localhost:5000${profileUser.user_profile_picture}`}
+                  alt={profileUser?.username}
+                  className="w-24 h-24 rounded-full object-cover bg-white bg-opacity-20 shrink-0"
+                  onError={(e) => {
+                    console.error('Failed to load profile picture:', profileUser.user_profile_picture);
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div className={`w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-5xl font-bold backdrop-blur-sm shrink-0 ${profileUser?.user_profile_picture ? 'hidden' : ''}`}>
+                <span className="select-none">{(profileUser?.username || 'U').charAt(0).toUpperCase()}</span>
               </div>
               <div>
                 <h1 className="text-4xl font-bold mb-2">{profileUser?.username || 'Kullanıcı'}</h1>
+                {/* Bio */}
+                {profileUser?.user_bio && (
+                  <p className="text-sm mt-2 mb-2 max-w-md text-white text-opacity-90">
+                    {profileUser.user_bio}
+                  </p>
+                )}
                 <div className="flex items-center space-x-6 text-sm">
                   <div>
                     <span className="font-semibold">{articles.length}</span> {t('userProfile.articles')}
@@ -261,10 +307,10 @@ const UserProfile = () => {
                 >
                 {article.image_url && (
                   <img
-                    src={article.image_url}
+                    src={getImageUrl(article.image_url)}
                     alt={article.title}
-                    className="w-full h-48 object-cover"
-                    onError={(e) => e.target.style.display = 'none'}
+                    className="w-full h-48 object-contain bg-gray-100 dark:bg-gray-700"
+                    onError={handleImageError}
                   />
                 )}
                 <div className="p-6">
@@ -273,11 +319,11 @@ const UserProfile = () => {
                       {article.category}
                     </span>
                   )}
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2 break-words">
                     {article.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-4">
-                    {article.content}
+                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-4 break-words">
+                    {stripHTML(article.content)}
                   </p>
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                     <span>{new Date(article.created_at).toLocaleDateString('tr-TR')}</span>

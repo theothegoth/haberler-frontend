@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import draftService from '../services/draftService';
+import ArticleTypeBadge from '../components/ArticleTypeBadge';
 
 const Drafts = () => {
   const { t } = useTranslation();
@@ -199,10 +200,16 @@ const Drafts = () => {
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                     </svg>
                     <span>{formatDate(draft.updated_at)}</span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
                     {draft.category && (
                       <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded text-xs font-medium">
                         {t(`categories.${draft.category.toLowerCase()}`)}
                       </span>
+                    )}
+                    {draft.article_type && (
+                      <ArticleTypeBadge type={draft.article_type} size="xs" />
                     )}
                   </div>
 

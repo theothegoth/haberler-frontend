@@ -5,6 +5,7 @@ import axios from 'axios';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import EditedBadge from '../components/EditedBadge';
+import ArticleTypeBadge from '../components/ArticleTypeBadge';
 import { getImageUrl, handleImageError } from '../utils/imageUtils';
 
 const AdvancedSearch = () => {
@@ -14,6 +15,7 @@ const AdvancedSearch = () => {
   const [filters, setFilters] = useState({
     q: searchParams.get('q') || '',
     category: searchParams.get('category') || '',
+    articleType: searchParams.get('articleType') || '',
     author: searchParams.get('author') || '',
     tags: searchParams.get('tags') || '',
     startDate: searchParams.get('startDate') || '',
@@ -38,6 +40,15 @@ const AdvancedSearch = () => {
     { value: 'entertainment', label: t('categories.entertainment') || 'Entertainment' }
   ];
 
+  const articleTypes = [
+    { value: '', label: t('articleType.all') || 'All Types' },
+    { value: 'news', label: t('articleType.news') || 'News' },
+    { value: 'opinion', label: t('articleType.opinion') || 'Opinion' },
+    { value: 'analysis', label: t('articleType.analysis') || 'Analysis' },
+    { value: 'interview', label: t('articleType.interview') || 'Interview' },
+    { value: 'editorial', label: t('articleType.editorial') || 'Editorial' }
+  ];
+
   const sortOptions = [
     { value: 'date', label: t('search.sortByDate') || 'Most Recent' },
     { value: 'popularity', label: t('search.sortByPopularity') || 'Most Popular' },
@@ -59,6 +70,7 @@ const AdvancedSearch = () => {
       const params = new URLSearchParams();
       if (filters.q) params.append('q', filters.q);
       if (filters.category) params.append('category', filters.category);
+      if (filters.articleType) params.append('articleType', filters.articleType);
       if (filters.author) params.append('author', filters.author);
       if (filters.tags) params.append('tags', filters.tags);
       if (filters.startDate) params.append('startDate', filters.startDate);
@@ -91,6 +103,7 @@ const AdvancedSearch = () => {
     setFilters({
       q: '',
       category: '',
+      articleType: '',
       author: '',
       tags: '',
       startDate: '',
@@ -145,6 +158,22 @@ const AdvancedSearch = () => {
               >
                 {categories.map(cat => (
                   <option key={cat.value} value={cat.value}>{cat.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Article Type Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('articleType.selectType') || 'Article Type'}
+              </label>
+              <select
+                value={filters.articleType}
+                onChange={(e) => handleFilterChange('articleType', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              >
+                {articleTypes.map(type => (
+                  <option key={type.value} value={type.value}>{type.label}</option>
                 ))}
               </select>
             </div>
@@ -298,12 +327,17 @@ const AdvancedSearch = () => {
                       </div>
                     )}
                     <div className="p-6">
-                      {article.category && (
-                        <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs break-words inline-block w-fit">
-                          {article.category}
-                        </span>
-                      )}
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2 break-words">
+                      <div className="flex flex-wrap items-center gap-2 mb-3">
+                        {article.category && (
+                          <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs break-words inline-block w-fit">
+                            {article.category}
+                          </span>
+                        )}
+                        {article.article_type && (
+                          <ArticleTypeBadge type={article.article_type} size="xs" />
+                        )}
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 break-words">
                         {article.title}
                       </h3>
                       <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 break-words mb-4">

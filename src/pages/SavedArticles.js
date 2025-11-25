@@ -6,6 +6,7 @@ import bookmarkService from '../services/bookmarkService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TwitterShareButton from '../components/TwitterShareButton';
 import EditedBadge from '../components/EditedBadge';
+import ArticleTypeBadge from '../components/ArticleTypeBadge';
 import SEO from '../components/SEO';
 import { getImageUrl, handleImageError } from '../utils/imageUtils';
 
@@ -165,11 +166,16 @@ const SavedArticles = () => {
                       </div>
                     )}
                     <div className="p-6 flex-grow flex flex-col">
-                      {article.category && (
-                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-xs break-words inline-block w-fit">
-                          {t(`categories.${article.category.toLowerCase()}`) || article.category}
-                        </span>
-                      )}
+                      <div className="flex flex-wrap items-center gap-2">
+                        {article.category && (
+                          <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-xs break-words inline-block w-fit">
+                            {t(`categories.${article.category.toLowerCase()}`) || article.category}
+                          </span>
+                        )}
+                        {article.article_type && (
+                          <ArticleTypeBadge type={article.article_type} size="xs" />
+                        )}
+                      </div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2 break-words hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">
                         {article.title}
                       </h3>

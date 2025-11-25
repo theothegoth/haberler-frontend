@@ -631,6 +631,21 @@
     "editedOn": "Edited {{date}}",
     "lastEdited": "Last edited: {{date}}"
   },
+  "articleType": {
+    "selectType": "Article Type",
+    "helperText": "Choose the type that best describes your article",
+    "news": "News",
+    "newsDesc": "Factual reporting",
+    "opinion": "Opinion",
+    "opinionDesc": "Personal viewpoint",
+    "analysis": "Analysis",
+    "analysisDesc": "In-depth examination",
+    "interview": "Interview",
+    "interviewDesc": "Q&A format",
+    "editorial": "Editorial",
+    "editorialDesc": "Institutional opinion",
+    "all": "All Types"
+  },
   "articleDetail": {
     "notFound": "Article not found",
     "comments": "Comments",

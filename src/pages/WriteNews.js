@@ -10,6 +10,7 @@ import RichTextEditor from '../components/RichTextEditor';
 import ArticleImageGallery from '../components/ArticleImageGallery';
 import ArticleVideoAttachment from '../components/ArticleVideoAttachment';
 import ContentQualityIndicator from '../components/ContentQualityIndicator';
+import ArticleTypeSelector from '../components/ArticleTypeSelector';
 import useUserVideos from '../hooks/useUserVideos';
 import articleImageService from '../services/articleImageService';
 import articleVideoService from '../services/articleVideoService';
@@ -25,7 +26,8 @@ const WriteNews = () => {
     title: '',
     content: '',
     category: '',
-    tags: []
+    tags: [],
+    articleType: 'news'
   });
   const [tagInput, setTagInput] = useState('');
   const [error, setError] = useState('');
@@ -58,7 +60,8 @@ const WriteNews = () => {
               title: draft.title || '',
               content: draft.content || '',
               category: draft.category || '',
-              tags: draft.tags || []
+              tags: draft.tags || [],
+              articleType: draft.article_type || 'news'
             };
             setFormData(loadedData);
             setCurrentDraftId(parseInt(draftId));
@@ -91,7 +94,8 @@ const WriteNews = () => {
         title: formData.title,
         content: formData.content,
         category: formData.category,
-        tags: formData.tags
+        tags: formData.tags,
+        articleType: formData.articleType
       };
 
       let result;
@@ -245,7 +249,8 @@ const WriteNews = () => {
       title: '',
       content: '',
       category: '',
-      tags: []
+      tags: [],
+      articleType: 'news'
     };
     setFormData(emptyData);
     setCurrentDraftId(null);
@@ -269,7 +274,8 @@ const WriteNews = () => {
           title: '',
           content: '',
           category: '',
-          tags: []
+          tags: [],
+          articleType: 'news'
         };
         setFormData(emptyData);
         setCurrentDraftId(null);
@@ -455,6 +461,14 @@ const WriteNews = () => {
                   <option key={cat} value={cat}>{t(`categories.${cat}`)}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Article Type */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <ArticleTypeSelector
+                value={formData.articleType}
+                onChange={(type) => setFormData({ ...formData, articleType: type })}
+              />
             </div>
 
             {/* Article Images */}

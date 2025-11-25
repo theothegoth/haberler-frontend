@@ -15,6 +15,7 @@ import StructuredData from '../components/StructuredData';
 import { getImageUrl, handleImageError } from '../utils/imageUtils';
 import TrendingArticles from '../components/TrendingArticles';
 import EditedBadge from '../components/EditedBadge';
+import ArticleTypeBadge from '../components/ArticleTypeBadge';
 
 const NewsFeed = () => {
   const navigate = useNavigate();
@@ -254,11 +255,16 @@ const NewsFeed = () => {
                         </div>
                       </div>
                     </Link>
-                    {news.category && (
-                      <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                        {news.category}
-                      </span>
-                    )}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {news.category && (
+                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                          {news.category}
+                        </span>
+                      )}
+                      {news.article_type && (
+                        <ArticleTypeBadge type={news.article_type} size="xs" />
+                      )}
+                    </div>
                   </div>
 
                   {/* Content */}

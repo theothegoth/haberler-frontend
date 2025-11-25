@@ -9,6 +9,7 @@ import RichTextEditor from '../components/RichTextEditor';
 import ArticleImageGallery from '../components/ArticleImageGallery';
 import ArticleVideoAttachment from '../components/ArticleVideoAttachment';
 import ContentQualityIndicator from '../components/ContentQualityIndicator';
+import ArticleTypeSelector from '../components/ArticleTypeSelector';
 import useUserVideos from '../hooks/useUserVideos';
 import articleImageService from '../services/articleImageService';
 import articleVideoService from '../services/articleVideoService';
@@ -23,7 +24,8 @@ const EditArticle = () => {
     title: '',
     content: '',
     category: '',
-    tags: []
+    tags: [],
+    articleType: 'news'
   });
   const [tagInput, setTagInput] = useState('');
   const [error, setError] = useState('');
@@ -47,7 +49,8 @@ const EditArticle = () => {
         title: article.title || '',
         content: article.content || '',
         category: article.category || '',
-        tags: article.tags || []
+        tags: article.tags || [],
+        articleType: article.article_type || 'news'
       });
     } catch (err) {
       const errorMsg = err.response?.data?.error || 'editArticle.loadError';
@@ -209,6 +212,14 @@ const EditArticle = () => {
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Article Type */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <ArticleTypeSelector
+                value={formData.articleType}
+                onChange={(type) => setFormData({ ...formData, articleType: type })}
+              />
             </div>
 
             {/* Article Images */}

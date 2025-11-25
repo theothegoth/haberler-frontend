@@ -15,6 +15,7 @@ import SimilarArticles from '../components/SimilarArticles';
 import ArticleImageGallery from '../components/ArticleImageGallery';
 import ArticleVideoAttachment from '../components/ArticleVideoAttachment';
 import EditedBadge from '../components/EditedBadge';
+import ArticleTypeBadge from '../components/ArticleTypeBadge';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -426,11 +427,41 @@ const ArticleDetail = () => {
   // Calculate total comment count (including replies)
   const totalCommentCount = comments.reduce((sum, c) => sum + 1 + (c.replies?.length || 0), 0);
 
+  // Map article type to schema.org @type
+  const getSchemaType = (articleType) => {
+    const typeMap = {
+      'news': 'NewsArticle',
+      'opinion': 'OpinionNewsArticle',
+      'analysis': 'AnalysisNewsArticle',
+      'interview': 'Article',
+      'editorial': 'OpinionNewsArticle'
+    };
+    return typeMap[articleType] || 'Article';
+  };
+
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": getSchemaType(article.article_type),
+    "headline": article.title,
+    "description": article.content?.substring(0, 200).replace(/<[^>]*>/g, ''),
+    "author": {
+      "@type": "Person",
+      "name": article.username
+    },
+    "datePublished": article.created_at,
+    "dateModified": article.updated_at || article.created_at,
+    ...(article.article_type === 'interview' && { "interviewFormat": "Q&A" })
+  };
+
   return (
     <>
       <SEO
         title={article.title}
         description={article.content?.substring(0, 160)}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
@@ -454,12 +485,17 @@ const ArticleDetail = () => {
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <div className="p-8">
               <ProtectedContent authorName={article.username}>
-                {/* Category */}
-                {article.category && (
-                  <div className="mb-4">
-                    <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-full text-sm">
-                      {article.category}
-                    </span>
+                {/* Category & Article Type */}
+                {(article.category || article.article_type) && (
+                  <div className="mb-4 flex flex-wrap items-center gap-2">
+                    {article.category && (
+                      <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-full text-sm">
+                        {article.category}
+                      </span>
+                    )}
+                    {article.article_type && (
+                      <ArticleTypeBadge type={article.article_type} size="sm" />
+                    )}
                   </div>
                 )}
 

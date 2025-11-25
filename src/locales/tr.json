@@ -634,6 +634,21 @@
     "editedOn": "{{date}} tarihinde düzenlendi",
     "lastEdited": "Son düzenlenme: {{date}}"
   },
+  "articleType": {
+    "selectType": "İçerik Türü",
+    "helperText": "İçeriğinizi en iyi tanımlayan türü seçin",
+    "news": "Haber",
+    "newsDesc": "Objektif haber",
+    "opinion": "Görüş",
+    "opinionDesc": "Kişisel görüş",
+    "analysis": "Analiz",
+    "analysisDesc": "Detaylı inceleme",
+    "interview": "Röportaj",
+    "interviewDesc": "Soru-cevap",
+    "editorial": "Köşe Yazısı",
+    "editorialDesc": "Kurumsal görüş",
+    "all": "Tüm Türler"
+  },
   "articleDetail": {
     "notFound": "Haber bulunamadı",
     "comments": "Yorumlar",

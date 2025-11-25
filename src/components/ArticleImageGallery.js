@@ -113,7 +113,7 @@ const SortableImageItem = ({ image, onDelete, onUpdateCaption, isEditing, setIsE
   );
 };
 
-const ArticleImageGallery = ({ articleId, editable = false }) => {
+const ArticleImageGallery = ({ articleId, editable = false, onImageChange }) => {
   const { t } = useTranslation();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -174,6 +174,7 @@ const ArticleImageGallery = ({ articleId, editable = false }) => {
       setError('');
       await articleImageService.addImage(articleId, file);
       await loadImages();
+      onImageChange?.(); // Notify parent component of image change
       e.target.value = ''; // Reset file input after successful upload
     } catch (err) {
       setError(err.response?.data?.error || t('writeNews.form.failedToUploadImage'));
@@ -189,6 +190,7 @@ const ArticleImageGallery = ({ articleId, editable = false }) => {
     try {
       await articleImageService.deleteImage(imageId);
       setImages(images.filter(img => img.id !== imageId));
+      onImageChange?.(); // Notify parent component of image change
     } catch (err) {
       alert(t('writeNews.form.failedToDeleteImage'));
     }

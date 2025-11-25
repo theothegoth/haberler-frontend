@@ -311,6 +311,9 @@ const WriteNews = () => {
       if (!draftIdToPublish) {
         const draft = await draftService.createDraft(formData);
         draftIdToPublish = draft.id;
+      } else {
+        // Save current content to draft before publishing
+        await draftService.updateDraft(draftIdToPublish, formData);
       }
 
       // Now publish the draft (which will check for media)
@@ -480,7 +483,7 @@ const WriteNews = () => {
                 {t('writeNews.form.articleImagesDescription')}
               </p>
               {currentDraftId ? (
-                <ArticleImageGallery articleId={currentDraftId} editable={true} />
+                <ArticleImageGallery articleId={currentDraftId} editable={true} onImageChange={fetchMediaCounts} />
               ) : (
                 <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 text-center">
                   <svg className="w-12 h-12 mx-auto mb-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

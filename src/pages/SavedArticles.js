@@ -42,6 +42,12 @@ const SavedArticles = () => {
       const currentOffset = isLoadMore ? offset : 0;
       const data = await bookmarkService.getSavedArticles(limit, currentOffset);
 
+      // Debug: Check if article_type is in the data
+      if (data && data.articles && data.articles.length > 0) {
+        console.log('First saved article:', data.articles[0]);
+        console.log('Has article_type?', 'article_type' in data.articles[0], data.articles[0].article_type);
+      }
+
       if (isLoadMore) {
         setArticles([...articles, ...(data.articles || [])]);
       } else {

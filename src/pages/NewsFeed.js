@@ -14,6 +14,7 @@ import DOMPurify from 'dompurify';
 import StructuredData from '../components/StructuredData';
 import { getImageUrl, handleImageError } from '../utils/imageUtils';
 import TrendingArticles from '../components/TrendingArticles';
+import EditedBadge from '../components/EditedBadge';
 
 const NewsFeed = () => {
   const navigate = useNavigate();
@@ -243,7 +244,14 @@ const NewsFeed = () => {
                       </div>
                       <div>
                         <p className="font-semibold text-gray-900 dark:text-white">{news.username}</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{formatTimeAgo(news.created_at)}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{formatTimeAgo(news.created_at)}</p>
+                          <EditedBadge
+                            createdAt={news.created_at}
+                            updatedAt={news.updated_at}
+                            size="sm"
+                          />
+                        </div>
                       </div>
                     </Link>
                     {news.category && (
@@ -261,14 +269,25 @@ const NewsFeed = () => {
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 hover:text-blue-600 cursor-pointer">
                       {news.title}
                     </h2>
-                    {news.image_url && (
-                      <img
-                        src={getImageUrl(news.image_url)}
-                        alt={news.title}
-                        className="w-full h-64 object-contain bg-gray-100 dark:bg-gray-700 rounded-lg mb-4"
-                        onError={handleImageError}
-                        onLoad={() => console.log('Image loaded:', getImageUrl(news.image_url))}
-                      />
+                    {news.display_thumbnail && (
+                      <div className="relative mb-4">
+                        <img
+                          src={getImageUrl(news.display_thumbnail)}
+                          alt={news.title}
+                          className="w-full h-64 object-contain bg-gray-100 dark:bg-gray-700 rounded-lg"
+                          onError={handleImageError}
+                        />
+                        {news.video_count > 0 && (
+                          <div
+                            className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-lg shadow-lg hover:bg-red-700 transition-colors"
+                            title={t('videoAttachment.hasVideo')}
+                          >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                            </svg>
+                          </div>
+                        )}
+                      </div>
                     )}
                     <p className="text-gray-700 dark:text-gray-200 line-clamp-3 mb-4">
                       {stripHTML(news.content)}

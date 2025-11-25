@@ -5,19 +5,24 @@ import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
 import ErrorMessage from '../components/ErrorMessage';
 import LoadingSpinner from '../components/LoadingSpinner';
-import ImageUpload from '../components/ImageUpload';
 import RichTextEditor from '../components/RichTextEditor';
+import ArticleImageGallery from '../components/ArticleImageGallery';
+import ArticleVideoAttachment from '../components/ArticleVideoAttachment';
+import ContentQualityIndicator from '../components/ContentQualityIndicator';
+import useUserVideos from '../hooks/useUserVideos';
+import articleImageService from '../services/articleImageService';
+import articleVideoService from '../services/articleVideoService';
 
 const EditArticle = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { videos: userVideos } = useUserVideos();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     category: '',
-    imageUrl: '',
     tags: []
   });
   const [tagInput, setTagInput] = useState('');
@@ -26,6 +31,8 @@ const EditArticle = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [preview, setPreview] = useState(false);
+  const [imageCount, setImageCount] = useState(0);
+  const [videoCount, setVideoCount] = useState(0);
 
   const categories = [
     'Politika', 'Ekonomi', 'Spor', 'Teknoloji', 'Sağlık',
@@ -40,11 +47,12 @@ const EditArticle = () => {
         title: article.title || '',
         content: article.content || '',
         category: article.category || '',
-        imageUrl: article.image_url || '',
         tags: article.tags || []
       });
     } catch (err) {
-      setError(err.response?.data?.error || t('editArticle.loadError'));
+      const errorMsg = err.response?.data?.error || 'editArticle.loadError';
+      // Store the error KEY, not the translated text, so it can be re-translated when language changes
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -53,6 +61,31 @@ const EditArticle = () => {
   useEffect(() => {
     loadArticle();
   }, [loadArticle]);
+
+  // Fetch media counts when article loads
+  useEffect(() => {
+    const fetchMediaCounts = async () => {
+      if (!id) {
+        setImageCount(0);
+        setVideoCount(0);
+        return;
+      }
+
+      try {
+        const [images, videos] = await Promise.all([
+          articleImageService.getImages(id),
+          articleVideoService.getVideos(id)
+        ]);
+        setImageCount(images?.length || 0);
+        setVideoCount(videos?.length || 0);
+      } catch (err) {
+        console.error('Error fetching media counts:', err);
+        // Don't set error state, just keep counts at 0
+      }
+    };
+
+    fetchMediaCounts();
+  }, [id]);
 
   const handleChange = (e) => {
     setFormData({
@@ -78,27 +111,10 @@ const EditArticle = () => {
     });
   };
 
-  const handleImageUploaded = (imageUrl) => {
-    setFormData({
-      ...formData,
-      imageUrl: imageUrl
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-
-    if (formData.title.length < 10) {
-      setError(t('writeNews.form.titleTooShort'));
-      return;
-    }
-
-    if (formData.content.length < 100) {
-      setError(t('writeNews.form.contentTooShort'));
-      return;
-    }
 
     try {
       setSubmitting(true);
@@ -108,7 +124,9 @@ const EditArticle = () => {
         navigate('/my-articles');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.error || t('editArticle.error'));
+      const errorMsg = err.response?.data?.error || 'editArticle.error';
+      // Store the error KEY, not the translated text, so it can be re-translated when language changes
+      setError(errorMsg);
     } finally {
       setSubmitting(false);
     }
@@ -148,7 +166,7 @@ const EditArticle = () => {
           </div>
         </div>
 
-        {error && <ErrorMessage message={error} />}
+        {error && <ErrorMessage message={t(error)} />}
         {success && (
           <div className="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border-l-4 border-green-500 p-4 mb-6 rounded">
             <p className="text-green-700 dark:text-green-300">{success}</p>
@@ -157,7 +175,7 @@ const EditArticle = () => {
 
         {!preview ? (
           /* Editor Form */
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
             {/* Title */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
@@ -172,7 +190,7 @@ const EditArticle = () => {
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg"
                 required
               />
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{formData.title.length} / {t('writeNews.form.minCharacters')} 10 {t('writeNews.form.titleHelper')}</p>
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{formData.title.length} / {t('writeNews.form.minCharacters')} 20 {t('writeNews.form.titleHelper')}</p>
             </div>
 
             {/* Category */}
@@ -193,16 +211,23 @@ const EditArticle = () => {
               </select>
             </div>
 
-            {/* Image Upload */}
+            {/* Article Images */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Article Image
+                {t('writeNews.form.articleImages')}
               </label>
-              <ImageUpload
-                currentImageUrl={formData.imageUrl}
-                onImageUploaded={handleImageUploaded}
-              />
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                {t('writeNews.form.articleImagesDescription')}
+              </p>
+              <ArticleImageGallery articleId={id} editable={true} />
             </div>
+
+            {/* Video Attachment */}
+            <ArticleVideoAttachment
+              articleId={id}
+              editable={true}
+              userVideos={userVideos}
+            />
 
             {/* Content */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
@@ -257,6 +282,16 @@ const EditArticle = () => {
               </div>
             </div>
 
+            {/* Content Quality Indicator */}
+            {(formData.title || formData.content) && (
+              <ContentQualityIndicator
+                title={formData.title}
+                content={formData.content}
+                imageCount={imageCount}
+                videoCount={videoCount}
+              />
+            )}
+
             {/* Submit */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <div className="flex space-x-4">
@@ -268,7 +303,8 @@ const EditArticle = () => {
                   {t('editArticle.cancel')}
                 </button>
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleSubmit}
                   disabled={submitting}
                   className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
@@ -300,14 +336,6 @@ const EditArticle = () => {
                 <span>{new Date().toLocaleDateString('tr-TR')}</span>
               </div>
             </div>
-            {formData.imageUrl && (
-              <img
-                src={formData.imageUrl.startsWith('http') ? formData.imageUrl : `http://localhost:5000${formData.imageUrl}`}
-                alt={formData.title}
-                className="w-full max-h-[600px] object-contain rounded-lg mb-6 bg-gray-100 dark:bg-gray-700"
-                onError={(e) => e.target.style.display = 'none'}
-              />
-            )}
             <div className="prose max-w-none text-gray-700 dark:text-gray-200 whitespace-pre-wrap">
               {formData.content || t('writeNews.preview.contentPlaceholder')}
             </div>

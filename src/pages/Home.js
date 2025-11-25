@@ -55,8 +55,8 @@ const Home = () => {
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {/* Feature 1 - Watch YouTube Videos */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center mb-4">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-center">
+            <div className="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center mb-4 mx-auto">
               <svg
                 className="w-6 h-6 text-red-600"
                 fill="none"
@@ -78,7 +78,7 @@ const Home = () => {
               {t('home.features.feature1.description')}
             </p>
             <Link
-              to="/dashboard"
+              to="/watch"
               className="inline-block w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-center font-semibold"
             >
               {t('home.features.feature1.button')}
@@ -86,8 +86,8 @@ const Home = () => {
           </div>
 
           {/* Feature 2 - Read News */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-center">
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4 mx-auto">
               <svg
                 className="w-6 h-6 text-blue-600"
                 fill="none"
@@ -117,8 +117,8 @@ const Home = () => {
           </div>
 
           {/* Feature 3 - Write News */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-4">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-center">
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-4 mx-auto">
               <svg
                 className="w-6 h-6 text-green-600"
                 fill="none"

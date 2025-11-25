@@ -9,6 +9,7 @@ import blockService from '../services/blockService';
 import ProtectedContent from '../components/ProtectedContent';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ReportModal from '../components/ReportModal';
+import EditedBadge from '../components/EditedBadge';
 import DOMPurify from 'dompurify';
 import { getImageUrl, handleImageError } from '../utils/imageUtils';
 
@@ -326,7 +327,14 @@ const UserProfile = () => {
                     {stripHTML(article.content)}
                   </p>
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                    <span>{new Date(article.created_at).toLocaleDateString('tr-TR')}</span>
+                    <div className="flex items-center gap-2">
+                      <span>{new Date(article.created_at).toLocaleDateString('tr-TR')}</span>
+                      <EditedBadge
+                        createdAt={article.created_at}
+                        updatedAt={article.updated_at}
+                        size="sm"
+                      />
+                    </div>
                     <div className="flex items-center space-x-4">
                       <button
                         onClick={(e) => handleLike(article.id, e)}

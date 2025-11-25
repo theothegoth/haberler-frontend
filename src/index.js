@@ -20,7 +20,7 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 
-// Register service worker for PWA
-serviceWorkerRegistration.register();
+// Service worker disabled to prevent caching issues with authentication
+// serviceWorkerRegistration.register();
 
 reportWebVitals();

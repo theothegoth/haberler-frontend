@@ -5,7 +5,9 @@ import DOMPurify from 'dompurify';
 import bookmarkService from '../services/bookmarkService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TwitterShareButton from '../components/TwitterShareButton';
+import EditedBadge from '../components/EditedBadge';
 import SEO from '../components/SEO';
+import { getImageUrl, handleImageError } from '../utils/imageUtils';
 
 const SavedArticles = () => {
   const { t } = useTranslation();
@@ -138,34 +140,51 @@ const SavedArticles = () => {
               {articles.map((article) => (
                 <article
                   key={article.id}
-                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full"
                 >
                   <Link
                     to={`/article/${article.id}`}
-                    className="block hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
+                    className="flex-grow flex flex-col hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
                   >
-                    {article.image_url && (
-                      <img
-                        src={article.image_url.startsWith('http') ? article.image_url : `http://localhost:5000${article.image_url}`}
-                        alt={article.title}
-                        className="w-full h-48 object-contain bg-gray-100 dark:bg-gray-700"
-                        onError={(e) => e.target.style.display = 'none'}
-                      />
+                    {article.display_thumbnail && (
+                      <div className="relative">
+                        <img
+                          src={getImageUrl(article.display_thumbnail)}
+                          alt={article.title}
+                          className="w-full h-48 object-contain bg-gray-100 dark:bg-gray-700"
+                          onError={handleImageError}
+                        />
+                        {article.video_count > 0 && (
+                          <div className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-lg shadow-lg hover:bg-red-700 transition-colors"
+                               title={t('videoAttachment.hasVideo')}>
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                            </svg>
+                          </div>
+                        )}
+                      </div>
                     )}
-                    <div className="p-6">
+                    <div className="p-6 flex-grow flex flex-col">
                       {article.category && (
-                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-xs">
+                        <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-xs break-words inline-block w-fit">
                           {t(`categories.${article.category.toLowerCase()}`) || article.category}
                         </span>
                       )}
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-3 mb-2 line-clamp-2 break-words hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">
                         {article.title}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
+                      <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 break-words mb-4">
                         {stripHTML(article.content)}
                       </p>
-                      <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-                        <span>{new Date(article.created_at).toLocaleDateString('tr-TR')}</span>
+                      <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mt-auto">
+                        <div className="flex items-center gap-2">
+                          <span>{new Date(article.created_at).toLocaleDateString('tr-TR')}</span>
+                          <EditedBadge
+                            createdAt={article.created_at}
+                            updatedAt={article.updated_at}
+                            size="sm"
+                          />
+                        </div>
                         <div className="flex items-center space-x-4">
                           <span className="flex items-center space-x-1">
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -190,7 +209,7 @@ const SavedArticles = () => {
                       </div>
                     </div>
                   </Link>
-                  <div className="px-6 pb-6 space-y-2">
+                  <div className="px-6 pb-6 pt-2 space-y-2 mt-auto">
                     <TwitterShareButton
                       title={article.title}
                       url={`${window.location.origin}/article/${article.id}`}

@@ -3,12 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNavigationBlocker } from '../context/NavigationBlockerContext';
-import newsService from '../services/newsService';
 import draftService from '../services/draftService';
 import ErrorMessage from '../components/ErrorMessage';
 import SEO from '../components/SEO';
-import ImageUpload from '../components/ImageUpload';
 import RichTextEditor from '../components/RichTextEditor';
+import ArticleImageGallery from '../components/ArticleImageGallery';
+import ArticleVideoAttachment from '../components/ArticleVideoAttachment';
+import ContentQualityIndicator from '../components/ContentQualityIndicator';
+import useUserVideos from '../hooks/useUserVideos';
+import articleImageService from '../services/articleImageService';
+import articleVideoService from '../services/articleVideoService';
 
 const WriteNews = () => {
   const { user } = useAuth();
@@ -16,11 +20,11 @@ const WriteNews = () => {
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const { enableBlocker, disableBlocker } = useNavigationBlocker();
+  const { videos: userVideos } = useUserVideos();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     category: '',
-    imageUrl: '',
     tags: []
   });
   const [tagInput, setTagInput] = useState('');
@@ -31,6 +35,8 @@ const WriteNews = () => {
   const [draftStatus, setDraftStatus] = useState(''); // 'saving', 'saved', 'error'
   const [currentDraftId, setCurrentDraftId] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [imageCount, setImageCount] = useState(0);
+  const [videoCount, setVideoCount] = useState(0);
   const autoSaveTimer = useRef(null);
   const initialFormData = useRef(null);
 
@@ -52,7 +58,6 @@ const WriteNews = () => {
               title: draft.title || '',
               content: draft.content || '',
               category: draft.category || '',
-              imageUrl: draft.image_url || '',
               tags: draft.tags || []
             };
             setFormData(loadedData);
@@ -86,7 +91,6 @@ const WriteNews = () => {
         title: formData.title,
         content: formData.content,
         category: formData.category,
-        imageUrl: formData.imageUrl,
         tags: formData.tags
       };
 
@@ -180,6 +184,32 @@ const WriteNews = () => {
     };
   }, [hasUnsavedChanges, formData.title, formData.content]);
 
+  // Function to fetch media counts
+  const fetchMediaCounts = useCallback(async () => {
+    if (!currentDraftId) {
+      setImageCount(0);
+      setVideoCount(0);
+      return;
+    }
+
+    try {
+      const [images, videos] = await Promise.all([
+        articleImageService.getImages(currentDraftId),
+        articleVideoService.getVideos(currentDraftId)
+      ]);
+      setImageCount(images?.length || 0);
+      setVideoCount(videos?.length || 0);
+    } catch (err) {
+      console.error('Error fetching media counts:', err);
+      // Don't set error state, just keep counts at 0
+    }
+  }, [currentDraftId]);
+
+  // Fetch media counts when draft ID changes
+  useEffect(() => {
+    fetchMediaCounts();
+  }, [fetchMediaCounts]);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -204,13 +234,6 @@ const WriteNews = () => {
     });
   };
 
-  const handleImageUploaded = (imageUrl) => {
-    setFormData({
-      ...formData,
-      imageUrl: imageUrl
-    });
-  };
-
   const handleNewArticle = () => {
     if (hasUnsavedChanges && (formData.title || formData.content)) {
       if (!window.confirm(t('writeNews.confirmNewArticle'))) {
@@ -222,7 +245,6 @@ const WriteNews = () => {
       title: '',
       content: '',
       category: '',
-      imageUrl: '',
       tags: []
     };
     setFormData(emptyData);
@@ -247,7 +269,6 @@ const WriteNews = () => {
           title: '',
           content: '',
           category: '',
-          imageUrl: '',
           tags: []
         };
         setFormData(emptyData);
@@ -269,24 +290,25 @@ const WriteNews = () => {
     setError('');
     setSuccess('');
 
-    if (formData.title.length < 10) {
-      setError(t('writeNews.form.titleTooShort'));
-      return;
-    }
-
-    if (formData.content.length < 100) {
-      setError(t('writeNews.form.contentTooShort'));
+    // Check media requirement on frontend first
+    if (imageCount === 0 && videoCount === 0) {
+      setError('VALIDATION.MEDIA_REQUIRED');
       return;
     }
 
     try {
       setLoading(true);
-      await newsService.createNews(formData);
 
-      // Delete draft after successful publish
-      if (currentDraftId) {
-        await draftService.deleteDraft(currentDraftId);
+      let draftIdToPublish = currentDraftId;
+
+      // If no draft exists, create one first so media validation can work
+      if (!draftIdToPublish) {
+        const draft = await draftService.createDraft(formData);
+        draftIdToPublish = draft.id;
       }
+
+      // Now publish the draft (which will check for media)
+      await draftService.publishDraft(draftIdToPublish);
 
       // Clear unsaved changes flag to allow navigation without warning
       setHasUnsavedChanges(false);
@@ -296,7 +318,9 @@ const WriteNews = () => {
         navigate('/my-articles');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.error || t('writeNews.error'));
+      const errorMsg = err.response?.data?.error || 'writeNews.error';
+      // Store the error KEY, not the translated text, so it can be re-translated when language changes
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -388,7 +412,7 @@ const WriteNews = () => {
           </div>
         </div>
 
-        {error && <ErrorMessage message={error} />}
+        {error && <ErrorMessage message={t(error)} />}
         {success && (
           <div className="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border-l-4 border-green-500 p-4 mb-6 rounded">
             <p className="text-green-700 dark:text-green-300">{success}</p>
@@ -397,7 +421,7 @@ const WriteNews = () => {
 
         {!preview ? (
           /* Editor Form */
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
             {/* Title */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
@@ -412,7 +436,7 @@ const WriteNews = () => {
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg"
                 required
               />
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{formData.title.length} / {t('writeNews.form.minCharacters')} 10 {t('writeNews.form.titleHelper')}</p>
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{formData.title.length} / {t('writeNews.form.minCharacters')} 20 {t('writeNews.form.titleHelper')}</p>
             </div>
 
             {/* Category */}
@@ -433,16 +457,57 @@ const WriteNews = () => {
               </select>
             </div>
 
-            {/* Image Upload */}
+            {/* Article Images */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Article Image
+                {t('writeNews.form.articleImages')}
               </label>
-              <ImageUpload
-                currentImageUrl={formData.imageUrl}
-                onImageUploaded={handleImageUploaded}
-              />
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                {t('writeNews.form.articleImagesDescription')}
+              </p>
+              {currentDraftId ? (
+                <ArticleImageGallery articleId={currentDraftId} editable={true} />
+              ) : (
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 text-center">
+                  <svg className="w-12 h-12 mx-auto mb-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    {t('writeNews.form.saveToUploadImages')}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('writeNews.form.saveToUploadImagesDescription')}
+                  </p>
+                </div>
+              )}
             </div>
+
+            {/* Article Video */}
+            {currentDraftId ? (
+              <ArticleVideoAttachment
+                articleId={currentDraftId}
+                editable={true}
+                userVideos={userVideos || []}
+                onVideoChange={fetchMediaCounts}
+              />
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
+                  {t('videoAttachment.addVideoOptional')}
+                </label>
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 text-center">
+                  <svg className="w-12 h-12 mx-auto mb-3 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                  </svg>
+                  <p className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    {t('videoAttachment.saveToAddVideo')}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('videoAttachment.saveToAddVideoDescription')}
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Content */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
@@ -500,10 +565,21 @@ const WriteNews = () => {
               </div>
             </div>
 
+            {/* Content Quality Indicator */}
+            {(formData.title || formData.content) && (
+              <ContentQualityIndicator
+                title={formData.title}
+                content={formData.content}
+                imageCount={imageCount}
+                videoCount={videoCount}
+              />
+            )}
+
             {/* Submit */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
@@ -534,14 +610,21 @@ const WriteNews = () => {
                 <span>{new Date().toLocaleDateString('tr-TR')}</span>
               </div>
             </div>
-            {formData.imageUrl && (
-              <img
-                src={formData.imageUrl.startsWith('http') ? formData.imageUrl : `http://localhost:5000${formData.imageUrl}`}
-                alt={formData.title}
-                className="w-full max-h-[600px] object-contain rounded-lg mb-6 bg-gray-100 dark:bg-gray-700"
-                onError={(e) => e.target.style.display = 'none'}
-              />
+
+            {/* Article Image Gallery in Preview */}
+            {currentDraftId && (
+              <div className="mb-6">
+                <ArticleImageGallery articleId={currentDraftId} editable={false} />
+              </div>
             )}
+
+            {/* Article Video in Preview */}
+            {currentDraftId && (
+              <div className="mb-6">
+                <ArticleVideoAttachment articleId={currentDraftId} editable={false} />
+              </div>
+            )}
+
             <div
               className="prose prose-lg max-w-none dark:prose-invert [&_*]:text-gray-900 dark:[&_*]:text-gray-100 break-words max-h-[600px] overflow-y-auto"
               dangerouslySetInnerHTML={{

@@ -159,11 +159,33 @@ const Drafts = () => {
               <div key={draft.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer hover:shadow-xl transition-shadow" onClick={() => handleEdit(draft.id)}>
                 {/* Image Preview */}
                 {draft.image_url && (
-                  <img
-                    src={draft.image_url}
-                    alt={draft.title || 'Draft'}
-                    className="w-full h-48 object-contain bg-gray-100 dark:bg-gray-700"
-                  />
+                  <div className="relative">
+                    <img
+                      src={draft.image_url}
+                      alt={draft.title || 'Draft'}
+                      className="w-full h-48 object-contain bg-gray-100 dark:bg-gray-700"
+                    />
+                    {draft.video_count > 0 && (
+                      <div className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-lg shadow-lg hover:bg-red-700 transition-colors"
+                           title={t('videoAttachment.hasVideo')}>
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {!draft.image_url && draft.video_count > 0 && (
+                  <div className="w-full h-48 bg-gray-100 dark:bg-gray-700 flex items-center justify-center relative">
+                    <div className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-lg shadow-lg">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                      </svg>
+                    </div>
+                    <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                  </div>
                 )}
 
                 {/* Draft Content */}

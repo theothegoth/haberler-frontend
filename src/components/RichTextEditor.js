@@ -61,10 +61,10 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
         }}
       />
       <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        <span className={charCount < 100 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}>
+        <span className={charCount < 500 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}>
           {charCount} characters
         </span>
-        {charCount < 100 && <span className="ml-2">(minimum 100 characters)</span>}
+        {charCount < 500 && <span className="ml-2">(minimum 500 characters)</span>}
       </div>
     </div>
   );

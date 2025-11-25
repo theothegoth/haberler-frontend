@@ -69,9 +69,9 @@ const SimilarArticles = ({ newsId }) => {
             className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow"
           >
             <Link to={`/article/${article.id}`} className="block p-3 group">
-              {article.imageUrl && (
+              {article.displayThumbnail && (
                 <img
-                  src={article.imageUrl}
+                  src={article.displayThumbnail}
                   alt={article.title}
                   className="w-full h-40 object-contain bg-gray-100 dark:bg-gray-700 rounded-lg mb-3"
                 />

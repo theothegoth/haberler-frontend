@@ -13,9 +13,11 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => {
@@ -27,9 +29,15 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.dispatchEvent(new Event('unauthorized'));
+      // Check if we actually have a token before clearing it
+      // This prevents clearing localStorage on requests that were supposed to be unauthenticated
+      const hadToken = localStorage.getItem('token');
+
+      if (hadToken) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.dispatchEvent(new Event('unauthorized'));
+      }
     }
 
     // Keep the original error object with response data intact

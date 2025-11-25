@@ -73,8 +73,7 @@ const Settings = () => {
       const data = await emailPreferencesService.getPreferences();
       setEmailPreferences(data);
     } catch (err) {
-      console.error('Error loading email preferences:', err);
-      setError('Email tercihleri yüklenirken bir hata oluştu');
+      setError(err.response?.data?.error || t('settings.email.loadError') || 'Email tercihleri yüklenirken bir hata oluştu');
     } finally {
       setLoadingEmailPrefs(false);
     }
@@ -564,7 +563,7 @@ const Settings = () => {
                           disabled={loading}
                           className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                         >
-                          {loading ? t('settings.saving') : t('settings.saveChanges')}
+                          {loading ? t('settings.email.saving') : t('settings.email.saveChanges')}
                         </button>
                       </div>
                     </div>

@@ -12,6 +12,9 @@ import HTMLContent from '../components/HTMLContent';
 import blockService from '../services/blockService';
 import ReportModal from '../components/ReportModal';
 import SimilarArticles from '../components/SimilarArticles';
+import ArticleImageGallery from '../components/ArticleImageGallery';
+import ArticleVideoAttachment from '../components/ArticleVideoAttachment';
+import EditedBadge from '../components/EditedBadge';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -479,9 +482,16 @@ const ArticleDetail = () => {
                         <p className="font-medium text-gray-900 dark:text-white">
                           {article.username}
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {new Date(article.created_at).toLocaleDateString('tr-TR')}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {new Date(article.created_at).toLocaleDateString('tr-TR')}
+                          </p>
+                          <EditedBadge
+                            createdAt={article.created_at}
+                            updatedAt={article.updated_at}
+                            size="sm"
+                          />
+                        </div>
                       </div>
                     </Link>
 
@@ -580,17 +590,15 @@ const ArticleDetail = () => {
                   </button>
                 </div>
 
-                {/* Article Image */}
-                {article.image_url && (
-                  <div className="w-full flex justify-center mb-6">
-                    <img
-                      src={article.image_url}
-                      alt={article.title}
-                      className="max-w-full max-h-96 object-contain rounded-lg"
-                      onError={(e) => (e.target.parentElement.style.display = 'none')}
-                    />
-                  </div>
-                )}
+                {/* Article Image Gallery */}
+                <div className="mb-6">
+                  <ArticleImageGallery articleId={id} editable={false} />
+                </div>
+
+                {/* Article Video */}
+                <div className="mb-6">
+                  <ArticleVideoAttachment articleId={id} editable={false} />
+                </div>
 
                 {/* Article Content */}
                 <HTMLContent

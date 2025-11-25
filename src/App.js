@@ -39,6 +39,13 @@ const BlockedUsers = lazy(() => import('./pages/BlockedUsers'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const Drafts = lazy(() => import('./pages/Drafts'));
 
+// Admin pages
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
+const AdminArticles = lazy(() => import('./pages/admin/AdminArticles'));
+const AdminReports = lazy(() => import('./pages/admin/AdminReports'));
+const ManageArticleImages = lazy(() => import('./pages/ManageArticleImages'));
+
 function App() {
   return (
     <HelmetProvider>
@@ -62,7 +69,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route
-              path="/dashboard"
+              path="/watch"
               element={
                 <PrivateRoute>
                   <Dashboard />
@@ -98,6 +105,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <MyArticles />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/article/:articleId/images"
+              element={
+                <PrivateRoute>
+                  <ManageArticleImages />
                 </PrivateRoute>
               }
             />
@@ -186,6 +201,40 @@ function App() {
               element={
                 <PrivateRoute>
                   <Drafts />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Admin Routes */}
+            <Route
+              path="/admin/dashboard"
+              element={
+                <PrivateRoute>
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <PrivateRoute>
+                  <AdminUsers />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/articles"
+              element={
+                <PrivateRoute>
+                  <AdminArticles />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/reports"
+              element={
+                <PrivateRoute>
+                  <AdminReports />
                 </PrivateRoute>
               }
             />

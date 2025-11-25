@@ -32,7 +32,13 @@ const Login = () => {
     const result = await login(email, password);
 
     if (result.success) {
-      navigate('/dashboard');
+      // Check if user is admin and redirect accordingly
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData && userData.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/feed');
+      }
     } else {
       setError(result.error);
     }

@@ -46,7 +46,7 @@ const Navigation = () => {
             <div className="flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
               {/* Watch - Direct Link */}
               <BlockedLink
-                to="/dashboard"
+                to="/watch"
                 className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 {t('nav.watch')}

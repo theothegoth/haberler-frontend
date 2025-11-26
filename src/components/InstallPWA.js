@@ -20,7 +20,6 @@ const InstallPWA = () => {
       // Hide the install button after app is installed
       setShowInstall(false);
       setDeferredPrompt(null);
-      console.log('PWA was installed');
     };
 
     // Check if app is already installed
@@ -49,14 +48,6 @@ const InstallPWA = () => {
 
     // Wait for the user to respond to the prompt
     const { outcome } = await deferredPrompt.userChoice;
-
-    console.log(`User response to the install prompt: ${outcome}`);
-
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
-    }
 
     // Clear the deferredPrompt
     setDeferredPrompt(null);

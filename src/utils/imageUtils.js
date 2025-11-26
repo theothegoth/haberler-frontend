@@ -14,11 +14,10 @@ export const getImageUrl = (imageUrl) => {
 
 // Utility function for image error handling
 export const handleImageError = (event) => {
-  console.error('Image failed to load:', event.target.src);
   event.target.style.display = 'none';
 };
 
 // Utility function to log image loading for debugging
 export const handleImageLoad = (event) => {
-  console.log('Image loaded successfully:', event.target.src);
+  // Image loaded successfully
 };

@@ -20,7 +20,7 @@ export function register(config) {
       if (isLocalhost) {
         checkValidServiceWorker(swUrl, config);
         navigator.serviceWorker.ready.then(() => {
-          console.log('This web app is being served cache-first by a service worker.');
+          // This web app is being served cache-first by a service worker.
         });
       } else {
         registerValidSW(swUrl, config);
@@ -33,8 +33,6 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      console.log('Service Worker registered:', registration);
-
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -44,13 +42,13 @@ function registerValidSW(swUrl, config) {
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
-              console.log('New content is available; please refresh.');
+              // New content is available; please refresh.
 
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
               }
             } else {
-              console.log('Content is cached for offline use.');
+              // Content is cached for offline use.
 
               if (config && config.onSuccess) {
                 config.onSuccess(registration);
@@ -77,7 +75,7 @@ function checkValidServiceWorker(swUrl, config) {
       ) {
         navigator.serviceWorker.ready.then((registration) => {
           registration.unregister().then(() => {
-            console.log('Service worker unregistered - invalid or not found');
+            // Service worker unregistered - invalid or not found
             // Removed auto-reload to prevent refresh loop
           });
         });
@@ -86,7 +84,7 @@ function checkValidServiceWorker(swUrl, config) {
       }
     })
     .catch(() => {
-      console.log('No internet connection found. App is running in offline mode.');
+      // No internet connection found. App is running in offline mode.
     });
 }
 

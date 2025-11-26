@@ -14,7 +14,6 @@ const useUserVideos = (category = null) => {
       setVideos(data);
     } catch (err) {
       setError(err.response?.data?.error || err.message);
-      console.error('Error fetching user videos:', err);
     } finally {
       setLoading(false);
     }

@@ -25,9 +25,7 @@ const articleImageService = {
 
   // Update image caption
   updateCaption: async (imageId, caption) => {
-    console.log('[FRONTEND] Updating caption:', { imageId, caption });
     const response = await apiClient.patch(`/articles/images/${imageId}/caption`, { caption });
-    console.log('[FRONTEND] Caption update response:', response.data);
     return response.data;
   },
 

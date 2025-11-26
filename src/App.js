@@ -8,6 +8,7 @@ import Navigation from './components/Navigation';
 import VerificationBanner from './components/VerificationBanner';
 import NavigationBlockerDialog from './components/NavigationBlockerDialog';
 import InstallPWA from './components/InstallPWA';
+import CookieConsent from './components/CookieConsent';
 import OfflineFallback from './components/OfflineFallback';
 import PrivateRoute from './components/PrivateRoute';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -38,6 +39,8 @@ const AdvancedSearch = lazy(() => import('./pages/AdvancedSearch'));
 const BlockedUsers = lazy(() => import('./pages/BlockedUsers'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const Drafts = lazy(() => import('./pages/Drafts'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 
 // Admin pages
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
@@ -59,11 +62,14 @@ function App() {
             <VerificationBanner />
             <NavigationBlockerDialog />
             <InstallPWA />
+            <CookieConsent />
             <Suspense fallback={<LoadingSpinner fullPage={true} size="lg" />}>
             <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/verify-email-required" element={<VerifyEmailRequired />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

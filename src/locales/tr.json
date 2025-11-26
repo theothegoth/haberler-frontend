@@ -808,5 +808,11 @@
     "fetchingVideo": "Video bilgisi alınıyor...",
     "videoNotFound": "Video bulunamadı veya erişilemez",
     "hasVideo": "Bu makalede video var"
+  },
+  "cookies": {
+    "title": "Çerez kullanıyoruz",
+    "description": "Tarama deneyiminizi geliştirmek, kişiselleştirilmiş içerik sunmak ve trafiğimizi analiz etmek için çerezleri kullanıyoruz. \"Kabul Et\"e tıklayarak çerez kullanımımıza izin vermiş olursunuz.",
+    "learnMore": "Daha fazla bilgi",
+    "accept": "Tümünü Kabul Et"
   }
 }

@@ -805,5 +805,11 @@
     "fetchingVideo": "Fetching video information...",
     "videoNotFound": "Video not found or unavailable",
     "hasVideo": "This article includes a video"
+  },
+  "cookies": {
+    "title": "We use cookies",
+    "description": "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking \"Accept\", you consent to our use of cookies.",
+    "learnMore": "Learn more",
+    "accept": "Accept All"
   }
 }

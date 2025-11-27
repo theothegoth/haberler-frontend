@@ -1,15 +1,17 @@
-// Utility function to construct proper image URLs
-export const getImageUrl = (imageUrl) => {
-  if (!imageUrl) return null;
+export const getImageUrl = (path) => {
+  if (!path) return 'https://via.placeholder.com/150?text=No+Image';
 
-  // If it's already a full URL, return as is
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl;
+  // If it's already a full URL (e.g. Cloudinary or external), return it as is
+  if (path.startsWith('http') || path.startsWith('blob:')) {
+    return path;
   }
 
-  // Otherwise, prepend the backend URL
-  const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
-  return `${backendUrl}${imageUrl}`;
+  // Ensure path starts with /
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+
+  // Always return the full HTTPS URL for your domain
+  // This fixes the Mixed Content error (http://localhost:5000)
+  return `https://www.gastehub.com/api${cleanPath}`;
 };
 
 // Utility function for image error handling

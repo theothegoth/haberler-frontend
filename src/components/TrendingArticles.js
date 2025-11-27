@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import recommendationService from '../services/recommendationService';
+import { getImageUrl } from '../utils/imageUtils';
 
 const TrendingArticles = ({ limit = 5, days = 7 }) => {
   const { t } = useTranslation();
@@ -108,7 +109,7 @@ const TrendingArticles = ({ limit = 5, days = 7 }) => {
               <div className="mt-1 flex items-center text-xs text-gray-400 dark:text-gray-500">
                 {article.author.profilePicture ? (
                   <img
-                    src={`http://localhost:5000${article.author.profilePicture}`}
+                    src={getImageUrl(article.author.profilePicture)}
                     alt={article.author.username}
                     className="w-4 h-4 rounded-full mr-1 object-cover"
                     onError={(e) => {

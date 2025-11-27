@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import authService from '../services/authService';
+import { getImageUrl } from '../utils/imageUtils';
 
 const ProfilePictureUpload = ({ currentImage, onUploadSuccess, onUploadError }) => {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ const ProfilePictureUpload = ({ currentImage, onUploadSuccess, onUploadError }) 
       const response = await authService.uploadProfilePicture(file);
 
       // Create preview URL
-      const previewUrl = `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${response.user.profile_picture}`;
+      const previewUrl = getImageUrl(response.user.profile_picture);
       setPreview(previewUrl);
 
       // Notify parent component

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../services/api';
 
 const ResetPassword = () => {
   const { t } = useTranslation();
@@ -42,10 +42,10 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/api/auth/reset-password', {
-        token,
-        newPassword: formData.newPassword
-      });
+    await api.post('/auth/reset-password', { 
+      token, 
+      newPassword: formData.newPassword
+    });
 
       setSuccess(true);
       setTimeout(() => {

@@ -159,10 +159,10 @@ const Drafts = () => {
             {drafts.map((draft) => (
               <div key={draft.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer hover:shadow-xl transition-shadow" onClick={() => handleEdit(draft.id)}>
                 {/* Image Preview */}
-                {draft.image_url && (
+                 {draft.display_thumbnail && (
                   <div className="relative">
                     <img
-                      src={draft.image_url}
+                      src={draft.display_thumbnail}
                       alt={draft.title || 'Draft'}
                       className="w-full h-48 object-contain bg-gray-100 dark:bg-gray-700"
                     />
@@ -176,7 +176,7 @@ const Drafts = () => {
                     )}
                   </div>
                 )}
-                {!draft.image_url && draft.video_count > 0 && (
+                 {!draft.display_thumbnail && draft.video_count > 0 && (
                   <div className="w-full h-48 bg-gray-100 dark:bg-gray-700 flex items-center justify-center relative">
                     <div className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-lg shadow-lg">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

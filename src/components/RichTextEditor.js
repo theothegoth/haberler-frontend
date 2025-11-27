@@ -1,5 +1,15 @@
 import { useRef, useMemo } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import 'tinymce/tinymce';
+import 'tinymce/themes/silver';
+import 'tinymce/models/dom';
+import 'tinymce/icons/default';
+import 'tinymce/plugins/link';
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/code';
+import 'tinymce/plugins/wordcount';
+import 'tinymce/skins/ui/oxide/skin.min.css';
+import 'tinymce/skins/content/default/content.min.css';
 
 const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) => {
   const editorRef = useRef(null);
@@ -14,7 +24,6 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
   return (
     <div className="rich-text-editor">
       <Editor
-        tinymceScriptSrc="/tinymce/tinymce.min.js"
         onInit={(evt, editor) => editorRef.current = editor}
         value={value}
         onEditorChange={onChange}
@@ -22,6 +31,8 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
           height: 500,
           menubar: false,
           license_key: 'gpl',
+          skin_url: '/static/skins/ui/oxide',
+          content_css: '/static/skins/content/default/content.css',
           plugins: [
             'lists', 'link', 'code', 'wordcount'
           ],

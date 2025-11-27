@@ -216,7 +216,7 @@ const UserProfile = () => {
             <div className="flex items-center space-x-6">
               {profileUser?.user_profile_picture ? (
                 <img
-                  src={`http://localhost:5000${profileUser.user_profile_picture}`}
+                  src={getImageUrl(profileUser.user_profile_picture)}
                   alt={profileUser?.username}
                   className="w-24 h-24 rounded-full object-cover bg-white bg-opacity-20 shrink-0"
                   onError={(e) => {

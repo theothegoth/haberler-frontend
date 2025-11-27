@@ -231,7 +231,7 @@ const NewsFeed = () => {
                     >
                       {news.user_profile_picture ? (
                         <img
-                          src={`http://localhost:5000${news.user_profile_picture}`}
+                          src={getImageUrl(news.user_profile_picture)}
                           alt={news.username}
                           className="w-10 h-10 rounded-full object-cover"
                           onError={(e) => {

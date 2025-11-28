@@ -8,8 +8,6 @@ import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/code';
 import 'tinymce/plugins/wordcount';
-import 'tinymce/skins/ui/oxide/skin.min.css';
-import 'tinymce/skins/content/default/content.min.css';
 
 const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) => {
   const editorRef = useRef(null);
@@ -31,8 +29,8 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
           height: 500,
           menubar: false,
           license_key: 'gpl',
-          skin_url: '/static/skins/ui/oxide',
-          content_css: '/static/skins/content/default/content.css',
+          skin_url: '/tinymce/skins/ui/oxide',
+          content_css: '/tinymce/skins/content/default/content.min.css',
           plugins: [
             'lists', 'link', 'code', 'wordcount'
           ],

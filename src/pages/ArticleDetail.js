@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import EmojiPicker from 'emoji-picker-react';
 import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
 import bookmarkService from '../services/bookmarkService';
@@ -16,6 +17,7 @@ import ArticleImageGallery from '../components/ArticleImageGallery';
 import ArticleVideoAttachment from '../components/ArticleVideoAttachment';
 import EditedBadge from '../components/EditedBadge';
 import ArticleTypeBadge from '../components/ArticleTypeBadge';
+import { getImageUrl } from '../utils/imageUtils';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -35,11 +37,32 @@ const ArticleDetail = () => {
   const [likingComment, setLikingComment] = useState(null);
   const [isBlocked, setIsBlocked] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  
+  // Emoji picker states
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showReplyEmojiPicker, setShowReplyEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef(null);
+  const replyEmojiPickerRef = useRef(null);
 
   useEffect(() => {
     loadArticle();
     loadComments();
   }, [id]);
+
+  // Click outside handler for emoji pickers
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+        setShowEmojiPicker(false);
+      }
+      if (replyEmojiPickerRef.current && !replyEmojiPickerRef.current.contains(event.target)) {
+        setShowReplyEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const loadArticle = async () => {
     try {
@@ -154,10 +177,21 @@ const ArticleDetail = () => {
     }
   };
 
+  const onEmojiClick = (emojiData) => {
+    setNewComment(prev => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const onReplyEmojiClick = (emojiData) => {
+    setReplyContent(prev => prev + emojiData.emoji);
+    setShowReplyEmojiPicker(false);
+  };
+
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     if (!currentUser) {
-      alert(t('common.loginRequired'));
+      // Redirect to login if not authenticated
+      navigate('/login');
       return;
     }
 
@@ -285,9 +319,17 @@ const ArticleDetail = () => {
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
           <Link to={`/user/${comment.user_id}`}>
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-              {(comment.username || 'U').charAt(0).toUpperCase()}
-            </div>
+            {comment.profile_picture ? (
+              <img
+                src={getImageUrl(comment.profile_picture)}
+                alt={comment.username}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                {(comment.username || 'U').charAt(0).toUpperCase()}
+              </div>
+            )}
           </Link>
           <div className="flex-1">
             <div className="flex items-center space-x-2">
@@ -301,7 +343,7 @@ const ArticleDetail = () => {
                 {new Date(comment.created_at).toLocaleDateString('tr-TR')}
               </span>
             </div>
-            <p className="mt-1 text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
               {comment.content}
             </p>
 
@@ -345,19 +387,36 @@ const ArticleDetail = () => {
 
             {/* Reply Form */}
             {!isReply && replyingTo === comment.id && (
-              <div className="mt-3">
-                <textarea
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder={t('articleDetail.writeReply')}
-                  className="w-full px-3 py-2 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none text-sm"
-                  rows="2"
-                />
+              <div className="mt-3 relative">
+                <div className="relative">
+                  <textarea
+                    value={replyContent}
+                    onChange={(e) => setReplyContent(e.target.value)}
+                    placeholder={t('articleDetail.writeReply')}
+                    className="w-full px-3 py-2 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none text-sm pr-10"
+                    rows="2"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowReplyEmojiPicker(!showReplyEmojiPicker)}
+                    className="absolute right-2 bottom-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                  {showReplyEmojiPicker && (
+                    <div className="absolute right-0 bottom-full mb-2 z-50" ref={replyEmojiPickerRef}>
+                      <EmojiPicker onEmojiClick={onReplyEmojiClick} width={300} height={400} />
+                    </div>
+                  )}
+                </div>
                 <div className="mt-2 flex justify-end space-x-2">
                   <button
                     onClick={() => {
                       setReplyingTo(null);
                       setReplyContent('');
+                      setShowReplyEmojiPicker(false);
                     }}
                     className="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
@@ -678,33 +737,41 @@ const ArticleDetail = () => {
                 {t('articleDetail.comments')} ({totalCommentCount})
               </h2>
 
-              {/* Comment Form */}
-              {currentUser ? (
-                <form onSubmit={handleSubmitComment} className="mb-8">
+              {/* Comment Form - Always visible, redirects on submit if not logged in */}
+              <form onSubmit={handleSubmitComment} className="mb-8">
+                <div className="relative">
                   <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder={t('articleDetail.writeComment')}
-                    className="w-full px-4 py-3 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
+                    className="w-full px-4 py-3 border dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none pr-10"
                     rows="3"
                   />
-                  <div className="mt-3 flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={submittingComment || !newComment.trim()}
-                      className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {submittingComment ? t('common.submitting') : t('articleDetail.submitComment')}
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                  <p className="text-blue-800 dark:text-blue-200">
-                    {t('articleDetail.loginToComment')}
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    className="absolute right-3 bottom-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                  {showEmojiPicker && (
+                    <div className="absolute right-0 top-full mt-2 z-50" ref={emojiPickerRef}>
+                      <EmojiPicker onEmojiClick={onEmojiClick} width={350} height={400} />
+                    </div>
+                  )}
                 </div>
-              )}
+                <div className="mt-3 flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={submittingComment}
+                    className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {submittingComment ? t('common.submitting') : t('articleDetail.submitComment')}
+                  </button>
+                </div>
+              </form>
 
               {/* Comments List */}
               <div className="space-y-4">

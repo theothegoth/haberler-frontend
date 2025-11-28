@@ -73,22 +73,14 @@ function App() {
             <Route path="/verify-email-required" element={<VerifyEmailRequired />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route
               path="/watch"
-              element={
-                <PrivateRoute>
-                  <Dashboard />
-                </PrivateRoute>
-              }
+              element={<Dashboard />}
             />
             <Route
               path="/feed"
-              element={
-                <PrivateRoute>
-                  <NewsFeed />
-                </PrivateRoute>
-              }
+              element={<NewsFeed />}
             />
             <Route
               path="/write"
@@ -124,11 +116,7 @@ function App() {
             />
             <Route
               path="/explore"
-              element={
-                <PrivateRoute>
-                  <Explore />
-                </PrivateRoute>
-              }
+              element={<Explore />}
             />
             <Route
               path="/settings"
@@ -164,35 +152,19 @@ function App() {
             />
             <Route
               path="/user/:userId"
-              element={
-                <PrivateRoute>
-                  <UserProfile />
-                </PrivateRoute>
-              }
+              element={<UserProfile />}
             />
             <Route
               path="/profile/:userId"
-              element={
-                <PrivateRoute>
-                  <UserProfile />
-                </PrivateRoute>
-              }
+              element={<UserProfile />}
             />
             <Route
               path="/article/:id"
-              element={
-                <PrivateRoute>
-                  <ArticleDetail />
-                </PrivateRoute>
-              }
+              element={<ArticleDetail />}
             />
             <Route
               path="/search"
-              element={
-                <PrivateRoute>
-                  <AdvancedSearch />
-                </PrivateRoute>
-              }
+              element={<AdvancedSearch />}
             />
             <Route
               path="/analytics"

@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import youtubeService from '../services/youtubeService';
 import LoadingSpinner from './LoadingSpinner';
+import { useAuth } from '../context/AuthContext';
 
 function AddChannelForm({ onAdded }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [input, setInput] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('error'); // 'error' or 'success'
@@ -14,6 +18,11 @@ function AddChannelForm({ onAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+
+    if (!user) {
+      navigate('/login');
+      return;
+    }
 
     if (!input.trim()) {
       setMessage(t('addChannelForm.enterChannelInfo'));

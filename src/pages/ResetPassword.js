@@ -1,12 +1,17 @@
-import { useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 
 const ResetPassword = () => {
   const { t } = useTranslation();
-  const { token } = useParams();
+  const { token: paramToken } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  
+  // Get token from either URL params or query string
+  const token = paramToken || searchParams.get('token');
+
   const [formData, setFormData] = useState({
     newPassword: '',
     confirmPassword: ''
@@ -15,6 +20,12 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (!token) {
+      setError(t('auth.resetPassword.invalidToken'));
+    }
+  }, [token, t]);
 
   const handleChange = (e) => {
     setFormData({
@@ -27,6 +38,11 @@ const ResetPassword = () => {
     e.preventDefault();
     setError('');
     setSuccess(false);
+
+    if (!token) {
+      setError(t('auth.resetPassword.missingToken'));
+      return;
+    }
 
     // Validation
     if (formData.newPassword.length < 6) {
@@ -42,10 +58,10 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-    await api.post('/auth/reset-password', { 
-      token, 
-      newPassword: formData.newPassword
-    });
+      await api.post('/auth/reset-password', { 
+        token, 
+        newPassword: formData.newPassword
+      });
 
       setSuccess(true);
       setTimeout(() => {

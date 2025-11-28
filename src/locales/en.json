@@ -265,6 +265,11 @@
       "noChannels": "You haven't added any channels yet",
       "confirmRemove": "Are you sure you want to remove this channel?"
     },
+    "loginToSeeVideos": "Login to Watch Videos",
+    "loginToTrackMessage": "Login to follow news channels and watch the latest videos.",
+    "loginToSeeChannels": "Login to see your channels",
+    "loginToAddChannel": "Login to add channel",
+    "welcomeGuest": "Welcome, Guest!",
     "noVideos": "No videos found",
     "noVideosMessage": "No videos from the last 48 hours. Either add more channels or wait for your channels to publish new content.",
     "noVideosMessageNoChannels": "Add news channels using the form above to start seeing the latest videos.",

@@ -265,6 +265,11 @@
       "noChannels": "Henüz kanal eklemediniz",
       "confirmRemove": "Bu kanalı kaldırmak istediğinizden emin misiniz?"
     },
+    "loginToSeeVideos": "Video İzlemek İçin Giriş Yapın",
+    "loginToTrackMessage": "Haber kanallarını takip etmek ve en son videoları izlemek için giriş yapın.",
+    "loginToSeeChannels": "Kanallarınızı görmek için giriş yapın",
+    "loginToAddChannel": "Kanal eklemek için giriş yapın",
+    "welcomeGuest": "Hoş geldiniz, Misafir!",
     "noVideos": "Video bulunamadı",
     "noVideosMessage": "Son 48 saatte yayınlanmış video yok. Daha fazla kanal ekleyin veya kanallarınızın yeni içerik yayınlamasını bekleyin.",
     "noVideosMessageNoChannels": "En son videoları görmeye başlamak için yukarıdaki formu kullanarak haber kanalları ekleyin.",

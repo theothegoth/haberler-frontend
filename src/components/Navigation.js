@@ -42,101 +42,100 @@ const Navigation = () => {
           </div>
 
           {/* Center Navigation Links */}
-          {isAuthenticated && (
-            <div className="flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
-              {/* Watch - Direct Link */}
-              <BlockedLink
-                to="/watch"
-                className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+          <div className="flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+            <BlockedLink
+              to="/watch"
+              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              {t('nav.watch')}
+            </BlockedLink>
+
+            {/* Read - Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setReadDropdownOpen(true)}
+              onMouseLeave={() => setReadDropdownOpen(false)}
+            >
+              <button
+                className="text-gray-700 dark:text-gray-200 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
               >
-                {t('nav.watch')}
-              </BlockedLink>
+                <span>{t('nav.read')}</span>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
 
-              {/* Read - Dropdown */}
-              <div
-                className="relative"
-                onMouseEnter={() => setReadDropdownOpen(true)}
-                onMouseLeave={() => setReadDropdownOpen(false)}
-              >
-                <button
-                  className="text-gray-700 dark:text-gray-200 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
-                >
-                  <span>{t('nav.read')}</span>
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-
-                {readDropdownOpen && (
-                  <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-600">
-                    <BlockedLink
-                      to="/feed"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      {t('nav.newsFeed')}
-                    </BlockedLink>
-                    <BlockedLink
-                      to="/my-articles"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      {t('nav.myArticles')}
-                    </BlockedLink>
-                    <BlockedLink
-                      to="/saved-articles"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      {t('nav.savedArticles')}
-                    </BlockedLink>
-                    <BlockedLink
-                      to="/search"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      {t('nav.searchArticles')}
-                    </BlockedLink>
-                  </div>
-                )}
-              </div>
-
-              {/* Write - Dropdown */}
-              <div
-                className="relative"
-                onMouseEnter={() => setWriteDropdownOpen(true)}
-                onMouseLeave={() => setWriteDropdownOpen(false)}
-              >
-                <button
-                  className="text-gray-700 dark:text-gray-200 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
-                >
-                  <span>{t('nav.write')}</span>
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-
-                {writeDropdownOpen && (
-                  <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-600">
-                    <BlockedLink
-                      to="/write"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      {t('nav.writeArticle')}
-                    </BlockedLink>
-                    <BlockedLink
-                      to="/drafts"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      {t('nav.drafts')}
-                    </BlockedLink>
-                    <BlockedLink
-                      to="/analytics"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      {t('nav.analytics')}
-                    </BlockedLink>
-                  </div>
-                )}
-              </div>
+              {readDropdownOpen && (
+                <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-600">
+                  <BlockedLink
+                    to="/feed"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {t('nav.newsFeed')}
+                  </BlockedLink>
+                  
+                  <BlockedLink
+                    to="/my-articles"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {t('nav.myArticles')}
+                  </BlockedLink>
+                  <BlockedLink
+                    to="/saved-articles"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {t('nav.savedArticles')}
+                  </BlockedLink>
+                    
+                  <BlockedLink
+                    to="/search"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {t('nav.searchArticles')}
+                  </BlockedLink>
+                </div>
+              )}
             </div>
-          )}
+
+            {/* Write - Dropdown (Always visible, redirects to login if not auth) */}
+            <div
+              className="relative"
+              onMouseEnter={() => setWriteDropdownOpen(true)}
+              onMouseLeave={() => setWriteDropdownOpen(false)}
+            >
+              <button
+                className="text-gray-700 dark:text-gray-200 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
+              >
+                <span>{t('nav.write')}</span>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+
+              {writeDropdownOpen && (
+                <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-600">
+                  <BlockedLink
+                    to="/write"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {t('nav.writeArticle')}
+                  </BlockedLink>
+                  <BlockedLink
+                    to="/drafts"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {t('nav.drafts')}
+                  </BlockedLink>
+                  <BlockedLink
+                    to="/analytics"
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {t('nav.analytics')}
+                  </BlockedLink>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-2">

@@ -9,6 +9,10 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/code';
 import 'tinymce/plugins/wordcount';
 
+// Import TinyMCE skins
+import 'tinymce/skins/ui/oxide/skin.min.css';
+import 'tinymce/skins/content/default/content.min.css';
+
 const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) => {
   const editorRef = useRef(null);
 
@@ -29,8 +33,7 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
           height: 500,
           menubar: false,
           license_key: 'gpl',
-          skin_url: '/tinymce/skins/ui/oxide',
-          content_css: '/tinymce/skins/content/default/content.min.css',
+          // skin_url and content_css are removed to use bundled CSS
           plugins: [
             'lists', 'link', 'code', 'wordcount'
           ],

@@ -1,52 +1,49 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 
 const PrivacyPolicy = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>{t('privacy.title') || 'Privacy Policy'} - Gaste</title>
-      </Helmet>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-gray-800 dark:text-gray-200">
+        <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Privacy Policy</h1>
+        <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">Last updated: {new Date().toLocaleDateString()}</p>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-          {t('privacy.title') || 'Privacy Policy'}
-        </h1>
-
-        <div className="prose dark:prose-invert max-w-none space-y-6 text-gray-600 dark:text-gray-300">
-          <p>Last updated: {new Date().toLocaleDateString()}</p>
-
+        <div className="space-y-6">
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">1. Information We Collect</h2>
-            <p>We collect information you provide directly to us, such as when you create an account, update your profile, or post content. This may include your name, email address, and profile picture.</p>
+            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">1. Information We Collect</h2>
+            <p>We collect information you provide directly to us, such as when you create an account, post content, or communicate with us. This may include your username, email address, and profile information.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">2. How We Use Your Information</h2>
-            <p>We use the information we collect to provide, maintain, and improve our services, to communicate with you, and to monitor and analyze trends and usage.</p>
+            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">2. How We Use Your Information</h2>
+            <p>We use the information we collect to operate, maintain, and improve our Service. This includes personalizing your experience, sending you technical notices, and responding to your comments and questions.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">3. Cookies</h2>
-            <p>We use cookies to personalize content and analyze our traffic. You can control cookies through your browser settings.</p>
+            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">3. Cookies and Tracking</h2>
+            <p>We use cookies and similar tracking technologies to track the activity on our Service and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">4. Data Security</h2>
-            <p>We take reasonable measures to help protect information about you from loss, theft, misuse, and unauthorized access, disclosure, alteration, and destruction.</p>
+            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">4. Data Security</h2>
+            <p>The security of your data is important to us, but remember that no method of transmission over the Internet is 100% secure. We strive to use commercially acceptable means to protect your Personal Data.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">5. Third-Party Services</h2>
-            <p>Our service may contain links to third-party websites or services (like YouTube) that are not owned or controlled by Gaste. We are not responsible for the privacy practices of these third parties.</p>
+            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">5. Third-Party Services</h2>
+            <p>We may use third-party Service Providers to monitor and analyze the use of our Service (e.g., Google Analytics).</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">6. Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy, please contact us at privacy@gaste.com.</p>
+            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">6. Children's Privacy</h2>
+            <p>Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">7. Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy, please contact us at support@gastehub.com.</p>
           </section>
         </div>
       </div>
@@ -55,4 +52,3 @@ const PrivacyPolicy = () => {
 };
 
 export default PrivacyPolicy;
-

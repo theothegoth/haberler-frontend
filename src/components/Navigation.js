@@ -29,14 +29,11 @@ const Navigation = () => {
               to="/"
               className="flex items-center space-x-2 text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-purple-700 transition-all"
             >
-              <svg
-                className="w-8 h-8 text-blue-600"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 6v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-              </svg>
+              <img
+                src="/logo192.png"
+                alt="Gaste Logo"
+                className="w-8 h-8 object-contain"
+              />
               <span className="tracking-wide">Gaste</span>
             </BlockedLink>
           </div>

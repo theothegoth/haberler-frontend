@@ -33,7 +33,9 @@ const RichTextEditor = ({ value, onChange, placeholder = 'Start writing...' }) =
           height: 500,
           menubar: false,
           license_key: 'gpl',
-          // skin_url and content_css are removed to use bundled CSS
+          // Disable automatic skin/content loading since we import them manually
+          skin: false,
+          content_css: false,
           plugins: [
             'lists', 'link', 'code', 'wordcount'
           ],

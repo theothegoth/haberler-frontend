@@ -39,8 +39,9 @@ const AdvancedSearch = lazy(() => import('./pages/AdvancedSearch'));
 const BlockedUsers = lazy(() => import('./pages/BlockedUsers'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const Drafts = lazy(() => import('./pages/Drafts'));
-const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const Terms = lazy(() => import('./pages/Terms'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+import Footer from './components/Footer';
 
 // Admin pages
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
@@ -68,8 +69,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/verify-email-required" element={<VerifyEmailRequired />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -218,6 +219,7 @@ function App() {
             />
           </Routes>
           </Suspense>
+          <Footer />
         </div>
           </OfflineFallback>
           </NavigationBlockerProvider>

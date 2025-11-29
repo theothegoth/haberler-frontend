@@ -15,9 +15,7 @@ COPY . .
 # Build the app
 RUN chmod +x node_modules/.bin/react-scripts
 RUN npm run build
-   RUN mkdir -p build/static && \
-       cp -r node_modules/tinymce/skins build/static/ && \
-       chmod -R 755 build/static/skins
+
 # Production stage (Nginx to serve static files)
 FROM nginx:alpine
 

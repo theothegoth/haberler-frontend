@@ -137,15 +137,38 @@ const NewsFeed = () => {
       return;
     }
 
+    // Optimistic update
+    setFeed(prevFeed => prevFeed.map(news => {
+      if (news.id === newsId) {
+        return {
+          ...news,
+          user_has_liked: !currentlyLiked,
+          like_count: currentlyLiked ? parseInt(news.like_count) - 1 : parseInt(news.like_count) + 1
+        };
+      }
+      return news;
+    }));
+
     try {
       if (currentlyLiked) {
         await newsService.unlikeNews(newsId);
       } else {
         await newsService.likeNews(newsId);
       }
-      loadFeed(true);
+      // Don't reload feed to avoid flicker and cache issues
     } catch (err) {
       console.error('Like error:', err);
+      // Revert on error
+      setFeed(prevFeed => prevFeed.map(news => {
+        if (news.id === newsId) {
+          return {
+            ...news,
+            user_has_liked: currentlyLiked,
+            like_count: currentlyLiked ? parseInt(news.like_count) + 1 : parseInt(news.like_count) - 1
+          };
+        }
+        return news;
+      }));
     }
   };
 

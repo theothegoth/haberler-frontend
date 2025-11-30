@@ -12,6 +12,7 @@ import CookieConsent from './components/CookieConsent';
 import OfflineFallback from './components/OfflineFallback';
 import PrivateRoute from './components/PrivateRoute';
 import LoadingSpinner from './components/LoadingSpinner';
+import Footer from './components/Footer';
 
 // Lazy load pages for better performance (code splitting)
 // Critical pages loaded immediately
@@ -41,7 +42,6 @@ const Analytics = lazy(() => import('./pages/Analytics'));
 const Drafts = lazy(() => import('./pages/Drafts'));
 const Terms = lazy(() => import('./pages/Terms'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
-import Footer from './components/Footer';
 
 // Admin pages
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));

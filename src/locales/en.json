@@ -134,7 +134,12 @@
       "button": "Sign Up Free"
     },
     "footer": {
-      "copyright": "© 2025 Gaste. All rights reserved."
+      "copyright": "© 2025 Gaste. All rights reserved.",
+      "platform": "Platform",
+      "legal": "Legal",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "about": "Watch, Read & Write News. All your news in one place."
     }
   },
   "auth": {
@@ -165,6 +170,8 @@
       "validEmail": "Please enter a valid email address",
       "passwordMinLength": "Password must be at least 6 characters",
       "passwordsMismatch": "Passwords do not match",
+      "mustAcceptTerms": "You must accept the Terms of Service and Privacy Policy to register",
+      "agreeStatement": "I agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>",
       "redirecting": "Redirecting to dashboard in 5 seconds...",
       "usernamePlaceholder": "username",
       "emailPlaceholder": "example@email.com"

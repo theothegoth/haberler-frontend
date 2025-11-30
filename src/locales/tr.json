@@ -134,7 +134,12 @@
       "button": "Ücretsiz Kayıt Ol"
     },
     "footer": {
-      "copyright": "© 2025 Gaste. Tüm hakları saklıdır."
+      "copyright": "© 2025 Gaste. Tüm hakları saklıdır.",
+      "platform": "Platform",
+      "legal": "Yasal",
+      "terms": "Kullanım Koşulları",
+      "privacy": "Gizlilik Politikası",
+      "about": "Haberleri İzle, Oku ve Yaz. Tüm haberler tek yerde."
     }
   },
   "auth": {
@@ -165,6 +170,8 @@
       "validEmail": "Geçerli bir email adresi girin",
       "passwordMinLength": "Şifre en az 6 karakter olmalıdır",
       "passwordsMismatch": "Şifreler eşleşmiyor",
+      "mustAcceptTerms": "Kayıt olmak için Kullanım Koşullarını ve Gizlilik Politikasını kabul etmelisiniz",
+      "agreeStatement": "<0>Kullanım Koşulları</0> ve <1>Gizlilik Politikası</1>nı kabul ediyorum",
       "redirecting": "5 saniye içinde dashboard'a yönlendiriliyorsunuz...",
       "usernamePlaceholder": "kullaniciadi",
       "emailPlaceholder": "ornek@email.com"

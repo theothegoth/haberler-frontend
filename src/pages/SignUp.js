@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 const SignUp = () => {
@@ -192,14 +192,13 @@ const SignUp = () => {
                 </div>
                 <div className="ml-3 text-sm">
                   <label htmlFor="terms" className="font-medium text-gray-700 dark:text-gray-200">
-                    I agree to the{' '}
-                    <Link to="/terms" className="text-blue-600 hover:underline" target="_blank">
-                      Terms of Service
-                    </Link>{' '}
-                    and{' '}
-                    <Link to="/privacy" className="text-blue-600 hover:underline" target="_blank">
-                      Privacy Policy
-                    </Link>
+                    <Trans
+                      i18nKey="auth.signup.agreeStatement"
+                      components={[
+                        <Link to="/terms" className="text-blue-600 hover:underline" target="_blank" key="0">Terms</Link>,
+                        <Link to="/privacy" className="text-blue-600 hover:underline" target="_blank" key="1">Privacy</Link>
+                      ]}
+                    />
                   </label>
                 </div>
               </div>

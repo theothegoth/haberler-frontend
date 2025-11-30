@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../services/api';
@@ -10,7 +10,8 @@ import ProfilePictureUpload from '../components/ProfilePictureUpload';
 
 const Settings = () => {
   const { t } = useTranslation();
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,6 +30,12 @@ const Settings = () => {
     newPassword: '',
     confirmPassword: ''
   });
+
+  // Delete Account State
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Blocked users state
   const [blockedUsers, setBlockedUsers] = useState([]);
@@ -209,6 +216,27 @@ const Settings = () => {
     setSuccess('');
   };
 
+  // Handle Account Deletion
+  const handleDeleteAccount = async (e) => {
+    e.preventDefault();
+    setDeleteError('');
+    setIsDeleting(true);
+
+    try {
+      await apiClient.delete('/auth/delete-account', {
+        data: { password: deletePassword }
+      });
+      
+      // Logout and redirect
+      logout();
+      navigate('/');
+    } catch (err) {
+      console.error('Delete account error:', err);
+      setDeleteError(err.response?.data?.error || 'Failed to delete account. Please check your password.');
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -276,6 +304,19 @@ const Settings = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                   </svg>
                   <span className="font-medium">{t('settings.tabs.blocked')}</span>
+                </button>
+                <button
+                  onClick={() => handleTabChange('danger')}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center space-x-3 ${
+                    activeTab === 'danger'
+                      ? 'bg-red-600 text-white'
+                      : 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <span className="font-medium">{t('settings.tabs.danger') || 'Danger Zone'}</span>
                 </button>
               </nav>
             </div>
@@ -677,10 +718,104 @@ const Settings = () => {
                   </div>
                 </div>
               )}
+
+              {/* Danger Zone Tab */}
+              {activeTab === 'danger' && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-red-600 mb-4">
+                      {t('settings.danger.title') || 'Danger Zone'}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                      {t('settings.danger.description') || 'Irreversible actions related to your account.'}
+                    </p>
+                  </div>
+
+                  <div className="border border-red-200 dark:border-red-900 rounded-lg p-6 bg-red-50 dark:bg-red-900/10">
+                    <h3 className="text-lg font-bold text-red-700 dark:text-red-400 mb-2">
+                      {t('settings.danger.deleteAccount') || 'Delete Account'}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">
+                      {t('settings.danger.deleteAccountDesc') || 'Once you delete your account, there is no going back. Your profile will be removed, but your articles and comments will be anonymized and kept on the platform.'}
+                    </p>
+                    <button
+                      onClick={() => setShowDeleteModal(true)}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                    >
+                      {t('settings.danger.deleteButton') || 'Delete My Account'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all scale-100">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+              {t('settings.danger.confirmDelete') || 'Are you sure?'}
+            </h3>
+            
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              {t('settings.danger.confirmMessage') || 'Please enter your password to confirm account deletion. This action cannot be undone.'}
+            </p>
+
+            {deleteError && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+                {deleteError}
+              </div>
+            )}
+
+            <form onSubmit={handleDeleteAccount}>
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                  {t('settings.password.currentPassword')}
+                </label>
+                <input
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  required
+                  placeholder="Password"
+                />
+              </div>
+
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeletePassword('');
+                    setDeleteError('');
+                  }}
+                  className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  disabled={isDeleting}
+                >
+                  {t('common.cancel') || 'Cancel'}
+                </button>
+                <button
+                  type="submit"
+                  disabled={isDeleting || !deletePassword}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                >
+                  {isDeleting && (
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  {t('settings.danger.confirmButton') || 'Delete Account'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

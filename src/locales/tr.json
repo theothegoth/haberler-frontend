@@ -356,7 +356,7 @@
       "fileSizeError": "Dosya boyutu 5MB'dan küçük olmalıdır",
       "maxImagesReached": "Maksimum 5 görsel yüklenebilir",
       "failedToSaveOrder": "Yeni sıralama kaydedilemedi",
-      "saveToUploadImages": "Görsel yüklemek için önce taslağınızı kaydedin",
+      "saveToUploadImages": "Görsel yüklemek için önce taslağı kaydedin",
       "saveToUploadImagesDescription": "Taslağınız 30 saniye sonra otomatik olarak kaydedilecek veya 'Taslağı Kaydet' butonuna tıklayarak manuel olarak kaydedebilirsiniz."
     },
     "buttons": {
@@ -479,45 +479,33 @@
     "youAreFollowing": "Takip Ettikleriniz",
     "totalArticles": "Toplam Haber"
   },
-  "protectedContent": {
-    "watermark": "tarafından",
-    "copyright": "Bu içerik telif hakkı ile korunmaktadır."
-  },
-  "categories": {
-    "politics": "Politika",
-    "economy": "Ekonomi",
-    "sports": "Spor",
-    "technology": "Teknoloji",
-    "health": "Sağlık",
-    "education": "Eğitim",
-    "culture": "Kültür",
-    "art": "Sanat",
-    "science": "Bilim",
-    "world": "Dünya",
-    "other": "Diğer",
-    "entertainment": "Eğlence"
-  },
-  "time": {
-    "yearsAgo": "yıl önce",
-    "monthsAgo": "ay önce",
-    "weeksAgo": "hafta önce",
-    "daysAgo": "gün önce",
-    "hoursAgo": "saat önce",
-    "minutesAgo": "dakika önce",
-    "justNow": "Az önce"
-  },
-  "share": {
-    "shareOnTwitter": "Twitter'da Paylaş",
-    "shareTwitter": "Paylaş",
-    "share": "Paylaş"
-  },
   "settings": {
     "title": "Ayarlar",
     "subtitle": "Hesap ayarlarınızı yönetin",
     "tabs": {
       "profile": "Profil",
       "password": "Şifre",
-      "blocked": "Engellenen Kullanıcılar"
+      "blocked": "Engellenen Kullanıcılar",
+      "email": "Email Tercihleri",
+      "danger": "Tehlikeli Bölge"
+    },
+    "blocked": {
+      "title": "Engellenen Kullanıcılar",
+      "description": "Engellediğiniz kullanıcıları buradan yönetebilirsiniz",
+      "userCount": "kullanıcı",
+      "noBlocked": "Henüz hiç kullanıcı engellemediniz",
+      "noBlockedMessage": "Engellemek istediğiniz kullanıcıların profillerinden veya içeriklerinden engelleme yapabilirsiniz",
+      "unblock": "Engeli Kaldır",
+      "unblocking": "Engel kaldırılıyor...",
+      "blockedDate": "Engellenme tarihi",
+      "confirmUnblock": "Bu kullanıcının engelini kaldırmak istediğinizden emin misiniz?",
+      "unblockSuccess": "Kullanıcının engeli kaldırıldı",
+      "unblockError": "Engel kaldırılırken bir hata oluştu",
+      "infoTitle": "Engelleme hakkında",
+      "info1": "Engellediğiniz kullanıcıların içerikleri haber akışınızda görünmez",
+      "info2": "Engellediğiniz kullanıcıların yorumları gizlenir",
+      "info3": "Engelleme işlemi gizlidir, karşı taraf haberdar olmaz",
+      "info4": "İstediğiniz zaman engeli kaldırabilirsiniz"
     },
     "profile": {
       "title": "Profil Ayarları",
@@ -572,30 +560,48 @@
       "updateSuccess": "Email tercihleri başarıyla güncellendi!",
       "updateError": "Email tercihleri güncellenirken bir hata oluştu"
     },
-    "tabs": {
-      "profile": "Profil",
-      "password": "Şifre",
-      "email": "Email Tercihleri",
-      "blocked": "Engellenen Kullanıcılar"
-    },
-    "blocked": {
-      "title": "Engellenen Kullanıcılar",
-      "description": "Engellediğiniz kullanıcıları buradan yönetebilirsiniz",
-      "userCount": "kullanıcı",
-      "noBlocked": "Henüz hiç kullanıcı engellemediniz",
-      "noBlockedMessage": "Engellemek istediğiniz kullanıcıların profillerinden veya içeriklerinden engelleme yapabilirsiniz",
-      "unblock": "Engeli Kaldır",
-      "unblocking": "Engel kaldırılıyor...",
-      "blockedDate": "Engellenme tarihi",
-      "confirmUnblock": "Bu kullanıcının engelini kaldırmak istediğinizden emin misiniz?",
-      "unblockSuccess": "Kullanıcının engeli kaldırıldı",
-      "unblockError": "Engel kaldırılırken bir hata oluştu",
-      "infoTitle": "Engelleme hakkında",
-      "info1": "Engellediğiniz kullanıcıların içerikleri haber akışınızda görünmez",
-      "info2": "Engellediğiniz kullanıcıların yorumları gizlenir",
-      "info3": "Engelleme işlemi gizlidir, karşı taraf haberdar olmaz",
-      "info4": "İstediğiniz zaman engeli kaldırabilirsiniz"
+    "danger": {
+      "title": "Tehlikeli Bölge",
+      "description": "Hesabınızla ilgili geri alınamaz işlemler.",
+      "deleteAccount": "Hesabı Sil",
+      "deleteAccountDesc": "Hesabınızı sildiğinizde geri dönüş yoktur. Profiliniz kaldırılacak, ancak makaleleriniz ve yorumlarınız anonimleştirilerek platformda tutulacaktır.",
+      "deleteButton": "Hesabımı Sil",
+      "confirmDelete": "Emin misiniz?",
+      "confirmMessage": "Hesap silme işlemini onaylamak için lütfen şifrenizi girin. Bu işlem geri alınamaz.",
+      "confirmButton": "Hesabı Sil"
     }
+  },
+  "protectedContent": {
+    "watermark": "tarafından",
+    "copyright": "Bu içerik telif hakkı ile korunmaktadır."
+  },
+  "categories": {
+    "politics": "Politika",
+    "economy": "Ekonomi",
+    "sports": "Spor",
+    "technology": "Teknoloji",
+    "health": "Sağlık",
+    "education": "Eğitim",
+    "culture": "Kültür",
+    "art": "Sanat",
+    "science": "Bilim",
+    "world": "Dünya",
+    "other": "Diğer",
+    "entertainment": "Eğlence"
+  },
+  "time": {
+    "yearsAgo": "yıl önce",
+    "monthsAgo": "ay önce",
+    "weeksAgo": "hafta önce",
+    "daysAgo": "gün önce",
+    "hoursAgo": "saat önce",
+    "minutesAgo": "dakika önce",
+    "justNow": "Az önce"
+  },
+  "share": {
+    "shareOnTwitter": "Twitter'da Paylaş",
+    "shareTwitter": "Paylaş",
+    "share": "Paylaş"
   },
   "imageUpload": {
     "change": "Fotoğrafı Değiştir",
@@ -806,7 +812,7 @@
     "videoLimitMessage": "Şu anda 1 video limit vardır. Mevcut videoyu kaldırarak yeni bir video ekleyebilirsiniz.",
     "addVideoOptional": "Video Ekle (Opsiyonel)",
     "saveToAddVideo": "Video eklemek için önce taslağı kaydedin",
-    "saveToAddVideoDescription": "Taslağınızı kaydettikten sonra makalenize herhangi bir YouTube videosu ekleyebilirsiniz.",
+    "saveToAddVideoDescription": "Taslağınız 30 saniye sonra otomatik olarak kaydedilecek veya 'Taslağı Kaydet' butonuna tıklayarak manuel olarak kaydedebilirsiniz.",
     "errorLoading": "Videolar yüklenirken bir hata oluştu",
     "errorAdding": "Video eklenirken bir hata oluştu",
     "errorDeleting": "Video silinirken bir hata oluştu",

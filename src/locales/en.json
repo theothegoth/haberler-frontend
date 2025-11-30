@@ -482,7 +482,9 @@
     "tabs": {
       "profile": "Profile",
       "password": "Password",
-      "blocked": "Blocked Users"
+      "blocked": "Blocked Users",
+      "email": "Email Preferences",
+      "danger": "Danger Zone"
     },
     "blocked": {
       "title": "Blocked Users",
@@ -555,11 +557,15 @@
       "updateSuccess": "Email preferences updated successfully!",
       "updateError": "Error updating email preferences"
     },
-    "tabs": {
-      "profile": "Profile",
-      "password": "Password",
-      "email": "Email Preferences",
-      "blocked": "Blocked Users"
+    "danger": {
+      "title": "Danger Zone",
+      "description": "Irreversible actions related to your account.",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDesc": "Once you delete your account, there is no going back. Your profile will be removed, but your articles and comments will be anonymized and kept on the platform.",
+      "deleteButton": "Delete My Account",
+      "confirmDelete": "Are you sure?",
+      "confirmMessage": "Please enter your password to confirm account deletion. This action cannot be undone.",
+      "confirmButton": "Delete Account"
     }
   },
   "protectedContent": {

@@ -356,7 +356,7 @@
       "fileSizeError": "Dosya boyutu 5MB'dan küçük olmalıdır",
       "maxImagesReached": "Maksimum 5 görsel yüklenebilir",
       "failedToSaveOrder": "Yeni sıralama kaydedilemedi",
-      "saveToUploadImages": "Görsel yüklemek için önce taslağı kaydedin",
+      "saveToUploadImages": "Görsel yüklemek için önce taslağınızı kaydedin",
       "saveToUploadImagesDescription": "Taslağınız 30 saniye sonra otomatik olarak kaydedilecek veya 'Taslağı Kaydet' butonuna tıklayarak manuel olarak kaydedebilirsiniz."
     },
     "buttons": {
@@ -812,7 +812,7 @@
     "videoLimitMessage": "Şu anda 1 video limit vardır. Mevcut videoyu kaldırarak yeni bir video ekleyebilirsiniz.",
     "addVideoOptional": "Video Ekle (Opsiyonel)",
     "saveToAddVideo": "Video eklemek için önce taslağı kaydedin",
-    "saveToAddVideoDescription": "Taslağınız 30 saniye sonra otomatik olarak kaydedilecek veya 'Taslağı Kaydet' butonuna tıklayarak manuel olarak kaydedebilirsiniz.",
+    "saveToAddVideoDescription": "Taslağınız kaydettikten sonra makalenize herhangi bir YouTube videosu ekleyebilirsiniz.",
     "errorLoading": "Videolar yüklenirken bir hata oluştu",
     "errorAdding": "Video eklenirken bir hata oluştu",
     "errorDeleting": "Video silinirken bir hata oluştu",

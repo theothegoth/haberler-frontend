@@ -406,8 +406,8 @@ const ArticleDetail = () => {
                     </svg>
                   </button>
                   {showReplyEmojiPicker && (
-                    <div className="absolute right-0 bottom-full mb-2 z-50" ref={replyEmojiPickerRef}>
-                      <EmojiPicker onEmojiClick={onReplyEmojiClick} width={300} height={400} />
+                    <div className="absolute right-0 bottom-full mb-2 z-50 w-full sm:w-auto max-w-[300px]" ref={replyEmojiPickerRef}>
+                      <EmojiPicker onEmojiClick={onReplyEmojiClick} width="100%" height={400} />
                     </div>
                   )}
                 </div>
@@ -564,7 +564,7 @@ const ArticleDetail = () => {
                 </h1>
 
                 {/* Author and Meta Info */}
-                <div className="flex items-center justify-between mb-6 pb-6 border-b dark:border-gray-700">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-6 border-b dark:border-gray-700 gap-4 sm:gap-0">
                   <div className="flex items-center space-x-4">
                     <Link
                       to={`/user/${article.user_id}`}
@@ -757,8 +757,8 @@ const ArticleDetail = () => {
                     </svg>
                   </button>
                   {showEmojiPicker && (
-                    <div className="absolute right-0 top-full mt-2 z-50" ref={emojiPickerRef}>
-                      <EmojiPicker onEmojiClick={onEmojiClick} width={350} height={400} />
+                    <div className="absolute right-0 top-full mt-2 z-50 w-full sm:w-auto max-w-[350px]" ref={emojiPickerRef}>
+                      <EmojiPicker onEmojiClick={onEmojiClick} width="100%" height={400} />
                     </div>
                   )}
                 </div>

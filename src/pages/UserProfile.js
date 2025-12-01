@@ -212,8 +212,8 @@ const UserProfile = () => {
       {/* Profile Header */}
       <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 md:gap-0">
+            <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6 text-center md:text-left">
               {profileUser?.user_profile_picture ? (
                 <img
                   src={getImageUrl(profileUser.user_profile_picture)}
@@ -233,11 +233,11 @@ const UserProfile = () => {
                 <h1 className="text-4xl font-bold mb-2">{profileUser?.username || 'Kullanıcı'}</h1>
                 {/* Bio */}
                 {profileUser?.user_bio && (
-                  <p className="text-sm mt-2 mb-2 max-w-md text-white text-opacity-90">
+                  <p className="text-sm mt-2 mb-2 max-w-md text-white text-opacity-90 mx-auto md:mx-0">
                     {profileUser.user_bio}
                   </p>
                 )}
-                <div className="flex items-center space-x-6 text-sm">
+                <div className="flex items-center justify-center md:justify-start space-x-6 text-sm">
                   <div>
                     <span className="font-semibold">{articles.length}</span> {t('userProfile.articles')}
                   </div>

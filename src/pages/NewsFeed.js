@@ -350,8 +350,8 @@ const NewsFeed = () => {
                   </Link>
 
                   {/* Actions */}
-                  <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900 flex items-center justify-between border-t">
-                    <div className="flex items-center space-x-6">
+                  <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900 flex flex-col sm:flex-row items-center justify-between border-t gap-4 sm:gap-0">
+                    <div className="flex items-center justify-between w-full sm:w-auto sm:space-x-6">
                       <button
                         onClick={() => handleLike(news.id, news.user_has_liked)}
                         className={`flex items-center space-x-2 transition-colors ${

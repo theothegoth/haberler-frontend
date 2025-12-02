@@ -34,7 +34,7 @@ const Navigation = () => {
               className="flex items-center space-x-2 text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-purple-700 transition-all"
             >
               <img
-                src="/logo192.png"
+                src="/logo2192.png"
                 alt="Gaste Logo"
                 className="w-8 h-8 object-contain"
               />

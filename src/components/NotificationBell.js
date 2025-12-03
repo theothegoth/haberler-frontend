@@ -20,7 +20,7 @@ const NotificationBell = () => {
 
   // Fetch notifications when dropdown opens
   useEffect(() => {
-    if (isOpen && notifications.length === 0) {
+    if (isOpen) {
       fetchNotifications();
     }
   }, [isOpen]);

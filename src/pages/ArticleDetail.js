@@ -541,7 +541,7 @@ const ArticleDetail = () => {
             {/* Main Article Column */}
             <div className="lg:col-span-2">
               {/* Article Container */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
             <div className="p-8">
               <ProtectedContent authorName={article.username}>
                 {/* Category & Article Type */}

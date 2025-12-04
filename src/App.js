@@ -85,11 +85,7 @@ function App() {
             />
             <Route
               path="/write"
-              element={
-                <PrivateRoute>
-                  <WriteNews />
-                </PrivateRoute>
-              }
+              element={<WriteNews />}
             />
             <Route
               path="/edit-article/:id"

@@ -32,7 +32,19 @@ const useUserVideos = (category = null, enabled = true) => {
     fetchVideos();
   };
 
-  return { videos, loading, error, refetch };
+  const checkNewVideos = useCallback(async () => {
+    if (!enabled) return;
+    try {
+      setLoading(true);
+      await youtubeService.updateUserVideos();
+      await fetchVideos();
+    } catch (err) {
+      setError(err.response?.data?.error || err.message);
+      setLoading(false);
+    }
+  }, [enabled, fetchVideos]);
+
+  return { videos, loading, error, refetch, checkNewVideos };
 };
 
 export default useUserVideos;

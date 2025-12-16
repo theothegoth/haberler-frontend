@@ -83,6 +83,9 @@ const WriteNews = () => {
 
   // Auto-save draft
   const saveDraft = useCallback(async () => {
+    // Only save if user is logged in
+    if (!user) return;
+
     // Only save if there's content
     if (!formData.title && !formData.content) {
       return;
@@ -296,6 +299,14 @@ const WriteNews = () => {
     setError('');
     setSuccess('');
 
+    // If user is not logged in, redirect to signup
+    if (!user) {
+        // Store current form data in local storage to potentially restore later?
+        // For now, just redirect
+        navigate('/signup');
+        return;
+    }
+
     // Check media requirement on frontend first
     if (imageCount === 0 && videoCount === 0) {
       setError('VALIDATION.MEDIA_REQUIRED');
@@ -346,11 +357,11 @@ const WriteNews = () => {
       />
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+          {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-0">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center shrink-0">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                 </svg>
@@ -360,26 +371,30 @@ const WriteNews = () => {
                   {t('writeNews.title')}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-300">{t('writeNews.subtitle')}</p>
-                {/* Draft Status */}
-                {draftStatus === 'saving' && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('writeNews.draft.saving')}</p>
-                )}
-                {draftStatus === 'saved' && (
-                  <p className="text-sm text-green-600 dark:text-green-400 mt-1">{t('writeNews.draft.saved')}</p>
-                )}
-                {draftStatus === 'error' && (
-                  <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t('writeNews.draft.error')}</p>
-                )}
-                {draftStatus === 'max_reached' && (
-                  <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">{t('writeNews.draft.maxReached')}</p>
+                {/* Draft Status - Only show if user is logged in */}
+                {user && (
+                  <>
+                    {draftStatus === 'saving' && (
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('writeNews.draft.saving')}</p>
+                    )}
+                    {draftStatus === 'saved' && (
+                      <p className="text-sm text-green-600 dark:text-green-400 mt-1">{t('writeNews.draft.saved')}</p>
+                    )}
+                    {draftStatus === 'error' && (
+                      <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t('writeNews.draft.error')}</p>
+                    )}
+                    {draftStatus === 'max_reached' && (
+                      <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">{t('writeNews.draft.maxReached')}</p>
+                    )}
+                  </>
                 )}
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              {currentDraftId && (
+            <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-start lg:justify-end">
+              {currentDraftId && user && (
                 <button
                   onClick={handleNewArticle}
-                  className="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800 rounded-lg transition-colors flex items-center space-x-2"
+                  className="flex-1 lg:flex-none px-4 py-2 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800 rounded-lg transition-colors flex items-center justify-center space-x-2 whitespace-nowrap"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
@@ -387,11 +402,11 @@ const WriteNews = () => {
                   <span>{t('writeNews.buttons.newArticle')}</span>
                 </button>
               )}
-              {hasUnsavedChanges && (formData.title || formData.content) && (
+              {user && hasUnsavedChanges && (formData.title || formData.content) && (
                 <button
                   onClick={saveDraft}
                   disabled={draftStatus === 'saving'}
-                  className="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  className="flex-1 lg:flex-none px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 whitespace-nowrap"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
@@ -399,17 +414,17 @@ const WriteNews = () => {
                   <span>{t('writeNews.buttons.saveDraft')}</span>
                 </button>
               )}
-              {currentDraftId && (
+              {currentDraftId && user && (
                 <button
                   onClick={handleDiscardDraft}
-                  className="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-800 rounded-lg transition-colors"
+                  className="flex-1 lg:flex-none px-4 py-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-800 rounded-lg transition-colors whitespace-nowrap"
                 >
                   {t('writeNews.buttons.discardDraft')}
                 </button>
               )}
               <button
                 onClick={() => setPreview(!preview)}
-                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg dark:text-white transition-colors flex items-center space-x-2"
+                className="flex-1 lg:flex-none px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg dark:text-white transition-colors flex items-center justify-center space-x-2 whitespace-nowrap"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -482,29 +497,46 @@ const WriteNews = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 {t('writeNews.form.articleImagesDescription')}
               </p>
-              {currentDraftId ? (
+              {currentDraftId && user ? (
                 <ArticleImageGallery articleId={currentDraftId} editable={true} onImageChange={fetchMediaCounts} />
               ) : (
                 <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 text-center">
                   <svg className="w-12 h-12 mx-auto mb-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <p className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                    {t('writeNews.form.saveToUploadImages')}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {t('writeNews.form.saveToUploadImagesDescription')}
-                  </p>
+                  {!user ? (
+                     <>
+                       <p className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                         Sign in to upload images
+                       </p>
+                       <button
+                         type="button"
+                         onClick={() => navigate('/signup')}
+                         className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm"
+                       >
+                         Sign Up / Login
+                       </button>
+                     </>
+                   ) : (
+                    <>
+                      <p className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                        {t('writeNews.form.saveToUploadImages')}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {t('writeNews.form.saveToUploadImagesDescription')}
+                      </p>
+                    </>
+                   )}
                 </div>
               )}
             </div>
 
             {/* Article Video */}
-            {currentDraftId ? (
+            {currentDraftId && user ? (
               <ArticleVideoAttachment
                 articleId={currentDraftId}
                 editable={true}
-                userVideos={userVideos || []}
+                // userVideos prop removed as feature is disabled
                 onVideoChange={fetchMediaCounts}
               />
             ) : (

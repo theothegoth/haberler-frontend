@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 const SignUp = () => {
@@ -9,6 +9,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -41,6 +42,11 @@ const SignUp = () => {
 
     if (password !== confirmPassword) {
       setError(t('auth.signup.passwordsMismatch'));
+      return;
+    }
+
+    if (!acceptedTerms) {
+      setError(t('auth.signup.mustAcceptTerms') || 'You must accept the Terms and Privacy Policy');
       return;
     }
 
@@ -170,6 +176,32 @@ const SignUp = () => {
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="••••••••"
               />
+            </div>
+
+            <div>
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="terms"
+                    name="terms"
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label htmlFor="terms" className="font-medium text-gray-700 dark:text-gray-200">
+                    <Trans
+                      i18nKey="auth.signup.agreeStatement"
+                      components={[
+                        <Link to="/terms" className="text-blue-600 hover:underline" target="_blank" key="0">Terms</Link>,
+                        <Link to="/privacy" className="text-blue-600 hover:underline" target="_blank" key="1">Privacy</Link>
+                      ]}
+                    />
+                  </label>
+                </div>
+              </div>
             </div>
 
             <div>

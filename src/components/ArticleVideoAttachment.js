@@ -156,50 +156,10 @@ const ArticleVideoAttachment = ({ articleId, editable = false, userVideos = [], 
           </div>
 
           {/* Divider */}
-          {userVideos && userVideos.length > 0 && (
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                  {t('videoAttachment.orSelectFromYours')}
-                </span>
-              </div>
-            </div>
-          )}
+          {/* Removed user videos section as requested */}
 
-          {/* Dropdown for user's videos */}
-          {userVideos && userVideos.length > 0 && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t('videoAttachment.selectFromMyVideos')}
-              </label>
-              <div className="flex gap-2">
-                <select
-                  value={selectedVideoId}
-                  onChange={(e) => setSelectedVideoId(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
-                  disabled={loading}
-                >
-                  <option value="">{t('videoAttachment.selectVideo')}</option>
-                  {userVideos.map((video) => (
-                    <option key={video.video_id} value={video.video_id}>
-                      {video.title}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  onClick={handleAddVideo}
-                  disabled={loading || !selectedVideoId}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {loading ? t('videoAttachment.adding') : t('videoAttachment.add')}
-                </button>
-              </div>
-            </div>
-          )}
-
+          {/* Dropdown for user's videos - Removed */}
+          
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {t('videoAttachment.description')}
           </p>

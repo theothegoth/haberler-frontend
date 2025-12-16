@@ -30,7 +30,7 @@ const Home = () => {
             {t('home.hero.subtitle')}
           </p>
           {!isAuthenticated && (
-            <div className="flex justify-center space-x-4">
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <Link
                 to="/signup"
                 className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold shadow-lg"

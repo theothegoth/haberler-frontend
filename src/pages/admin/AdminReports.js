@@ -155,7 +155,7 @@ const AdminReports = () => {
 
         {/* Stats Cards */}
         {stats && stats.stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <div className="text-sm text-gray-500 dark:text-gray-400">Total Reports</div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
@@ -185,7 +185,7 @@ const AdminReports = () => {
 
         {/* Filters */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Report Type

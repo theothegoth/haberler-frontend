@@ -124,7 +124,7 @@ const AdminArticles = () => {
 
         {/* Stats Cards */}
         {stats && stats.stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <div className="text-sm text-gray-500 dark:text-gray-400">Total Articles</div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
@@ -145,7 +145,7 @@ const AdminArticles = () => {
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <div className="text-sm text-gray-500 dark:text-gray-400">Top Category</div>
-              <div className="text-lg font-bold text-purple-600 dark:text-purple-400 mt-2">
+              <div className="text-lg font-bold text-purple-600 dark:text-purple-400 mt-2 truncate">
                 {stats.stats.top_category || 'N/A'}
               </div>
             </div>
@@ -154,7 +154,7 @@ const AdminArticles = () => {
 
         {/* Filters */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Search

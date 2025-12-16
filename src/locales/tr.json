@@ -134,7 +134,12 @@
       "button": "Ücretsiz Kayıt Ol"
     },
     "footer": {
-      "copyright": "© 2025 Gaste. Tüm hakları saklıdır."
+      "copyright": "© 2025 Gaste. Tüm hakları saklıdır.",
+      "platform": "Platform",
+      "legal": "Yasal",
+      "terms": "Kullanım Koşulları",
+      "privacy": "Gizlilik Politikası",
+      "about": "Haberleri İzle, Oku ve Yaz. Tüm haberler tek yerde."
     }
   },
   "auth": {
@@ -165,6 +170,8 @@
       "validEmail": "Geçerli bir email adresi girin",
       "passwordMinLength": "Şifre en az 6 karakter olmalıdır",
       "passwordsMismatch": "Şifreler eşleşmiyor",
+      "mustAcceptTerms": "Kayıt olmak için Kullanım Koşullarını ve Gizlilik Politikasını kabul etmelisiniz",
+      "agreeStatement": "<0>Kullanım Koşulları</0> ve <1>Gizlilik Politikası</1>nı kabul ediyorum",
       "redirecting": "5 saniye içinde dashboard'a yönlendiriliyorsunuz...",
       "usernamePlaceholder": "kullaniciadi",
       "emailPlaceholder": "ornek@email.com"
@@ -265,6 +272,11 @@
       "noChannels": "Henüz kanal eklemediniz",
       "confirmRemove": "Bu kanalı kaldırmak istediğinizden emin misiniz?"
     },
+    "loginToSeeVideos": "Video İzlemek İçin Giriş Yapın",
+    "loginToTrackMessage": "Haber kanallarını takip etmek ve en son videoları izlemek için giriş yapın.",
+    "loginToSeeChannels": "Kanallarınızı görmek için giriş yapın",
+    "loginToAddChannel": "Kanal eklemek için giriş yapın",
+    "welcomeGuest": "Hoş geldiniz, Misafir!",
     "noVideos": "Video bulunamadı",
     "noVideosMessage": "Son 48 saatte yayınlanmış video yok. Daha fazla kanal ekleyin veya kanallarınızın yeni içerik yayınlamasını bekleyin.",
     "noVideosMessageNoChannels": "En son videoları görmeye başlamak için yukarıdaki formu kullanarak haber kanalları ekleyin.",
@@ -285,7 +297,9 @@
     "modal": {
       "title": "Video İzle",
       "subtitle": "Video Oynatıcı"
-    }
+    },
+    "refresh": "Yenile",
+    "refreshVideos": "Videoları Güncelle"
   },
   "videoCategories": {
     "1": "Film & Animasyon",
@@ -467,45 +481,33 @@
     "youAreFollowing": "Takip Ettikleriniz",
     "totalArticles": "Toplam Haber"
   },
-  "protectedContent": {
-    "watermark": "tarafından",
-    "copyright": "Bu içerik telif hakkı ile korunmaktadır."
-  },
-  "categories": {
-    "politics": "Politika",
-    "economy": "Ekonomi",
-    "sports": "Spor",
-    "technology": "Teknoloji",
-    "health": "Sağlık",
-    "education": "Eğitim",
-    "culture": "Kültür",
-    "art": "Sanat",
-    "science": "Bilim",
-    "world": "Dünya",
-    "other": "Diğer",
-    "entertainment": "Eğlence"
-  },
-  "time": {
-    "yearsAgo": "yıl önce",
-    "monthsAgo": "ay önce",
-    "weeksAgo": "hafta önce",
-    "daysAgo": "gün önce",
-    "hoursAgo": "saat önce",
-    "minutesAgo": "dakika önce",
-    "justNow": "Az önce"
-  },
-  "share": {
-    "shareOnTwitter": "Twitter'da Paylaş",
-    "shareTwitter": "Paylaş",
-    "share": "Paylaş"
-  },
   "settings": {
     "title": "Ayarlar",
     "subtitle": "Hesap ayarlarınızı yönetin",
     "tabs": {
       "profile": "Profil",
       "password": "Şifre",
-      "blocked": "Engellenen Kullanıcılar"
+      "blocked": "Engellenen Kullanıcılar",
+      "email": "Email Tercihleri",
+      "danger": "Tehlikeli Bölge"
+    },
+    "blocked": {
+      "title": "Engellenen Kullanıcılar",
+      "description": "Engellediğiniz kullanıcıları buradan yönetebilirsiniz",
+      "userCount": "kullanıcı",
+      "noBlocked": "Henüz hiç kullanıcı engellemediniz",
+      "noBlockedMessage": "Engellemek istediğiniz kullanıcıların profillerinden veya içeriklerinden engelleme yapabilirsiniz",
+      "unblock": "Engeli Kaldır",
+      "unblocking": "Engel kaldırılıyor...",
+      "blockedDate": "Engellenme tarihi",
+      "confirmUnblock": "Bu kullanıcının engelini kaldırmak istediğinizden emin misiniz?",
+      "unblockSuccess": "Kullanıcının engeli kaldırıldı",
+      "unblockError": "Engel kaldırılırken bir hata oluştu",
+      "infoTitle": "Engelleme hakkında",
+      "info1": "Engellediğiniz kullanıcıların içerikleri haber akışınızda görünmez",
+      "info2": "Engellediğiniz kullanıcıların yorumları gizlenir",
+      "info3": "Engelleme işlemi gizlidir, karşı taraf haberdar olmaz",
+      "info4": "İstediğiniz zaman engeli kaldırabilirsiniz"
     },
     "profile": {
       "title": "Profil Ayarları",
@@ -560,30 +562,48 @@
       "updateSuccess": "Email tercihleri başarıyla güncellendi!",
       "updateError": "Email tercihleri güncellenirken bir hata oluştu"
     },
-    "tabs": {
-      "profile": "Profil",
-      "password": "Şifre",
-      "email": "Email Tercihleri",
-      "blocked": "Engellenen Kullanıcılar"
-    },
-    "blocked": {
-      "title": "Engellenen Kullanıcılar",
-      "description": "Engellediğiniz kullanıcıları buradan yönetebilirsiniz",
-      "userCount": "kullanıcı",
-      "noBlocked": "Henüz hiç kullanıcı engellemediniz",
-      "noBlockedMessage": "Engellemek istediğiniz kullanıcıların profillerinden veya içeriklerinden engelleme yapabilirsiniz",
-      "unblock": "Engeli Kaldır",
-      "unblocking": "Engel kaldırılıyor...",
-      "blockedDate": "Engellenme tarihi",
-      "confirmUnblock": "Bu kullanıcının engelini kaldırmak istediğinizden emin misiniz?",
-      "unblockSuccess": "Kullanıcının engeli kaldırıldı",
-      "unblockError": "Engel kaldırılırken bir hata oluştu",
-      "infoTitle": "Engelleme hakkında",
-      "info1": "Engellediğiniz kullanıcıların içerikleri haber akışınızda görünmez",
-      "info2": "Engellediğiniz kullanıcıların yorumları gizlenir",
-      "info3": "Engelleme işlemi gizlidir, karşı taraf haberdar olmaz",
-      "info4": "İstediğiniz zaman engeli kaldırabilirsiniz"
+    "danger": {
+      "title": "Tehlikeli Bölge",
+      "description": "Hesabınızla ilgili geri alınamaz işlemler.",
+      "deleteAccount": "Hesabı Sil",
+      "deleteAccountDesc": "Hesabınızı sildiğinizde geri dönüş yoktur. Profiliniz kaldırılacak, ancak makaleleriniz ve yorumlarınız anonimleştirilerek platformda tutulacaktır.",
+      "deleteButton": "Hesabımı Sil",
+      "confirmDelete": "Emin misiniz?",
+      "confirmMessage": "Hesap silme işlemini onaylamak için lütfen şifrenizi girin. Bu işlem geri alınamaz.",
+      "confirmButton": "Hesabı Sil"
     }
+  },
+  "protectedContent": {
+    "watermark": "tarafından",
+    "copyright": "Bu içerik telif hakkı ile korunmaktadır."
+  },
+  "categories": {
+    "politics": "Politika",
+    "economy": "Ekonomi",
+    "sports": "Spor",
+    "technology": "Teknoloji",
+    "health": "Sağlık",
+    "education": "Eğitim",
+    "culture": "Kültür",
+    "art": "Sanat",
+    "science": "Bilim",
+    "world": "Dünya",
+    "other": "Diğer",
+    "entertainment": "Eğlence"
+  },
+  "time": {
+    "yearsAgo": "yıl önce",
+    "monthsAgo": "ay önce",
+    "weeksAgo": "hafta önce",
+    "daysAgo": "gün önce",
+    "hoursAgo": "saat önce",
+    "minutesAgo": "dakika önce",
+    "justNow": "Az önce"
+  },
+  "share": {
+    "shareOnTwitter": "Twitter'da Paylaş",
+    "shareTwitter": "Paylaş",
+    "share": "Paylaş"
   },
   "imageUpload": {
     "change": "Fotoğrafı Değiştir",
@@ -794,7 +814,7 @@
     "videoLimitMessage": "Şu anda 1 video limit vardır. Mevcut videoyu kaldırarak yeni bir video ekleyebilirsiniz.",
     "addVideoOptional": "Video Ekle (Opsiyonel)",
     "saveToAddVideo": "Video eklemek için önce taslağı kaydedin",
-    "saveToAddVideoDescription": "Taslağınızı kaydettikten sonra makalenize herhangi bir YouTube videosu ekleyebilirsiniz.",
+    "saveToAddVideoDescription": "Taslağınız kaydettikten sonra makalenize herhangi bir YouTube videosu ekleyebilirsiniz.",
     "errorLoading": "Videolar yüklenirken bir hata oluştu",
     "errorAdding": "Video eklenirken bir hata oluştu",
     "errorDeleting": "Video silinirken bir hata oluştu",
@@ -808,5 +828,11 @@
     "fetchingVideo": "Video bilgisi alınıyor...",
     "videoNotFound": "Video bulunamadı veya erişilemez",
     "hasVideo": "Bu makalede video var"
+  },
+  "cookies": {
+    "title": "Çerez kullanıyoruz",
+    "description": "Tarama deneyiminizi geliştirmek, kişiselleştirilmiş içerik sunmak ve trafiğimizi analiz etmek için çerezleri kullanıyoruz. \"Kabul Et\"e tıklayarak çerez kullanımımıza izin vermiş olursunuz.",
+    "learnMore": "Daha fazla bilgi",
+    "accept": "Tümünü Kabul Et"
   }
 }

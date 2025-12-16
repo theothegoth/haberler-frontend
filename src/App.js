@@ -12,6 +12,7 @@ import CookieConsent from './components/CookieConsent';
 import OfflineFallback from './components/OfflineFallback';
 import PrivateRoute from './components/PrivateRoute';
 import LoadingSpinner from './components/LoadingSpinner';
+import Footer from './components/Footer';
 
 // Lazy load pages for better performance (code splitting)
 // Critical pages loaded immediately
@@ -39,7 +40,7 @@ const AdvancedSearch = lazy(() => import('./pages/AdvancedSearch'));
 const BlockedUsers = lazy(() => import('./pages/BlockedUsers'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const Drafts = lazy(() => import('./pages/Drafts'));
-const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const Terms = lazy(() => import('./pages/Terms'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 
 // Admin pages
@@ -68,35 +69,23 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/verify-email-required" element={<VerifyEmailRequired />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route
               path="/watch"
-              element={
-                <PrivateRoute>
-                  <Dashboard />
-                </PrivateRoute>
-              }
+              element={<Dashboard />}
             />
             <Route
               path="/feed"
-              element={
-                <PrivateRoute>
-                  <NewsFeed />
-                </PrivateRoute>
-              }
+              element={<NewsFeed />}
             />
             <Route
               path="/write"
-              element={
-                <PrivateRoute>
-                  <WriteNews />
-                </PrivateRoute>
-              }
+              element={<WriteNews />}
             />
             <Route
               path="/edit-article/:id"
@@ -124,11 +113,7 @@ function App() {
             />
             <Route
               path="/explore"
-              element={
-                <PrivateRoute>
-                  <Explore />
-                </PrivateRoute>
-              }
+              element={<Explore />}
             />
             <Route
               path="/settings"
@@ -164,35 +149,19 @@ function App() {
             />
             <Route
               path="/user/:userId"
-              element={
-                <PrivateRoute>
-                  <UserProfile />
-                </PrivateRoute>
-              }
+              element={<UserProfile />}
             />
             <Route
               path="/profile/:userId"
-              element={
-                <PrivateRoute>
-                  <UserProfile />
-                </PrivateRoute>
-              }
+              element={<UserProfile />}
             />
             <Route
               path="/article/:id"
-              element={
-                <PrivateRoute>
-                  <ArticleDetail />
-                </PrivateRoute>
-              }
+              element={<ArticleDetail />}
             />
             <Route
               path="/search"
-              element={
-                <PrivateRoute>
-                  <AdvancedSearch />
-                </PrivateRoute>
-              }
+              element={<AdvancedSearch />}
             />
             <Route
               path="/analytics"
@@ -246,6 +215,7 @@ function App() {
             />
           </Routes>
           </Suspense>
+          <Footer />
         </div>
           </OfflineFallback>
           </NavigationBlockerProvider>

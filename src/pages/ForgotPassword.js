@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../services/api';
 
 const ForgotPassword = () => {
   const { t } = useTranslation();
@@ -17,9 +17,7 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/api/auth/forgot-password', {
-        email
-      });
+    await api.post('/auth/forgot-password', { email });
 
       setSuccess(true);
       setEmail('');

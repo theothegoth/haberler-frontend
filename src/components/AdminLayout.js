@@ -65,25 +65,28 @@ const AdminLayout = ({ children }) => {
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="px-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h1 className="ml-4 text-xl font-bold text-gray-900 dark:text-white hidden sm:block">
                 Admin Panel
+              </h1>
+              <h1 className="ml-4 text-lg font-bold text-gray-900 dark:text-white sm:hidden">
+                Admin
               </h1>
             </div>
 
             <div className="flex items-center space-x-4">
               <Link
                 to="/watch"
-                className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hidden sm:block"
               >
                 View Site
               </Link>
-              <span className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="text-sm text-gray-600 dark:text-gray-300 hidden sm:block">
                 {user?.username}
               </span>
               <button
@@ -98,17 +101,26 @@ const AdminLayout = ({ children }) => {
       </nav>
 
       <div className="flex pt-16">
+        {/* Sidebar Overlay for Mobile */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          ></div>
+        )}
+
         {/* Sidebar */}
         <aside
           className={`${
-            sidebarOpen ? 'w-64' : 'w-0'
-          } bg-white dark:bg-gray-800 shadow-lg fixed left-0 top-16 bottom-0 transition-all duration-300 overflow-hidden z-20`}
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } lg:translate-x-0 fixed lg:static left-0 top-16 bottom-0 w-64 bg-white dark:bg-gray-800 shadow-lg transition-transform duration-300 z-30 overflow-y-auto`}
         >
           <nav className="p-4 space-y-2">
             {menuItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setSidebarOpen(false)} // Close on mobile click
                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive(item.path)
                     ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
@@ -123,11 +135,7 @@ const AdminLayout = ({ children }) => {
         </aside>
 
         {/* Main Content */}
-        <main
-          className={`flex-1 transition-all duration-300 ${
-            sidebarOpen ? 'ml-64' : 'ml-0'
-          } p-8`}
-        >
+        <main className="flex-1 w-full p-4 sm:p-8 overflow-x-hidden">
           {children}
         </main>
       </div>

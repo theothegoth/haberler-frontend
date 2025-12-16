@@ -1,12 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import youtubeService from '../services/youtubeService';
 
-const useUserVideos = (category = null) => {
+const useUserVideos = (category = null, enabled = true) => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchVideos = useCallback(async () => {
+    if (!enabled) {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -17,7 +22,7 @@ const useUserVideos = (category = null) => {
     } finally {
       setLoading(false);
     }
-  }, [category]);
+  }, [category, enabled]);
 
   useEffect(() => {
     fetchVideos();
@@ -27,7 +32,19 @@ const useUserVideos = (category = null) => {
     fetchVideos();
   };
 
-  return { videos, loading, error, refetch };
+  const checkNewVideos = useCallback(async () => {
+    if (!enabled) return;
+    try {
+      setLoading(true);
+      await youtubeService.updateUserVideos();
+      await fetchVideos();
+    } catch (err) {
+      setError(err.response?.data?.error || err.message);
+      setLoading(false);
+    }
+  }, [enabled, fetchVideos]);
+
+  return { videos, loading, error, refetch, checkNewVideos };
 };
 
 export default useUserVideos;

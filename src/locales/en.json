@@ -134,7 +134,12 @@
       "button": "Sign Up Free"
     },
     "footer": {
-      "copyright": "© 2025 Gaste. All rights reserved."
+      "copyright": "© 2025 Gaste. All rights reserved.",
+      "platform": "Platform",
+      "legal": "Legal",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "about": "Watch, Read & Write News. All your news in one place."
     }
   },
   "auth": {
@@ -165,6 +170,8 @@
       "validEmail": "Please enter a valid email address",
       "passwordMinLength": "Password must be at least 6 characters",
       "passwordsMismatch": "Passwords do not match",
+      "mustAcceptTerms": "You must accept the Terms of Service and Privacy Policy to register",
+      "agreeStatement": "I agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>",
       "redirecting": "Redirecting to dashboard in 5 seconds...",
       "usernamePlaceholder": "username",
       "emailPlaceholder": "example@email.com"
@@ -265,6 +272,11 @@
       "noChannels": "You haven't added any channels yet",
       "confirmRemove": "Are you sure you want to remove this channel?"
     },
+    "loginToSeeVideos": "Login to Watch Videos",
+    "loginToTrackMessage": "Login to follow news channels and watch the latest videos.",
+    "loginToSeeChannels": "Login to see your channels",
+    "loginToAddChannel": "Login to add channel",
+    "welcomeGuest": "Welcome, Guest!",
     "noVideos": "No videos found",
     "noVideosMessage": "No videos from the last 48 hours. Either add more channels or wait for your channels to publish new content.",
     "noVideosMessageNoChannels": "Add news channels using the form above to start seeing the latest videos.",
@@ -285,7 +297,9 @@
     "modal": {
       "title": "Watch Video",
       "subtitle": "Video Player"
-    }
+    },
+    "refresh": "Refresh",
+    "refreshVideos": "Refresh Videos"
   },
   "videoCategories": {
     "1": "Film & Animation",
@@ -470,7 +484,9 @@
     "tabs": {
       "profile": "Profile",
       "password": "Password",
-      "blocked": "Blocked Users"
+      "blocked": "Blocked Users",
+      "email": "Email Preferences",
+      "danger": "Danger Zone"
     },
     "blocked": {
       "title": "Blocked Users",
@@ -543,11 +559,15 @@
       "updateSuccess": "Email preferences updated successfully!",
       "updateError": "Error updating email preferences"
     },
-    "tabs": {
-      "profile": "Profile",
-      "password": "Password",
-      "email": "Email Preferences",
-      "blocked": "Blocked Users"
+    "danger": {
+      "title": "Danger Zone",
+      "description": "Irreversible actions related to your account.",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDesc": "Once you delete your account, there is no going back. Your profile will be removed, but your articles and comments will be anonymized and kept on the platform.",
+      "deleteButton": "Delete My Account",
+      "confirmDelete": "Are you sure?",
+      "confirmMessage": "Please enter your password to confirm account deletion. This action cannot be undone.",
+      "confirmButton": "Delete Account"
     }
   },
   "protectedContent": {
@@ -805,5 +825,11 @@
     "fetchingVideo": "Fetching video information...",
     "videoNotFound": "Video not found or unavailable",
     "hasVideo": "This article includes a video"
+  },
+  "cookies": {
+    "title": "We use cookies",
+    "description": "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking \"Accept\", you consent to our use of cookies.",
+    "learnMore": "Learn more",
+    "accept": "Accept All"
   }
 }

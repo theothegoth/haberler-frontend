@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import newsService from '../services/newsService';
 import followService from '../services/followService';
 import bookmarkService from '../services/bookmarkService';
@@ -20,6 +21,7 @@ import ArticleTypeBadge from '../components/ArticleTypeBadge';
 const NewsFeed = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user } = useAuth();
   
   // Helper to strip HTML tags for preview
   const stripHTML = (html) => {
@@ -70,15 +72,21 @@ const NewsFeed = () => {
   }, [offset, t]);
 
   const loadSuggested = useCallback(async () => {
+    // Only load suggested users if logged in
+    if (!user) return;
+    
     try {
       const data = await followService.getSuggestedUsers(5);
       setSuggested(data);
     } catch (err) {
       console.error('Failed to load suggestions:', err);
     }
-  }, []);
+  }, [user]);
 
   const loadBookmarkStatus = useCallback(async (articles) => {
+    // Only load bookmarks if logged in
+    if (!user) return;
+
     try {
       const bookmarkChecks = await Promise.all(
         articles.map(article => bookmarkService.checkSaved(article.id).catch(() => false))
@@ -107,6 +115,11 @@ const NewsFeed = () => {
   }, [feed, loadBookmarkStatus]);
 
   const handleFollow = async (userId) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
     try {
       await followService.followUser(userId);
       // Refresh suggested users and feed
@@ -119,20 +132,53 @@ const NewsFeed = () => {
   };
 
   const handleLike = async (newsId, currentlyLiked) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    // Optimistic update
+    setFeed(prevFeed => prevFeed.map(news => {
+      if (news.id === newsId) {
+        return {
+          ...news,
+          user_has_liked: !currentlyLiked,
+          like_count: currentlyLiked ? parseInt(news.like_count) - 1 : parseInt(news.like_count) + 1
+        };
+      }
+      return news;
+    }));
+
     try {
       if (currentlyLiked) {
         await newsService.unlikeNews(newsId);
       } else {
         await newsService.likeNews(newsId);
       }
-      loadFeed(true);
+      // Don't reload feed to avoid flicker and cache issues
     } catch (err) {
       console.error('Like error:', err);
+      // Revert on error
+      setFeed(prevFeed => prevFeed.map(news => {
+        if (news.id === newsId) {
+          return {
+            ...news,
+            user_has_liked: currentlyLiked,
+            like_count: currentlyLiked ? parseInt(news.like_count) + 1 : parseInt(news.like_count) - 1
+          };
+        }
+        return news;
+      }));
     }
   };
 
 
   const handleBookmark = async (newsId, currentlySaved) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
     try {
       if (currentlySaved) {
         await bookmarkService.unsaveArticle(newsId);
@@ -231,7 +277,7 @@ const NewsFeed = () => {
                     >
                       {news.user_profile_picture ? (
                         <img
-                          src={`http://localhost:5000${news.user_profile_picture}`}
+                          src={getImageUrl(news.user_profile_picture)}
                           alt={news.username}
                           className="w-10 h-10 rounded-full object-cover"
                           onError={(e) => {
@@ -304,8 +350,8 @@ const NewsFeed = () => {
                   </Link>
 
                   {/* Actions */}
-                  <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900 flex items-center justify-between border-t">
-                    <div className="flex items-center space-x-6">
+                  <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900 flex flex-col sm:flex-row items-center justify-between border-t gap-4 sm:gap-0">
+                    <div className="flex items-center justify-between w-full sm:w-auto sm:space-x-6">
                       <button
                         onClick={() => handleLike(news.id, news.user_has_liked)}
                         className={`flex items-center space-x-2 transition-colors ${
@@ -377,7 +423,8 @@ const NewsFeed = () => {
             {/* Trending Articles */}
             <TrendingArticles limit={5} days={7} />
 
-            {/* Suggested Users */}
+            {/* Suggested Users - Only show if logged in */}
+            {user && (
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t('newsFeed.suggestedUsers')}</h3>
               <div className="space-y-4">
@@ -402,6 +449,7 @@ const NewsFeed = () => {
                 ))}
               </div>
             </div>
+            )}
 
             {/* Quick Actions */}
             <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl shadow-lg p-6 text-white">

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import newsService from '../services/newsService';
+import { getImageUrl } from '../utils/imageUtils';
 
 const ImageUpload = ({ currentImageUrl, onImageUploaded }) => {
   const { t } = useTranslation();
@@ -33,7 +34,7 @@ const ImageUpload = ({ currentImageUrl, onImageUploaded }) => {
       const response = await newsService.uploadImage(file);
 
       // Create preview URL
-      const previewUrl = `http://localhost:5000${response.imageUrl}`;
+      const previewUrl = getImageUrl(response.imageUrl);
       setPreview(previewUrl);
 
       // Notify parent component

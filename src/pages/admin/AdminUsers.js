@@ -63,17 +63,17 @@ const AdminUsers = () => {
         </div>
 
         {/* Search */}
-        <form onSubmit={handleSearch} className="flex space-x-4">
+        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by username or email..."
-            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white w-full"
           />
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 w-full sm:w-auto"
           >
             Search
           </button>
@@ -81,7 +81,8 @@ const AdminUsers = () => {
 
         {/* Users Table */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">User</th>
@@ -128,6 +129,7 @@ const AdminUsers = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* Pagination */}

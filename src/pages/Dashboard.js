@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import he from 'he';
 import { useAuth } from '../context/AuthContext';
@@ -15,6 +16,7 @@ Modal.setAppElement('#root');
 
 function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedVideoId, setSelectedVideoId] = useState(null);
@@ -25,8 +27,9 @@ function Dashboard() {
   const [selectedChannelFilter, setSelectedChannelFilter] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const { videos, loading, error, refetch } = useUserVideos();
-  const { channels, loading: channelsLoading, removeChannel, refetch: refetchChannels } = useUserChannels();
+  // Only fetch if user is logged in
+  const { videos, loading, error, refetch, checkNewVideos } = useUserVideos(null, !!user);
+  const { channels, loading: channelsLoading, removeChannel, refetch: refetchChannels } = useUserChannels(!!user);
 
   const openModal = (videoId) => {
     setSelectedVideoId(videoId);
@@ -51,6 +54,11 @@ function Dashboard() {
   };
 
   const handleChannelAdded = () => {
+    // AddChannelForm handles the redirect, but we keep this check just in case
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     refetch();
     refetchChannels();
   };
@@ -152,7 +160,9 @@ function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold">{t('dashboard.welcome')}, {user?.username}!</h1>
+              <h1 className="text-3xl font-bold">
+                {user ? `${t('dashboard.welcome')}, ${user.username}!` : t('dashboard.welcomeGuest')}
+              </h1>
               <p className="text-blue-100 dark:text-gray-300 mt-1">{t('dashboard.trackVideos')}</p>
             </div>
             <button
@@ -165,7 +175,7 @@ function Dashboard() {
             </button>
           </div>
 
-          {/* Stats */}
+          {/* Stats - Show limited stats for guests */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatsCard
               title={t("dashboard.stats.totalChannels")}
@@ -213,9 +223,9 @@ function Dashboard() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar */}
-          <aside className={`${sidebarOpen ? 'block' : 'hidden'} lg:block w-64 flex-shrink-0`}>
+          <aside className={`${sidebarOpen ? 'block' : 'hidden'} lg:block w-full lg:w-64 flex-shrink-0`}>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sticky top-6">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -228,7 +238,11 @@ function Dashboard() {
               ) : (
                 <ChannelList
                   channels={channels}
-                  onChannelClick={setSelectedChannelFilter}
+                  onChannelClick={(id) => {
+                    setSelectedChannelFilter(id);
+                    // On mobile, close sidebar after selection if desired, 
+                    // or let user close it manually. For now, keeping manual close.
+                  }}
                   selectedChannel={selectedChannelFilter}
                   onRemoveChannel={handleRemoveChannel}
                 />
@@ -239,7 +253,7 @@ function Dashboard() {
           {/* Main Area */}
           <main className="flex-1 min-w-0">
             {/* Add Channel Form */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 relative">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t('dashboard.channelList.addNewChannel')}</h2>
               <AddChannelForm onAdded={handleChannelAdded} />
             </div>
@@ -322,6 +336,19 @@ function Dashboard() {
                     </svg>
                   </button>
                 </div>
+
+                {/* Refresh Button */}
+                <button
+                  onClick={checkNewVideos}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={t('dashboard.refreshVideos')}
+                  disabled={loading}
+                >
+                  <svg className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span className="hidden sm:inline">{t('dashboard.refresh')}</span>
+                </button>
               </div>
             </div>
 
@@ -353,7 +380,9 @@ function Dashboard() {
                     />
                   </svg>
                   <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-                    {searchQuery ? t('dashboard.noResults') : (channels.length === 0 ? t('dashboard.channelList.noChannels') : t('dashboard.noVideos'))}
+                    {searchQuery 
+                      ? t('dashboard.noResults') 
+                      : (channels.length === 0 ? t('dashboard.channelList.noChannels') : t('dashboard.noVideos'))}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {searchQuery

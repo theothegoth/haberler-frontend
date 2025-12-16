@@ -7,6 +7,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import EditedBadge from '../components/EditedBadge';
 import ArticleTypeBadge from '../components/ArticleTypeBadge';
 import { getImageUrl, handleImageError } from '../utils/imageUtils';
+import api from '../services/api';
 
 const AdvancedSearch = () => {
   const { t } = useTranslation();
@@ -80,7 +81,7 @@ const AdvancedSearch = () => {
 
       setSearchParams(params);
 
-      const response = await axios.get(`http://localhost:5000/api/news/search?${params.toString()}`);
+      const response = await api.get(`/news/search?${params.toString()}`);
       setResults(response.data);
     } catch (err) {
       setError(err.response?.data?.error || t('search.searchError') || 'Search failed');

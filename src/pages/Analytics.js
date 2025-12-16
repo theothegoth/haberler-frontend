@@ -358,20 +358,20 @@ const Analytics = () => {
                     to={`/article/${article.id}`}
                     className="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
+                      <div className="flex-1 w-full">
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                          <span className="text-lg font-bold text-blue-600 dark:text-blue-400 flex-shrink-0">
                             #{index + 1}
                           </span>
                           <h3 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
                             {article.title}
                           </h3>
                         </div>
-                        <div className="flex gap-4 text-xs text-gray-600 dark:text-gray-400">
-                          <span>👁️ {article.views.toLocaleString()}</span>
-                          <span>❤️ {article.likes}</span>
-                          <span>💬 {article.comments}</span>
+                        <div className="flex flex-wrap gap-4 text-xs text-gray-600 dark:text-gray-400">
+                          <span className="whitespace-nowrap">👁️ {article.views.toLocaleString()}</span>
+                          <span className="whitespace-nowrap">❤️ {article.likes}</span>
+                          <span className="whitespace-nowrap">💬 {article.comments}</span>
                         </div>
                       </div>
                     </div>
@@ -398,18 +398,18 @@ const Analytics = () => {
                     className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-medium text-gray-900 dark:text-white">
+                      <h3 className="font-medium text-gray-900 dark:text-white truncate mr-2">
                         {category.category}
                       </h3>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">
                         {category.articleCount} {t('analytics.articles', 'articles')}
                       </span>
                     </div>
-                    <div className="flex gap-4 text-xs text-gray-600 dark:text-gray-400">
-                      <span>👁️ {category.totalViews.toLocaleString()}</span>
-                      <span>❤️ {category.totalLikes}</span>
-                      <span>💬 {category.totalComments}</span>
-                      <span className="ml-auto">
+                    <div className="flex flex-wrap gap-4 text-xs text-gray-600 dark:text-gray-400">
+                      <span className="whitespace-nowrap">👁️ {category.totalViews.toLocaleString()}</span>
+                      <span className="whitespace-nowrap">❤️ {category.totalLikes}</span>
+                      <span className="whitespace-nowrap">💬 {category.totalComments}</span>
+                      <span className="ml-auto whitespace-nowrap">
                         Avg: {category.avgViewsPerArticle} {t('analytics.views', 'views')}
                       </span>
                     </div>

@@ -297,7 +297,9 @@
     "modal": {
       "title": "Watch Video",
       "subtitle": "Video Player"
-    }
+    },
+    "refresh": "Refresh",
+    "refreshVideos": "Refresh Videos"
   },
   "videoCategories": {
     "1": "Film & Animation",

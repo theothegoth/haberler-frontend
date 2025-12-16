@@ -297,7 +297,9 @@
     "modal": {
       "title": "Video İzle",
       "subtitle": "Video Oynatıcı"
-    }
+    },
+    "refresh": "Yenile",
+    "refreshVideos": "Videoları Güncelle"
   },
   "videoCategories": {
     "1": "Film & Animasyon",

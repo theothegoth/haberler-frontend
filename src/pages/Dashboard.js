@@ -220,6 +220,9 @@ function Dashboard() {
     try {
       setGuestLoading(true);
       setGuestError(null);
+      // Misafir modunda son 48 saatteki videoların gerçekten güncellenmesi için
+      // önce backend cache'ini güncelle, sonra cache'ten tekrar oku.
+      await youtubeService.updateVideoCache('TR');
       const allVideos = await youtubeService.getVideosFromCache('TR', null);
       const channelVideos = allVideos.filter(
         (video) => video.channelTitle === guestChannelTitle,

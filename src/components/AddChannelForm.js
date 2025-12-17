@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import youtubeService from '../services/youtubeService';
 import LoadingSpinner from './LoadingSpinner';
@@ -8,21 +7,22 @@ import { useAuth } from '../context/AuthContext';
 
 function AddChannelForm({ onAdded }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [input, setInput] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('error'); // 'error' or 'success'
   const [loading, setLoading] = useState(false);
 
+  const parseChannelTitleFromMessage = (message) => {
+    if (!message) return null;
+    const parts = message.split(':');
+    if (parts.length < 2) return null;
+    return parts[parts.length - 1].trim();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
-
-    if (!user) {
-      navigate('/login');
-      return;
-    }
 
     if (!input.trim()) {
       setMessage(t('addChannelForm.enterChannelInfo'));
@@ -32,18 +32,44 @@ function AddChannelForm({ onAdded }) {
 
     try {
       setLoading(true);
-      const response = await youtubeService.addUserChannel(input.trim());
+
+      let response;
+      let callbackPayload = {};
+
+      if (user) {
+        // Authenticated user: use user-specific endpoint
+        response = await youtubeService.addUserChannel(input.trim());
+        callbackPayload = {
+          mode: 'user',
+          channelId: response.channelId || null,
+          channelTitle: response.channelTitle || null,
+        };
+      } else {
+        // Guest user: use public YouTube cache endpoint
+        response = await youtubeService.addChannel(input.trim());
+        callbackPayload = {
+          mode: 'guest',
+          channelTitle:
+            response.channelTitle ||
+            parseChannelTitleFromMessage(response.message),
+        };
+      }
+
       setMessage(response.message || t('addChannelForm.channelAddedSuccess'));
       setMessageType('success');
       setInput('');
 
       // Call the onAdded callback after a short delay to show success message
       setTimeout(() => {
-        if (onAdded) onAdded();
+        if (onAdded) onAdded(callbackPayload);
         setMessage('');
       }, 2000);
     } catch (error) {
-      setMessage(error.response?.data?.error || error.message || t('addChannelForm.errorOccurred'));
+      setMessage(
+        error.response?.data?.error ||
+          error.message ||
+          t('addChannelForm.errorOccurred'),
+      );
       setMessageType('error');
     } finally {
       setLoading(false);
@@ -94,6 +120,7 @@ function AddChannelForm({ onAdded }) {
 }
 
 AddChannelForm.propTypes = {
+  // Called with { mode: 'user' | 'guest', channelTitle?: string, channelId?: string }
   onAdded: PropTypes.func,
 };
 

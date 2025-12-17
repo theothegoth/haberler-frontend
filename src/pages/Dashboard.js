@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import he from 'he';
@@ -11,6 +11,7 @@ import StatsCard from '../components/StatsCard';
 import ChannelList from '../components/ChannelList';
 import useUserVideos from '../hooks/useUserVideos';
 import useUserChannels from '../hooks/useUserChannels';
+import youtubeService from '../services/youtubeService';
 
 Modal.setAppElement('#root');
 
@@ -27,9 +28,24 @@ function Dashboard() {
   const [selectedChannelFilter, setSelectedChannelFilter] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Only fetch if user is logged in
-  const { videos, loading, error, refetch, checkNewVideos } = useUserVideos(null, !!user);
+  const isGuest = !user;
+
+  // Only fetch user-specific data if user is logged in
+  const {
+    videos: userVideos,
+    loading: userLoading,
+    error: userError,
+    refetch,
+    checkNewVideos,
+  } = useUserVideos(null, !!user);
   const { channels, loading: channelsLoading, removeChannel, refetch: refetchChannels } = useUserChannels(!!user);
+
+  // Guest mode state (no login required)
+  const [guestVideos, setGuestVideos] = useState([]);
+  const [guestLoading, setGuestLoading] = useState(false);
+  const [guestError, setGuestError] = useState(null);
+  const [guestChannelTitle, setGuestChannelTitle] = useState(null);
+  const [guestChannels, setGuestChannels] = useState([]);
 
   const openModal = (videoId) => {
     setSelectedVideoId(videoId);
@@ -53,15 +69,88 @@ function Dashboard() {
     }
   };
 
-  const handleChannelAdded = () => {
-    // AddChannelForm handles the redirect, but we keep this check just in case
-    if (!user) {
-      navigate('/login');
+  // Helpers for guest channel persistence
+  const loadGuestChannelsFromStorage = () => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const raw = window.localStorage.getItem('guest_channels');
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed;
+    } catch {
+      return [];
+    }
+  };
+
+  const saveGuestChannelsToStorage = (channelsToSave) => {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.setItem('guest_channels', JSON.stringify(channelsToSave));
+    } catch {
+      // ignore storage errors
+    }
+  };
+
+  useEffect(() => {
+    if (!isGuest) return;
+    const stored = loadGuestChannelsFromStorage();
+    if (stored.length > 0) {
+      setGuestChannels(stored);
+      // Optionel: ilk kanalı otomatik seçip videolarını çek
+      setGuestChannelTitle(stored[0].title);
+    }
+  }, [isGuest]);
+
+  const handleChannelAdded = async (payload) => {
+    // payload: { mode: 'user' | 'guest', channelTitle?, channelId? }
+    if (user) {
+      // Logged-in users: refresh user-specific data
+      refetch();
+      refetchChannels();
       return;
     }
-    refetch();
-    refetchChannels();
+
+    // Guest users: persist channel locally and fetch latest videos
+    const channelTitle = payload?.channelTitle || null;
+    if (!channelTitle) {
+      return;
+    }
+
+    const newChannel = {
+      id: channelTitle, // use title as id in guest mode
+      title: channelTitle,
+    };
+
+    setGuestChannels((prev) => {
+      const exists = prev.some((c) => c.id === newChannel.id);
+      if (exists) return prev;
+      const updated = [...prev, newChannel];
+      saveGuestChannelsToStorage(updated);
+      return updated;
+    });
+
+    try {
+      setGuestLoading(true);
+      setGuestError(null);
+      setGuestChannelTitle(channelTitle);
+
+      const allVideos = await youtubeService.getVideosFromCache('TR', null);
+      const channelVideos = allVideos.filter(
+        (video) => video.channelTitle === channelTitle,
+      );
+      setGuestVideos(channelVideos);
+    } catch (err) {
+      setGuestError(err.response?.data?.error || err.message);
+    } finally {
+      setGuestLoading(false);
+    }
   };
+
+  // Select active video list and loading/error state (user vs guest)
+  const videos = isGuest ? guestVideos : userVideos;
+  const loading = isGuest ? guestLoading : userLoading;
+  const error = isGuest ? guestError : userError;
 
   // Get unique categories from current videos
   const availableCategories = useMemo(() => {
@@ -116,7 +205,7 @@ function Dashboard() {
 
   // Calculate stats
   const stats = useMemo(() => ({
-    totalChannels: channels.length,
+    totalChannels: isGuest ? guestChannels.length : channels.length,
     totalVideos: videos.length,
     todayVideos: videos.filter(v => {
       const videoDate = new Date(v.publishedAt);
@@ -124,7 +213,26 @@ function Dashboard() {
       return videoDate.toDateString() === today.toDateString();
     }).length,
     categories: availableCategories.length,
-  }), [channels, videos, availableCategories]);
+  }), [channels, guestChannels, isGuest, videos, availableCategories]);
+
+  const handleGuestCheckNewVideos = async () => {
+    if (!guestChannelTitle) return;
+    try {
+      setGuestLoading(true);
+      setGuestError(null);
+      const allVideos = await youtubeService.getVideosFromCache('TR', null);
+      const channelVideos = allVideos.filter(
+        (video) => video.channelTitle === guestChannelTitle,
+      );
+      setGuestVideos(channelVideos);
+    } catch (err) {
+      setGuestError(err.response?.data?.error || err.message);
+    } finally {
+      setGuestLoading(false);
+    }
+  };
+
+  const handleRefreshClick = isGuest ? handleGuestCheckNewVideos : checkNewVideos;
 
   const formatDuration = (seconds) => {
     if (!seconds) return '';
@@ -227,24 +335,42 @@ function Dashboard() {
           {/* Sidebar */}
           <aside className={`${sidebarOpen ? 'block' : 'hidden'} lg:block w-full lg:w-64 flex-shrink-0`}>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sticky top-6">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 flex items-center">
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                 </svg>
                 {t('dashboard.channelList.title')}
               </h2>
+              {isGuest && guestChannels.length === 0 && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  {t('dashboard.loginToAddChannel')}
+                </p>
+              )}
               {channelsLoading ? (
                 <div className="text-center py-4 text-gray-500 dark:text-gray-400">{t('common.loading')}</div>
               ) : (
                 <ChannelList
-                  channels={channels}
+                  channels={isGuest ? guestChannels : channels}
                   onChannelClick={(id) => {
                     setSelectedChannelFilter(id);
-                    // On mobile, close sidebar after selection if desired, 
-                    // or let user close it manually. For now, keeping manual close.
+                    if (isGuest && id) {
+                      const ch = guestChannels.find((c) => c.id === id);
+                      if (ch) {
+                        setGuestChannelTitle(ch.title);
+                      }
+                    }
                   }}
                   selectedChannel={selectedChannelFilter}
-                  onRemoveChannel={handleRemoveChannel}
+                  onRemoveChannel={isGuest ? (id) => {
+                    setGuestChannels((prev) => {
+                      const updated = prev.filter((c) => c.id !== id);
+                      saveGuestChannelsToStorage(updated);
+                      return updated;
+                    });
+                    // Eğer kaldırılan kanal seçiliyse, filtreyi ve guestChannelTitle'ı sıfırla
+                    setSelectedChannelFilter((prev) => (prev === id ? null : prev));
+                    setGuestChannelTitle((prev) => (prev && prev === id ? null : prev));
+                  } : handleRemoveChannel}
                 />
               )}
             </div>
@@ -339,7 +465,7 @@ function Dashboard() {
 
                 {/* Refresh Button */}
                 <button
-                  onClick={checkNewVideos}
+                  onClick={handleRefreshClick}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   title={t('dashboard.refreshVideos')}
                   disabled={loading}

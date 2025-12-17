@@ -29,37 +29,43 @@ const ChannelList = ({ channels, onChannelClick, selectedChannel, onRemoveChanne
         </span>
       </button>
 
-      {channels.map((channel) => (
-        <div
-          key={channel.id}
-          className={`group relative px-3 py-2 rounded-lg transition-colors ${
-            selectedChannel === channel.channel_id
-              ? 'bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 text-blue-700 dark:text-blue-300'
-              : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'
-          }`}
-        >
-          <button
-            onClick={() => onChannelClick(channel.channel_id)}
-            className="w-full text-left"
+      {channels.map((channel) => {
+        // Support both authenticated user channels and guest channels
+        const id = channel.channel_id || channel.id;
+        const title = channel.channel_title || channel.title || channel.name;
+
+        return (
+          <div
+            key={id}
+            className={`group relative px-3 py-2 rounded-lg transition-colors ${
+              selectedChannel === id
+                ? 'bg-blue-100 dark:bg-blue-900 dark:bg-opacity-30 text-blue-700 dark:text-blue-300'
+                : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'
+            }`}
           >
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium truncate pr-6">
-                {channel.channel_title}
-              </span>
-            </div>
-          </button>
-          <button
-            onClick={() => onRemoveChannel(channel.channel_id)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 dark:hover:bg-red-900 dark:hover:bg-opacity-30 rounded"
-            aria-label={`${channel.channel_title} ${t('channelList.removeChannelAria')}`}
-            title={t('common.removeChannel')}
-          >
-            <svg className="w-4 h-4 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      ))}
+            <button
+              onClick={() => onChannelClick(id)}
+              className="w-full text-left"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium truncate pr-6">
+                  {title}
+                </span>
+              </div>
+            </button>
+            <button
+              onClick={() => onRemoveChannel(id)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 dark:hover:bg-red-900 dark:hover:bg-opacity-30 rounded"
+              aria-label={`${title} ${t('channelList.removeChannelAria')}`}
+              title={t('common.removeChannel')}
+            >
+              <svg className="w-4 h-4 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -67,7 +73,7 @@ const ChannelList = ({ channels, onChannelClick, selectedChannel, onRemoveChanne
 ChannelList.propTypes = {
   channels: PropTypes.array.isRequired,
   onChannelClick: PropTypes.func.isRequired,
-  selectedChannel: PropTypes.string,
+  selectedChannel: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onRemoveChannel: PropTypes.func.isRequired,
 };
 
